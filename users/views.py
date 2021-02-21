@@ -19,6 +19,7 @@ def handle_post_req(request):
             messages.success(request, f'Account created for {username}!')
             print(f'Account created for {username}!')
     else:
+        messages.error(request, "Please make sure all fields are correct")
         print("Form is invalid")
 
     return redirect('register')
