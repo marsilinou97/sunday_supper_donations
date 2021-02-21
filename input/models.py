@@ -1,16 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-# Create your models here.
+# Django models documentation: https://docs.djangoproject.com/en/3.1/topics/db/models/
 
 class Donor(models.Model):
     pass
 
+"""
+Donor subclasses
+"""
 
 class AnonymousDonor(models.Model):
+    # might need something like blank=True, not sure. -brad
     donor = models.OneToOneField(Donor, on_delete=models.CASCADE, primary_key=True)
-
 
 class IdentifiedDonor(models.Model):
 
@@ -34,7 +36,6 @@ class IdentifiedDonor(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name + " " + self.email_address
 
-
 class Donation(models.Model):
     #Donor FK
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
@@ -49,11 +50,78 @@ class Donation(models.Model):
     def __str__(self):
         return self.donor + " " + self.date_received + " " + self.user
 
+"""
+Items
+"""
+class Item(models.Model):
+    # Auto generated pk
+    donations_id = models.ForeignKey(Donation, on_delete=models.CASCADE)
+    quantity = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.donations_id + " " + self.quantity
 
+"""
+Enumerations for Item subclasses
+"""
+class Business(models.Model):
+    # Enumeration for GiftCards table; see Giftcard
+    name = models.CharField(primary_key=True,max_length=50)
 
+    def __str__(self):
+        return self.name
 
+class ClothingType(models.Model):
+    # Enumeration for Clothing table; see Clothing
+    name = models.CharField(primary_key=True,max_length=50)
 
+    def __str__(self):
+        return self.name
 
+class FundType(models.Model):
+    # Enumeration for Funds table
+    name = models.CharField(primary_key=True,max_length=50)
 
+    def __str__(self):
+        return self.name
 
+"""
+Item subclasses
+"""
+class Clothing(models.Model):
+    items_id = models.OneToOneField(Items, on_delete=models.CASCADE)
+    # These are all the clothing types we'll need
+    type = models.ForeignKey(ClothingType)
+
+    def __str__(self):
+        return self.items_id + " " + self.type
+
+class Food(models.Model):
+    items_id = models.OneToOneField(Items, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.items_id + " " + self.name
+
+class Fund(models.Model):
+    items_id = models.OneToOneField(Items, on_delete=models.CASCADE)
+    type = models.ForeignKey(FundType)
+    amount = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.items_id + " " + self.type + " " + self.amount
+
+class GiftCard(models.Model):
+    items_id = models.OneToOneField(Items, on_delete=models.CASCADE)
+    business_name = models.ForeignKey(Businesses)
+    amount = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.items_id + " " + self.business_name + " " + self.amount
+
+class Miscellaneous(models.Model):
+    items_id = models.OneToOneField(Items, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.items_id + " " + self.name
