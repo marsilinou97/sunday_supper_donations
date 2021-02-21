@@ -1,6 +1,7 @@
 from django import forms
 
-class DonarInformationForm(forms.Form):
+
+class DonorInformationForm(forms.Form):
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
@@ -13,11 +14,10 @@ class DonarInformationForm(forms.Form):
 
     class Meta:
         # model = input
-        fields = ['first_name', 'last_name', 'dob', 'address1','address2', 'city', 'state', 'zip', 'email']
+        fields = ['first_name', 'last_name', 'dob', 'address1', 'address2', 'city', 'state', 'zip', 'email']
 
     def __init__(self, *args, **kwargs):
-
-        super(DonarInformationForm, self).__init__(*args, **kwargs)
+        super(DonorInformationForm, self).__init__(*args, **kwargs)
 
         fields = self.visible_fields()
         for visible in fields:
@@ -33,4 +33,3 @@ class DonarInformationForm(forms.Form):
         self.fields["state"].widget.attrs.update({"placeholder": "State"})
         self.fields["zip"].widget.attrs.update({"placeholder": "Zip Code"})
         self.fields["email"].widget.attrs.update({"placeholder": "Email"})
-

@@ -23,8 +23,3 @@ class UserRegisterForm(UserCreationForm):
         self.fields["password1"].widget.attrs.update({"placeholder": "Password"})
         self.fields["password2"].widget.attrs.update({"placeholder": "Confirm Password"})
         self.fields["token"].widget.attrs.update({"placeholder": "Token"})
-
-
-        # fields['username'].widget.attrs['placeholder'] = "Username"
-        # fields['email'].widget.attrs['placeholder'] = "Email"
-
