@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
-    'input'
+    'input', #shouln't this be input.apps.InputConfig?
 
 ]
 
