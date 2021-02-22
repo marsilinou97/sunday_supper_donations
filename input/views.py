@@ -4,11 +4,11 @@ from .forms import DonorInformationForm
 
 
 # Create your views here.
-def handle_get_req(request):#gets the information?
+def handle_get_req(request):
     form = DonorInformationForm()
     return render(request, 'input/donar-info-form.html', {'form': form})
 
-def handle_post_req(request):#sends the information to the database?
+def handle_post_req(request):
     form = DonorInformationForm(request.POST)
     print(list(request.POST.items()))
 
