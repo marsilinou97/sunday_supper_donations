@@ -27,18 +27,19 @@ class IdentifiedDonor(models.Model):
     # Donors FK
     donor = models.OneToOneField(Donor, on_delete=models.CASCADE, primary_key=True)
 
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(blank=True)
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email_address = models.EmailField(max_length=50)
-    phone_number = models.CharField(max_length=11)
 
-    address_line1 = models.CharField(max_length=50)
-    address_line2 = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=13)
-    zipcode = models.CharField(max_length=10)
+    email_address = models.EmailField(max_length=50, blank=True)
+    phone_number = models.CharField(max_length=11, blank=True)
+
+    address_line1 = models.CharField(max_length=50, blank=True)
+    address_line2 = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=50, blank=True)
+    state = models.CharField(max_length=13, blank=True)
+    zipcode = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " " + self.email_address
@@ -131,7 +132,7 @@ class Food(models.Model):
 
 class Fund(models.Model):
     items_id = models.OneToOneField(Item, on_delete=models.CASCADE)
-    type = models.ForeignKey(FundType,on_delete=models.CASCADE)
+    type = models.ForeignKey(FundType, on_delete=models.CASCADE)
     amount = models.CharField(max_length=10)
 
     def __str__(self):
@@ -140,7 +141,7 @@ class Fund(models.Model):
 
 class GiftCard(models.Model):
     items_id = models.OneToOneField(Item, on_delete=models.CASCADE)
-    business_name = models.ForeignKey(Business,on_delete=models.CASCADE)
+    business_name = models.ForeignKey(Business, on_delete=models.CASCADE)
     amount = models.CharField(max_length=10)
 
     def __str__(self):
