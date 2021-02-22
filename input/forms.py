@@ -33,3 +33,30 @@ class DonorInformationForm(forms.Form):
         self.fields["state"].widget.attrs.update({"placeholder": "State"})
         self.fields["zip"].widget.attrs.update({"placeholder": "Zip Code"})
         self.fields["email"].widget.attrs.update({"placeholder": "Email"})
+
+
+
+class DonationForm(forms.Form):
+    date_received = forms.DateField(required=True)
+    thanks_sent = forms.BooleanField(required=True)
+    comment = forms.CharField(required=False)
+
+    class Meta:
+        # model = input
+        fields = ['date_received', 'thanks_sent', 'comment']
+
+    def __init__(self, *args, **kwargs):
+        super(DonationForm, self).__init__(*args, **kwargs)
+
+        fields = self.visible_fields()
+        for visible in fields:
+            # Add class to each of the form elements
+            visible.field.widget.attrs['class'] = 'form-control'
+        
+        self.fields["date_received"].widget.attrs.update({"placeholder": "Date"})
+        self.fields["thanks_sent"].widget.attrs.update()
+        self.fields["comment"].widget.attrs.update({"placeholder": "Comment"})
+
+class GiftCardField(forms.Form):
+    pass
+
