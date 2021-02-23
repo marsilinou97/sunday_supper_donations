@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import RawDataForm
+import logging
 
 def index(request):
     return render(request, 'analytics/analytics.html')
@@ -18,4 +19,5 @@ def raw_data(request):
         Process form to run queries on DB....
         '''
 
+        # return context containing filtered data
 
