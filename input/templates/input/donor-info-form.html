@@ -161,13 +161,24 @@
                 <div style="display: grid; grid-template-rows: 4fr 1fr; grid-gap: 1em;">
                     <div id="items_form">
                         <h3>Items</h3>
-                        <div class="itemAttribSubWrapper">
-                            {% for field in item_form %}
-                                <div>
-                                    {{ field.label_tag }} {{ field }}
-                                </div>
-                            {% endfor %}
-                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Sub Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>{{item_form.quantity}}</td>
+                                    <td>{{item_form.type}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="wrapperX">
