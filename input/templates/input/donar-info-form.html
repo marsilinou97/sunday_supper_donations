@@ -63,105 +63,113 @@
 
             <div class="wrapperX">
 
-                <div id="donor_form">
-                    <h3>Donation Infomation</h3>
-                    <div class="wrapperX">
-                        <span>
-                            <b>{{donar_form.first_name.label}}</b>
-                            {{donar_form.first_name}}
-                        </span>
-                        <span>
-                            <b>{{donar_form.last_name.label}}</b>
-                            {{donar_form.last_name}}
-                        </span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
-                        <span>
-                            <b>{{donar_form.email.label}}</b>
-                            {{donar_form.email}}
-                        </span>
-                        <span>
-                            <b>{{donar_form.dob.label}}</b>
-                            {{donar_form.dob}}
-                        </span>
-                    </div>
-                    <div class="wrapperX">
-                        <span>
-                            <b>{{donar_form.address1.label}}</b>
-                            {{donar_form.address1}}
-                        </span>
-                        <span>
-                            <b>{{donar_form.address2.label}}</b>
-                            {{donar_form.address2}}
-                        </span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
-                        <span>
-                            <b>{{donar_form.city.label}}</b>
-                            {{donar_form.city}}
-                        </span>
-                        <span>
-                            <b>{{donar_form.state.label}}</b>
-                            {{donar_form.state}}
-                        </span>
-                        <span>
-                            <b>{{donar_form.zip.label}}</b>
-                            {{donar_form.zip}}
-                        </span>
-                    </div>
-                </div>
-
-                <div id="items_form">
-                    <h3>Items</h3>
-                    <div class="itemAttribSubWrapper">
-                    {% for field in item_form  %}
-                        <div >
-                            {{ field.label_tag }} {{ field }} 
-                        </div>
-                    {% endfor %}
-                    </div>
-                </div>
-                
-                <div class="wrapperX">
-                    <div id="donation_form">
+                <div class="wrapperY">        
+                    <div id="donor_form">
                         <h3>Donation Infomation</h3>
-                        <div>
-                            <div class="wrapperX">
+                        <div class="wrapperX">
+                            <span>
+                                <b>{{donar_form.first_name.label}}</b>
+                                {{donar_form.first_name}}
+                            </span>
+                            <span>
+                                <b>{{donar_form.last_name.label}}</b>
+                                {{donar_form.last_name}}
+                            </span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
+                            <span>
+                                <b>{{donar_form.email.label}}</b>
+                                {{donar_form.email}}
+                            </span>
+                            <span>
+                                <b>{{donar_form.dob.label}}</b>
+                                {{donar_form.dob}}
+                            </span>
+                        </div>
+                        <div class="wrapperX">
+                            <span>
+                                <b>{{donar_form.address1.label}}</b>
+                                {{donar_form.address1}}
+                            </span>
+                            <span>
+                                <b>{{donar_form.address2.label}}</b>
+                                {{donar_form.address2}}
+                            </span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
+                            <span>
+                                <b>{{donar_form.city.label}}</b>
+                                {{donar_form.city}}
+                            </span>
+                            <span>
+                                <b>{{donar_form.state.label}}</b>
+                                {{donar_form.state}}
+                            </span>
+                            <span>
+                                <b>{{donar_form.zip.label}}</b>
+                                {{donar_form.zip}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="wrapperX">
+                        <div id="donation_form">
+                            <h3>Donation Infomation</h3>
+                            <div>
+                                <div class="wrapperX">
+                                    <span>
+                                    <b>{{donation_info_form.date_received.label}}</b>
+                                        {{donation_info_form.date_received}}
+                                    </span>
+                                    <span>
+                                        <div><b>{{donation_info_form.thanks_sent.label}}</b></div>
+                                        <div>{{donation_info_form.thanks_sent}}</div>
+                                    </span>
+                                </div>
                                 <span>
-                                   <b>{{donation_info_form.date_received.label}}</b>
-                                    {{donation_info_form.date_received}}
-                                </span>
-                                <span>
-                                    <div><b>{{donation_info_form.thanks_sent.label}}</b></div>
-                                    <div>{{donation_info_form.thanks_sent}}</div>
+                                    <b>{{donation_info_form.comment.label}}</b>
+                                    {{donation_info_form.comment}}
                                 </span>
                             </div>
-                            <span>
-                                <b>{{donation_info_form.comment.label}}</b>
-                                {{donation_info_form.comment}}
-                            </span>
                         </div>
-                    </div>
 
-                    <div id="funds_form">
-                        <h3>Funds</h3>
-                        <div class="wrapperY">
-                            <span>
-                                <b>{{funds_form.type.label}}</b>
-                                {{funds_form.type}}
-                            </span>
-                            <span>
-                                <b>{{funds_form.amount.label}}</b>
-                                {{funds_form.amount}}
-                            </span>
+                        <div id="funds_form">
+                            <h3>Funds</h3>
+                            <div class="wrapperY">
+                                <span>
+                                    <b>{{funds_form.type.label}}</b>
+                                    {{funds_form.type}}
+                                </span>
+                                <span>
+                                    <b>{{funds_form.amount.label}}</b>
+                                    {{funds_form.amount}}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-25">Enter</button>
-                                        <div id="message" class=""></div>
+                <div style="display: grid; grid-template-rows: 4fr 1fr; grid-gap: 1em;">
+                    <div id="items_form">
+                        <h3>Items</h3>
+                        <div class="itemAttribSubWrapper">
+                        {% for field in item_form  %}
+                            <div >
+                                {{ field.label_tag }} {{ field }} 
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
 
+                    <div class="wrapperX">
+                        <div>
+                            <button class="btn btn-primary btn-lg center-block mt-3 w-22">Clear</button>
+                            <div id="clear" class=""></div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-22">Enter</button>
+                            <div id="message" class=""></div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -170,15 +178,11 @@
     </div>
         <script type="text/javascript">
         function anonymousToggle() {
+            const donor_form = document.getElementById("donor_form")
             if (document.getElementById("anonymous").checked === true) {
-                {#TODO: Remove or hide donor form}
-                Array.from(document.getElementById("donor_form").children).forEach(formElement => function () {
-                    formElement.disabled = true;
-                    formElement.value = '';
-                }());
-
+                donor_form.style.display = "none"
             } else {
-                Array.from(document.querySelector("#donor_form").children).forEach(formElement => formElement.disabled = false);
+                donor_form.style.display = "block"
             }
         }
 

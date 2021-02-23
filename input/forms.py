@@ -42,9 +42,11 @@ class DonationForm(forms.Form):
     thanks_sent = forms.BooleanField(required=False)
     comment = forms.CharField(
         required=False, 
-        max_length=100,
-        widget=forms.Textarea(),
-        help_text="Comment"
+        max_length=10,
+        widget=forms.Textarea(
+            attrs={'rows': 2}
+        ),
+        help_text="Comment",
         )
 
     class Meta:
