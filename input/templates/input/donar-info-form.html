@@ -49,6 +49,7 @@
         }
 
         {#*{transition: height 0.1s ease;}#}
+
     </style>
     <div class="donar-info-form">
         <form method="post" onsubmit="return submit_form()">
@@ -64,7 +65,50 @@
 
                 <div id="donor_form">
                     <h3>Donation Infomation</h3>
-                    {{ donar_form }}
+                    <div class="wrapperX">
+                        <span>
+                            <b>{{donar_form.first_name.label}}</b>
+                            {{donar_form.first_name}}
+                        </span>
+                        <span>
+                            <b>{{donar_form.last_name.label}}</b>
+                            {{donar_form.last_name}}
+                        </span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
+                        <span>
+                            <b>{{donar_form.email.label}}</b>
+                            {{donar_form.email}}
+                        </span>
+                        <span>
+                            <b>{{donar_form.dob.label}}</b>
+                            {{donar_form.dob}}
+                        </span>
+                    </div>
+                    <div class="wrapperX">
+                        <span>
+                            <b>{{donar_form.address1.label}}</b>
+                            {{donar_form.address1}}
+                        </span>
+                        <span>
+                            <b>{{donar_form.address2.label}}</b>
+                            {{donar_form.address2}}
+                        </span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
+                        <span>
+                            <b>{{donar_form.city.label}}</b>
+                            {{donar_form.city}}
+                        </span>
+                        <span>
+                            <b>{{donar_form.state.label}}</b>
+                            {{donar_form.state}}
+                        </span>
+                        <span>
+                            <b>{{donar_form.zip.label}}</b>
+                            {{donar_form.zip}}
+                        </span>
+                    </div>
                 </div>
 
                 <div id="items_form">
@@ -81,19 +125,19 @@
                 <div class="wrapperX">
                     <div id="donation_form">
                         <h3>Donation Infomation</h3>
-                        <div class="wrapperY">
+                        <div>
                             <div class="wrapperX">
                                 <span>
-                                    {{donation_info_form.date_received.label}}
+                                   <b>{{donation_info_form.date_received.label}}</b>
                                     {{donation_info_form.date_received}}
                                 </span>
                                 <span>
-                                    <div>{{donation_info_form.thanks_sent.label}}</div>
+                                    <div><b>{{donation_info_form.thanks_sent.label}}</b></div>
                                     <div>{{donation_info_form.thanks_sent}}</div>
                                 </span>
                             </div>
                             <span>
-                                {{donation_info_form.comment.label}}
+                                <b>{{donation_info_form.comment.label}}</b>
                                 {{donation_info_form.comment}}
                             </span>
                         </div>
@@ -103,11 +147,11 @@
                         <h3>Funds</h3>
                         <div class="wrapperY">
                             <span>
-                                {{funds_form.type.label}}
+                                <b>{{funds_form.type.label}}</b>
                                 {{funds_form.type}}
                             </span>
                             <span>
-                                {{funds_form.amount.label}}
+                                <b>{{funds_form.amount.label}}</b>
                                 {{funds_form.amount}}
                             </span>
                         </div>
@@ -124,11 +168,10 @@
             
         </form>
     </div>
-
-
         <script type="text/javascript">
         function anonymousToggle() {
             if (document.getElementById("anonymous").checked === true) {
+                {#TODO: Remove or hide donor form}
                 Array.from(document.getElementById("donor_form").children).forEach(formElement => function () {
                     formElement.disabled = true;
                     formElement.value = '';

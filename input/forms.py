@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.widgets import SelectDateWidget
 
 
 class DonorInformationForm(forms.Form):
@@ -39,7 +40,12 @@ class DonorInformationForm(forms.Form):
 class DonationForm(forms.Form):
     date_received = forms.DateField(required=True)
     thanks_sent = forms.BooleanField(required=False)
-    comment = forms.CharField(required=False)
+    comment = forms.CharField(
+        required=False, 
+        max_length=100,
+        widget=forms.Textarea(),
+        help_text="Comment"
+        )
 
     class Meta:
         # model = input
@@ -60,7 +66,6 @@ class DonationForm(forms.Form):
 class ItemForm(forms.Form):
     type = forms.ChoiceField(required=False)
     quantity = forms.IntegerField(required=False)
-    name = forms.ChoiceField(required=False)
 
     class Meta:
         # model = input
@@ -72,11 +77,10 @@ class ItemForm(forms.Form):
         fields = self.visible_fields()
         for visible in fields:
             # Add class to each of the form elements
-            visible.field.widget.attrs['class'] = 'form-control-sm'
+            visible.field.widget.attrs['class'] = 'form-control'
         
         self.fields["type"].widget.attrs.update({"placeholder": "type"})
         self.fields["quantity"].widget.attrs.update({"placeholder": "0"})
-        self.fields["name"].widget.attrs.update({"placeholder": "name"})
 
 class FundsForm(forms.Form):
     type = forms.ChoiceField(required=False)
