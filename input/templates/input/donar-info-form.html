@@ -38,21 +38,36 @@
             display: grid;
             grid-template-columns: 1fr 2fr 1fr 1fr;
         }
+        .anonymous {
+            padding: 10px;
+        }
 
+        #message {
+            font-size: 15pt;
+            padding: 15px;
+            text-align: center;
+        }
+
+        {#*{transition: height 0.1s ease;}#}
     </style>
     <div class="donar-info-form">
-        <form method="post">
+        <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
             <h2>YEWWW</h2>
             <hr>
+
+            <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
+            <label for="anonymous" class="anonymous">Anonymous Donor</label>
+            <hr>
+
             <div class="wrapperX">
 
-                <div>
+                <div id="donor_form">
                     <h3>Donation Infomation</h3>
                     {{ donar_form }}
                 </div>
 
-                <div>
+                <div id="items_form">
                     <h3>Items</h3>
                     <div class="itemAttribSubWrapper">
                     {% for field in item_form  %}
@@ -64,7 +79,7 @@
                 </div>
                 
                 <div class="wrapperX">
-                    <div>
+                    <div id="donation_form">
                         <h3>Donation Infomation</h3>
                         <div class="wrapperY">
                             <div class="wrapperX">
@@ -84,7 +99,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div id="funds_form">
                         <h3>Funds</h3>
                         <div class="wrapperY">
                             <span>
@@ -101,11 +116,51 @@
 
                 <div>
                     <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-25">Enter</button>
+                                        <div id="message" class=""></div>
+
                 </div>
 
             </div>
             
         </form>
     </div>
+
+
+        <script type="text/javascript">
+        function anonymousToggle() {
+            if (document.getElementById("anonymous").checked === true) {
+                Array.from(document.getElementById("donor_form").children).forEach(formElement => function () {
+                    formElement.disabled = true;
+                    formElement.value = '';
+                }());
+
+            } else {
+                Array.from(document.querySelector("#donor_form").children).forEach(formElement => formElement.disabled = false);
+            }
+        }
+
+        function items_completed() {
+            return document.querySelector("#items_form #id_type").selectedIndex !== -1 && document.querySelector("#items_form #id_quantity").value !== '' && document.getElementById("id_name").selectedIndex !== -1
+        }
+
+        function funds_completed() {
+            return document.querySelector("#funds_form #id_type").selectedIndex !== -1 && document.querySelector("#funds_form #id_amount").value !== ''
+        }
+
+        function donation_information_completed() {
+            return document.querySelector("#donation_form #id_amount").value !== '' && document.querySelector("#donation_form #id_date_received").value !== '';
+        }
+
+
+        function submit_form() {
+            if ((items_completed() || funds_completed()) && document.getElementById("anonymous").checked === true) {
+                return true;
+            } else {
+                {#TODO: Enhance error messages#}
+                document.querySelector("#message").innerHTML = "Please make sure to fill up required fields";
+                return false;
+            }
+        }
+    </script>
 
 {% endblock %}

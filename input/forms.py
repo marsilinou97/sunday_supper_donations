@@ -38,7 +38,7 @@ class DonorInformationForm(forms.Form):
 
 class DonationForm(forms.Form):
     date_received = forms.DateField(required=True)
-    thanks_sent = forms.BooleanField(required=True)
+    thanks_sent = forms.BooleanField(required=False)
     comment = forms.CharField(required=False)
 
     class Meta:
