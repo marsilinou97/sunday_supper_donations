@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 from input import views as input_views
+from news import views as news_views
 from users import views as users_views
 
 urlpatterns = [
+    path('', users_views.register, name="register"),
     path('input/', input_views.index, name="input_page"),
     path('admin/', admin.site.urls, name="admin"),
     path('register/', users_views.register, name="register"),
+    path('news/', news_views.index, name="news"),
 ]
