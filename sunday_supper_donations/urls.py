@@ -19,6 +19,7 @@ from django.urls import path
 from input import views as input_views
 from news import views as news_views
 from users import views as users_views
+from analytics import views as analytics_views
 
 urlpatterns = [
     path('', users_views.register, name="register"),
@@ -26,4 +27,5 @@ urlpatterns = [
     path('admin/', admin.site.urls, name="admin"),
     path('register/', users_views.register, name="register"),
     path('news/', news_views.index, name="news"),
+    path('analytics/', analytics_views.index, name="news"),
 ]

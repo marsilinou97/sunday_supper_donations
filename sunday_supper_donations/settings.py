@@ -39,7 +39,8 @@ INSTALLED_APPS = [
 
     'users',
     'input',
-    'news'
+    'news',
+    'analytics'
 
 ]
 
