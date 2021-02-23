@@ -1,12 +1,17 @@
+from datetime import datetime
+
 from django import forms
-from django.forms.widgets import SelectDateWidget
+
+from .models import *
 
 
 class DonorInformationForm(forms.Form):
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
-    dob = forms.DateField(required=False)
+    dob = forms.DateField(required=False,
+                          widget=forms.DateInput(attrs={'type': 'date', "min": "1900-01-01",
+                                                        "max": datetime.today().strftime('%Y-%m-%d')}))
     address1 = forms.CharField(required=False)
     address2 = forms.CharField(required=False)
     city = forms.CharField(required=False)
@@ -36,21 +41,20 @@ class DonorInformationForm(forms.Form):
         self.fields["email"].widget.attrs.update({"placeholder": "Email"})
 
 
-
-class DonationForm(forms.Form):
-    date_received = forms.DateField(required=True)
+class DonationForm(forms.ModelForm):
+    date_received = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
     thanks_sent = forms.BooleanField(required=False)
     comment = forms.CharField(
-        required=False, 
-        max_length=10,
+        required=False,
+        max_length=500,
         widget=forms.Textarea(
-            attrs={'rows': 2}
+            attrs={'rows': 5}
         ),
         help_text="Comment",
-        )
+    )
 
     class Meta:
-        # model = input
+        model = Donation
         fields = ['date_received', 'thanks_sent', 'comment']
 
     def __init__(self, *args, **kwargs):
@@ -60,10 +64,14 @@ class DonationForm(forms.Form):
         for visible in fields:
             # Add class to each of the form elements
             visible.field.widget.attrs['class'] = 'form-control'
-        
-        self.fields["date_received"].widget.attrs.update({"placeholder": "Date"})
+
         self.fields["thanks_sent"].widget.attrs.update({"class": "form-check-input"})
         self.fields["comment"].widget.attrs.update({"placeholder": "Comment"})
+
+    def clean(self):
+        cleaned_data = super(DonationForm, self).clean()
+        return cleaned_data
+
 
 class ItemForm(forms.Form):
     type = forms.ChoiceField(required=False)
@@ -80,9 +88,10 @@ class ItemForm(forms.Form):
         for visible in fields:
             # Add class to each of the form elements
             visible.field.widget.attrs['class'] = 'form-control'
-        
+
         self.fields["type"].widget.attrs.update({"placeholder": "type"})
         self.fields["quantity"].widget.attrs.update({"placeholder": "0"})
+
 
 class FundsForm(forms.Form):
     type = forms.ChoiceField(required=False)
@@ -99,6 +108,3 @@ class FundsForm(forms.Form):
         for visible in fields:
             # Add class to each of the form elements
             visible.field.widget.attrs['class'] = 'form-control'
-        
-
-

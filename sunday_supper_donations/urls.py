@@ -28,5 +28,5 @@ urlpatterns = [
     path('register/', users_views.register, name="register"),
     path('news/', news_views.index, name="news"),
     # adjusted analytics url routing
-    path('analytics/', include('analytics.urls'), name="analytics"),
+    path('analytics/', include('analytics.urls')),
 ]

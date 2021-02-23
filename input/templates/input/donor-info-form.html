@@ -3,41 +3,45 @@
 {% block content %}
     <style>
 
-        .wrapperX{
+        .wrapperX {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-gap: 1em;
         }
-        .wrapperX> div{
+
+        .wrapperX > div {
             background: #eee;
             padding: 1em;
         }
-        .wrapperX > div:nth-child(odd){
+
+        .wrapperX > div:nth-child(odd) {
             background: #ddd;
         }
 
-        .wrapperY{
+        .wrapperY {
             display: grid;
             grid-template-rows: 1fr 1fr;
             grid-gap: 1em;
         }
 
-        .wrapperY> div{
+        .wrapperY > div {
             background: #eee;
             padding: 1em;
         }
-        .wrapperY > div:nth-child(odd){
+
+        .wrapperY > div:nth-child(odd) {
             background: #ddd;
         }
 
-        .donationSubWrapper > div{
+        .donationSubWrapper > div {
             background: #eee;
         }
 
-        .itemAttribSubWrapper{
+        .itemAttribSubWrapper {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr 1fr;
         }
+
         .anonymous {
             padding: 10px;
         }
@@ -51,7 +55,7 @@
         {#*{transition: height 0.1s ease;}#}
 
     </style>
-    <div class="donar-info-form">
+    <div class="donor-info-form">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
             <h2>YEWWW</h2>
@@ -63,51 +67,57 @@
 
             <div class="wrapperX">
 
-                <div class="wrapperY">        
+                <div class="wrapperY">
                     <div id="donor_form">
                         <h3>Donation Infomation</h3>
                         <div class="wrapperX">
                             <span>
-                                <b>{{donar_form.first_name.label}}</b>
-                                {{donar_form.first_name}}
+                                <b>{{ donor_form.first_name.label }}</b>
+                                {{ donor_form.first_name }}
                             </span>
                             <span>
-                                <b>{{donar_form.last_name.label}}</b>
-                                {{donar_form.last_name}}
+                                <b>{{ donor_form.last_name.label }}</b>
+                                {{ donor_form.last_name }}
                             </span>
                         </div>
                         <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
                             <span>
-                                <b>{{donar_form.email.label}}</b>
-                                {{donar_form.email}}
+                                <b>{{ donor_form.email.label }}</b>
+                                {{ donor_form.email }}
                             </span>
                             <span>
-                                <b>{{donar_form.dob.label}}</b>
-                                {{donar_form.dob}}
+                                <b>{{ donor_form.dob.label }}</b>
+                                {{ donor_form.dob }}
                             </span>
                         </div>
                         <div class="wrapperX">
                             <span>
-                                <b>{{donar_form.address1.label}}</b>
-                                {{donar_form.address1}}
+                                <b>{{ donor_form.address1.label }}</b>
+                                {{ donor_form.address1 }}
                             </span>
                             <span>
-                                <b>{{donar_form.address2.label}}</b>
-                                {{donar_form.address2}}
+                                <b>{{ donor_form.address2.label }}</b>
+                                {{ donor_form.address2 }}
                             </span>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
                             <span>
-                                <b>{{donar_form.city.label}}</b>
-                                {{donar_form.city}}
+                                <b>{{ donor_form.city.label }}</b>
+                                {{ donor_form.city }}
                             </span>
                             <span>
-                                <b>{{donar_form.state.label}}</b>
-                                {{donar_form.state}}
+                                <b>{{ donor_form.state.label }}</b>
+                                <select name="state" id="id_state" class="form-control">
+                                    <option value="" disabled selected>State</option>
+                                    {% for state,abr in states.items %}
+                                        <option value="{{ abr }}">{{ state.title }}</option>
+                                    {% endfor %}
+                                </select>
+{#                                {{ donor_form.state }}#}
                             </span>
                             <span>
-                                <b>{{donar_form.zip.label}}</b>
-                                {{donar_form.zip}}
+                                <b>{{ donor_form.zip.label }}</b>
+                                {{ donor_form.zip }}
                             </span>
                         </div>
                     </div>
@@ -117,17 +127,17 @@
                             <div>
                                 <div class="wrapperX">
                                     <span>
-                                    <b>{{donation_info_form.date_received.label}}</b>
-                                        {{donation_info_form.date_received}}
+                                    <b>{{ donation_info_form.date_received.label }}</b>
+                                        {{ donation_info_form.date_received }}
                                     </span>
                                     <span>
-                                        <div><b>{{donation_info_form.thanks_sent.label}}</b></div>
-                                        <div>{{donation_info_form.thanks_sent}}</div>
+                                        <div><b>{{ donation_info_form.thanks_sent.label }}</b></div>
+                                        <div>{{ donation_info_form.thanks_sent }}</div>
                                     </span>
                                 </div>
                                 <span>
-                                    <b>{{donation_info_form.comment.label}}</b>
-                                    {{donation_info_form.comment}}
+                                    <b>{{ donation_info_form.comment.label }}</b>
+                                    {{ donation_info_form.comment }}
                                 </span>
                             </div>
                         </div>
@@ -136,12 +146,12 @@
                             <h3>Funds</h3>
                             <div class="wrapperY">
                                 <span>
-                                    <b>{{funds_form.type.label}}</b>
-                                    {{funds_form.type}}
+                                    <b>{{ funds_form.type.label }}</b>
+                                    {{ funds_form.type }}
                                 </span>
                                 <span>
-                                    <b>{{funds_form.amount.label}}</b>
-                                    {{funds_form.amount}}
+                                    <b>{{ funds_form.amount.label }}</b>
+                                    {{ funds_form.amount }}
                                 </span>
                             </div>
                         </div>
@@ -152,17 +162,19 @@
                     <div id="items_form">
                         <h3>Items</h3>
                         <div class="itemAttribSubWrapper">
-                        {% for field in item_form  %}
-                            <div >
-                                {{ field.label_tag }} {{ field }} 
-                            </div>
-                        {% endfor %}
+                            {% for field in item_form %}
+                                <div>
+                                    {{ field.label_tag }} {{ field }}
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
 
                     <div class="wrapperX">
                         <div>
-                            <button class="btn btn-primary btn-lg center-block mt-3 w-22">Clear</button>
+                            <button class="btn btn-primary btn-lg center-block mt-3 w-22" id="clear_fields">
+                                Clear
+                            </button>
                             <div id="clear" class=""></div>
                         </div>
                         <div>
@@ -173,17 +185,20 @@
                 </div>
 
             </div>
-            
+
         </form>
     </div>
-        <script type="text/javascript">
+    <script type="text/javascript">
         function anonymousToggle() {
-            const donor_form = document.getElementById("donor_form")
-            if (document.getElementById("anonymous").checked === true) {
-                donor_form.style.display = "none"
-            } else {
-                donor_form.style.display = "block"
-            }
+            $("#donor_form").slideToggle(300);
+            {#const donor_form = document.getElementById("donor_form")#}
+            {#if (document.getElementById("anonymous").checked === true) {#}
+            {#    $("#donor_form").toggle(200);#}
+            {#donor_form.style.display = "none"#}
+            {# else #}
+            {#    $("#donor_form").toggle(200);#}
+            {#donor_form.style.display = "block"#}
+            {##}
         }
 
         function items_completed() {
@@ -200,6 +215,7 @@
 
 
         function submit_form() {
+            return true;
             if ((items_completed() || funds_completed()) && document.getElementById("anonymous").checked === true) {
                 return true;
             } else {
@@ -208,6 +224,14 @@
                 return false;
             }
         }
+
+
+        $("#clear_fields").click(function (e) {
+            e.preventDefault();
+            $(this).closest('form').find("input, textarea").val("");
+            $("#id_state option:eq(0)").prop('selected', true);
+        });
+
     </script>
 
 {% endblock %}

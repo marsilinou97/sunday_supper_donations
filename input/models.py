@@ -11,6 +11,8 @@ Donor superclass
 
 class Donor(models.Model):
     pass
+    def __str__(self):
+        return "DONOR"
 
 
 """
@@ -62,7 +64,7 @@ class Donation(models.Model):
     comments = models.TextField()
 
     def __str__(self):
-        return self.donor + " " + self.date_received + " " + self.user
+        return f"{self.donor} {self.date_received}  {self.user}"
 
 
 """
