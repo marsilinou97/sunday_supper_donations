@@ -1,13 +1,93 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
+    <style>
 
+        .wrapper{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1em;
+        }
+        .wrapper > div{
+            background: #eee;
+            padding: 1em;
+        }
+        .wrapper > div:nth-child(odd){
+            background: #ddd;
+        }
+
+        .donationSubWrapper{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1em;
+        }
+
+        .donationSubWrapper > div{
+            background: #eee;
+        }
+
+        .itemAttribSubWrapper{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        .donorInformationSubWrapper{
+            display: grid;
+            grid-template-rows: 1fr 1fr
+        }
+
+    </style>
     <div class="donar-info-form">
         <form method="post">
-            <h2>Donar Infomation</h2>
+            <h2>YEWWW</h2>
             <hr>
-            {{ form }}
-            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-25">Enter</button>
+            <div class="wrapper">
+
+                <div>
+                    {{ donar_form }}
+                </div>
+
+                <div>
+                    <h3>Items</h3>
+                    <div class="itemAttribSubWrapper">
+                    {% for field in item_form  %}
+                        <div >
+                            {{ field.label_tag }} {{ field }} 
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="donationSubWrapper">
+                    <div>
+                        <h3>Donation Infomation</h3>
+                        {% for field in donation_info_form  %}
+                        <div class="col-sm-6">
+                            <div >
+                                {{ field.label_tag }} {{ field }} 
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div>
+                        <h3>Funds</h3>
+                        {% for field in funds_form  %}
+                        <div class="col-sm-6">
+                            <div >
+                                {{ field.label_tag }} {{ field }} 
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-25">Enter</button>
+                </div>
+
+            </div>
+            
         </form>
     </div>
 

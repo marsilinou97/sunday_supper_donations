@@ -57,6 +57,42 @@ class DonationForm(forms.Form):
         self.fields["thanks_sent"].widget.attrs.update()
         self.fields["comment"].widget.attrs.update({"placeholder": "Comment"})
 
-class GiftCardField(forms.Form):
-    pass
+class ItemForm(forms.Form):
+    type = forms.ChoiceField(required=False)
+    quantity = forms.IntegerField(required=False)
+    name = forms.ChoiceField(required=False)
+
+    class Meta:
+        # model = input
+        fields = ['type', 'quantity', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+
+        fields = self.visible_fields()
+        for visible in fields:
+            # Add class to each of the form elements
+            visible.field.widget.attrs['class'] = 'form-control'
+        
+        self.fields["type"].widget.attrs.update({"placeholder": "type"})
+        self.fields["quantity"].widget.attrs.update({"placeholder": "0"})
+        self.fields["name"].widget.attrs.update({"placeholder": "name"})
+
+class FundsForm(forms.Form):
+    type = forms.ChoiceField(required=False)
+    amount = forms.DecimalField(required=False)
+
+    class Meta:
+        # model = input
+        fields = ['type', 'amount']
+
+    def __init__(self, *args, **kwargs):
+        super(FundsForm, self).__init__(*args, **kwargs)
+
+        fields = self.visible_fields()
+        for visible in fields:
+            # Add class to each of the form elements
+            visible.field.widget.attrs['class'] = 'form-control'
+        
+
 
