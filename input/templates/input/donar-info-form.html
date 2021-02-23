@@ -3,23 +3,31 @@
 {% block content %}
     <style>
 
-        .wrapper{
+        .wrapperX{
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-gap: 1em;
         }
-        .wrapper > div{
+        .wrapperX> div{
             background: #eee;
             padding: 1em;
         }
-        .wrapper > div:nth-child(odd){
+        .wrapperX > div:nth-child(odd){
             background: #ddd;
         }
 
-        .donationSubWrapper{
+        .wrapperY{
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
             grid-gap: 1em;
+        }
+
+        .wrapperY> div{
+            background: #eee;
+            padding: 1em;
+        }
+        .wrapperY > div:nth-child(odd){
+            background: #ddd;
         }
 
         .donationSubWrapper > div{
@@ -28,22 +36,19 @@
 
         .itemAttribSubWrapper{
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-        }
-
-        .donorInformationSubWrapper{
-            display: grid;
-            grid-template-rows: 1fr 1fr
+            grid-template-columns: 1fr 2fr 1fr 1fr;
         }
 
     </style>
     <div class="donar-info-form">
         <form method="post">
+            {% csrf_token %}
             <h2>YEWWW</h2>
             <hr>
-            <div class="wrapper">
+            <div class="wrapperX">
 
                 <div>
+                    <h3>Donation Infomation</h3>
                     {{ donar_form }}
                 </div>
 
@@ -58,27 +63,39 @@
                     </div>
                 </div>
                 
-                <div class="donationSubWrapper">
+                <div class="wrapperX">
                     <div>
                         <h3>Donation Infomation</h3>
-                        {% for field in donation_info_form  %}
-                        <div class="col-sm-6">
-                            <div >
-                                {{ field.label_tag }} {{ field }} 
+                        <div class="wrapperY">
+                            <div class="wrapperX">
+                                <span>
+                                    {{donation_info_form.date_received.label}}
+                                    {{donation_info_form.date_received}}
+                                </span>
+                                <span>
+                                    <div>{{donation_info_form.thanks_sent.label}}</div>
+                                    <div>{{donation_info_form.thanks_sent}}</div>
+                                </span>
                             </div>
+                            <span>
+                                {{donation_info_form.comment.label}}
+                                {{donation_info_form.comment}}
+                            </span>
                         </div>
-                        {% endfor %}
                     </div>
 
                     <div>
                         <h3>Funds</h3>
-                        {% for field in funds_form  %}
-                        <div class="col-sm-6">
-                            <div >
-                                {{ field.label_tag }} {{ field }} 
-                            </div>
+                        <div class="wrapperY">
+                            <span>
+                                {{funds_form.type.label}}
+                                {{funds_form.type}}
+                            </span>
+                            <span>
+                                {{funds_form.amount.label}}
+                                {{funds_form.amount}}
+                            </span>
                         </div>
-                        {% endfor %}
                     </div>
                 </div>
 

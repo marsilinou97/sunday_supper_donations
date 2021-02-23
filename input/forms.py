@@ -54,7 +54,7 @@ class DonationForm(forms.Form):
             visible.field.widget.attrs['class'] = 'form-control'
         
         self.fields["date_received"].widget.attrs.update({"placeholder": "Date"})
-        self.fields["thanks_sent"].widget.attrs.update()
+        self.fields["thanks_sent"].widget.attrs.update({"class": "form-check-input"})
         self.fields["comment"].widget.attrs.update({"placeholder": "Comment"})
 
 class ItemForm(forms.Form):
@@ -72,7 +72,7 @@ class ItemForm(forms.Form):
         fields = self.visible_fields()
         for visible in fields:
             # Add class to each of the form elements
-            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['class'] = 'form-control-sm'
         
         self.fields["type"].widget.attrs.update({"placeholder": "type"})
         self.fields["quantity"].widget.attrs.update({"placeholder": "0"})
