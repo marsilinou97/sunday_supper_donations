@@ -68,6 +68,41 @@
             <div class="wrapperX">
 
                 <div class="wrapperY">
+                    <div class="wrapperX">
+                        <div id="donation_form">
+                            <h3>Donation Infomation</h3>
+                            <div>
+                                <div class="wrapperX">
+                                    <span>
+                                    <b>{{ donation_info_form.date_received.label }}</b>
+                                        {{ donation_info_form.date_received }}
+                                    </span>
+                                    <span>
+                                        <div><b>{{ donation_info_form.thanks_sent.label }}</b></div>
+                                        <div>{{ donation_info_form.thanks_sent }}</div>
+                                    </span>
+                                </div>
+                                <span>
+                                    <b>{{ donation_info_form.comment.label }}</b>
+                                    {{ donation_info_form.comment }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div id="funds_form">
+                            <h3>Funds</h3>
+                            <div class="wrapperY">
+                                <span>
+                                    <b>{{ funds_form.type.label }}</b>
+                                    {{ funds_form.type }}
+                                </span>
+                                <span>
+                                    <b>{{ funds_form.amount.label }}</b>
+                                    {{ funds_form.amount }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     <div id="donor_form">
                         <h3>Donor Infomation</h3>
                         <div class="wrapperX">
@@ -121,41 +156,6 @@
                             </span>
                         </div>
                     </div>
-                    <div class="wrapperX">
-                        <div id="donation_form">
-                            <h3>Donation Infomation</h3>
-                            <div>
-                                <div class="wrapperX">
-                                    <span>
-                                    <b>{{ donation_info_form.date_received.label }}</b>
-                                        {{ donation_info_form.date_received }}
-                                    </span>
-                                    <span>
-                                        <div><b>{{ donation_info_form.thanks_sent.label }}</b></div>
-                                        <div>{{ donation_info_form.thanks_sent }}</div>
-                                    </span>
-                                </div>
-                                <span>
-                                    <b>{{ donation_info_form.comment.label }}</b>
-                                    {{ donation_info_form.comment }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div id="funds_form">
-                            <h3>Funds</h3>
-                            <div class="wrapperY">
-                                <span>
-                                    <b>{{ funds_form.type.label }}</b>
-                                    {{ funds_form.type }}
-                                </span>
-                                <span>
-                                    <b>{{ funds_form.amount.label }}</b>
-                                    {{ funds_form.amount }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div style="display: grid; grid-template-rows: 4fr 1fr; grid-gap: 1em;">
@@ -163,24 +163,24 @@
                         <h3>Items</h3>
                         <table class="table">
                             <thead>
-                                <tr>
+                            <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Type</th>
                                 <th scope="col">Sub Type</th>
-                                </tr>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>{{item_form.quantity}}</td>
-                                    <td>{{item_form.type}}</td>
-                                    <td></td>
-                                </tr>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>{{ item_form.quantity }}</td>
+                                <td>{{ item_form.type }}</td>
+                                <td></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
-
+                    <div class="alert alert-danger" role="alert" id="message" style="opacity: 0;"></div>
                     <div class="wrapperX">
                         <div>
                             <button class="btn btn-primary btn-lg center-block mt-3 w-22" id="clear_fields">
@@ -190,7 +190,6 @@
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-22">Enter</button>
-                            <div id="message" class=""></div>
                         </div>
                     </div>
                 </div>
@@ -226,11 +225,15 @@
 
 
         function submit_form() {
+            {#TODO rmove early return, only for current testing #}
+            {#clean_inputs();#}
             return true;
+            document.querySelectorAll("textarea").forEach(e => e.value = DOMPurify.sanitize(e.value));
             if ((items_completed() || funds_completed()) && document.getElementById("anonymous").checked === true) {
                 return true;
             } else {
                 {#TODO: Enhance error messages#}
+                document.querySelector("#message").style.opacity = '1';
                 document.querySelector("#message").innerHTML = "Please make sure to fill up required fields";
                 return false;
             }

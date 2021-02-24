@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from django import forms
-
 from .models import *
+from .helpers import remove_html_tags
 
 
 class DonorInformationForm(forms.Form):
@@ -70,6 +70,7 @@ class DonationForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(DonationForm, self).clean()
+        cleaned_data = remove_html_tags(cleaned_data)
         return cleaned_data
 
 
