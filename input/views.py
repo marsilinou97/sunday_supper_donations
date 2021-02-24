@@ -27,8 +27,8 @@ def handle_post_req(request):
     donation_form = DonationForm(request.POST)
     funds_form = FundsForm(request.POST)
     item_form = ItemForm(request.POST)
-
-    if donor_information_form.is_valid() & donation_form.is_Valid() & funds_form.is_Valid & item_form.is_Valid:
+    donation_form.is_valid()
+    if donor_information_form.is_valid() & donation_form.is_valid() & funds_form.is_valid() & item_form.is_valid():
         donor_information_form.save()
         donation_form.save()
         funds_form.save()

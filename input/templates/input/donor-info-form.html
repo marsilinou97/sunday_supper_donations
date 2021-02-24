@@ -225,7 +225,9 @@
 
 
         function submit_form() {
-            clean_inputs();
+            {#TODO rmove early return, only for current testing #}
+            {#clean_inputs();#}
+            return true;
             document.querySelectorAll("textarea").forEach(e => e.value = DOMPurify.sanitize(e.value));
             if ((items_completed() || funds_completed()) && document.getElementById("anonymous").checked === true) {
                 return true;
