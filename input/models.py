@@ -10,9 +10,9 @@ Donor superclass
 
 
 class Donor(models.Model):
-    pass
     def __str__(self):
-        return "DONOR"
+        return f"{self.pk}"
+    pass
 
 
 """
@@ -21,30 +21,31 @@ Donor subclasses
 
 
 class AnonymousDonor(models.Model):
-    # might need something like blank=True, not sure. -brad
     donor = models.OneToOneField(Donor, on_delete=models.CASCADE, primary_key=True)
 
+    def __str__(self):
+        return f"{self.pk} Anonymous"
 
 class IdentifiedDonor(models.Model):
     # Donors FK
     donor = models.OneToOneField(Donor, on_delete=models.CASCADE, primary_key=True)
 
-    date_of_birth = models.DateField(blank=True)
+    date_of_birth = models.DateField(blank=True, null=True)
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
-    email_address = models.EmailField(max_length=50, blank=True)
-    phone_number = models.CharField(max_length=11, blank=True)
+    email_address = models.EmailField(max_length=50, blank=True, null=True)
+    phone_number = models.CharField(max_length=11, blank=True, null=True)
 
-    address_line1 = models.CharField(max_length=50, blank=True)
-    address_line2 = models.CharField(max_length=50, blank=True)
-    city = models.CharField(max_length=50, blank=True)
-    state = models.CharField(max_length=13, blank=True)
-    zipcode = models.CharField(max_length=10, blank=True)
+    address_line1 = models.CharField(max_length=50, blank=True, null=True)
+    address_line2 = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=13, blank=True, null=True)
+    zipcode = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name + " " + self.email_address
+        return f"{self.pk} {self.first_name} {self.last_name} {self.email_address}"
 
 
 """
@@ -60,10 +61,11 @@ class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     date_received = models.DateField()
-    thanks_sent = models.BooleanField()
-    comments = models.TextField()
+    thanks_sent = models.BooleanField(blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
 
     def __str__(self):
+        # TODO test donation prints "<Donation: DONOR 1900-01-01  >"; need a way to print donor's name, or anonymous
         return f"{self.donor} {self.date_received}  {self.user}"
 
 
@@ -78,7 +80,7 @@ class Item(models.Model):
     quantity = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.donations_id + " " + self.quantity
+        return f"{self.donations_id} {self.quantity}"
 
 
 """
@@ -91,7 +93,7 @@ class Business(models.Model):
     name = models.CharField(primary_key=True, max_length=50)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 
 class ClothingType(models.Model):
@@ -99,7 +101,7 @@ class ClothingType(models.Model):
     name = models.CharField(primary_key=True, max_length=50)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 
 class FundType(models.Model):
@@ -107,7 +109,7 @@ class FundType(models.Model):
     name = models.CharField(primary_key=True, max_length=50)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 
 """
@@ -117,11 +119,10 @@ Item subclasses
 
 class Clothing(models.Model):
     items_id = models.OneToOneField(Item, on_delete=models.CASCADE)
-    # These are all the clothing types we'll need
     type = models.ForeignKey(ClothingType, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.items_id + " " + self.type
+        return f"{self.items_id} {self.type}"
 
 
 class Food(models.Model):
@@ -129,7 +130,7 @@ class Food(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.items_id + " " + self.name
+        return f"{self.items_id} {self.name}"
 
 
 class Fund(models.Model):
@@ -138,7 +139,7 @@ class Fund(models.Model):
     amount = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.items_id + " " + self.type + " " + self.amount
+        return f"{self.items_id} {self.type} {self.amount}"
 
 
 class GiftCard(models.Model):
@@ -147,7 +148,7 @@ class GiftCard(models.Model):
     amount = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.items_id + " " + self.business_name + " " + self.amount
+        return f"{self.items_id} {self.business_name} {self.amount}"
 
 
 class Miscellaneous(models.Model):
@@ -155,4 +156,9 @@ class Miscellaneous(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.items_id + " " + self.name
+        return f"{self.items_id} {self.name}"
+
+def tableDebug():
+    x = [AnonymousDonor,IdentifiedDonor,Donor,Donation,Item,Fund,GiftCard,Clothing,Food,Miscellaneous,FundType,Business,ClothingType,User]
+    for x1 in x:
+        print(x1.objects.all())
