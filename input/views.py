@@ -15,6 +15,7 @@ us_states = {
 
 
 # Create your views here.
+# 2 following def is for DonorInformationForm.
 def handle_get_req(request):
     form = DonorInformationForm()
     return render(request, 'input/donor-info-form.html', {'form': form})
@@ -25,6 +26,15 @@ def handle_post_req(request):
     donation_form = DonationForm(request.POST)
     funds_form = FundsForm(request.POST)
     item_form = ItemForm(request.POST)
+
+    if donor_information_form.is_valid() & donation_form.is_Valid() & funds_form.is_Valid & item_form.is_Valid:
+        donor_information_form.save()
+        donation_form.save()
+        funds_form.save()
+        item_form.save()
+        message.success(request, "Information is saved on the database")
+    else:
+        message.error(request, "Error 1: Invalid Input")
 
     return redirect('input_page')
 
@@ -43,5 +53,5 @@ def index(request):
                           'states': us_states
                       })
     else:
-        # TODO: return error
+        messages.error(request, "Error")
         pass
