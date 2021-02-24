@@ -65,7 +65,6 @@ class Donation(models.Model):
     comments = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        # TODO test donation prints "<Donation: DONOR 1900-01-01  >"; need a way to print donor's name, or anonymous
         return f"{self.donor} {self.date_received}  {self.user}"
 
 
