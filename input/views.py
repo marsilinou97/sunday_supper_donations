@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
+from django.contrib import messages
 
 us_states = {
     'Alabama': 'al', 'Alaska': 'ak', 'American Samoa': 'as', 'Arizona': 'az', 'Arkansas': 'ar', 'California': 'ca',
@@ -32,9 +33,9 @@ def handle_post_req(request):
         donation_form.save()
         funds_form.save()
         item_form.save()
-        message.success(request, "Information is saved on the database")
+        messages.success(request, "Information is saved on the database")
     else:
-        message.error(request, "Error 1: Invalid Input")
+        messages.error(request, "Error 1: Invalid Input")
 
     return redirect('input_page')
 
