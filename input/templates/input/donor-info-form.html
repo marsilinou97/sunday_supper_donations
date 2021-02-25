@@ -53,7 +53,27 @@
         }
 
         {#*{transition: height 0.1s ease;}#}
+        table {
+            height: 35vh;
+            width: 100%;
+            display: block;
+            overflow-y: scroll;
+        }
 
+        thead, tbody {
+            display: inline-table;
+            width: 100%;
+        }
+
+        .selected {
+            border-right: 2px red solid;
+            border-left: 2px red solid;
+        }
+
+        tbody#items_body tr:hover {
+            border-right: 2px pink solid;
+            border-left: 2px pink solid;
+        }
     </style>
     <div class="donor-info-form">
         <form method="post" onsubmit="return submit_form()">
@@ -169,18 +189,35 @@
                             <button id="add_button" type="button" class="btn btn-default btn-sm">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
-                        </div><br>
+                        </div>
+                        <br>
 
                         <table class="table shadow p-3 mb-5 bg-body rounded">
                             <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Sub Type</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Sub Type</th>
+                            </tr>
                             </thead>
                             <tbody id="items_body">
+                            <tr class="shadow p-3 mb-5 bg-body rounded">
+                                <td scope="row">1</td>
+                                <td><select name="type" class="form-control" placeholder="Type" id="id_type">
+                                    <option value="giftcard">Gift Cards</option>
+                                    <option value="clothing">Clothing</option>
+                                    <option value="food">Food</option>
+                                    <option value="misc">Miscellaneous</option>
+                                </select></td>
+                                <td><input type="number" name="quantity" class="form-control" placeholder="0"
+                                           id="id_quantity"></td>
+                                <td><select name="sub_type_business" class="form-control" placeholder="Business"
+                                            id="id_sub_type_business">
+                                    <option value="tar">Target</option>
+                                    <option value="bestbuy">BestBuy</option>
+                                </select></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -243,32 +280,52 @@
             }
         }
 
+        function items_row_clicked(e) {
+            $(e).parent().children().removeClass("selected");
+            $(e).addClass("selected");
+        }
+
         {% spaceless %}
-        $("#add_button").click(function (e) {
-            e.preventDefault();
-            var itemCount = $("#items_body").children().length + 1
-            const row = $('<tr class="shadow p-3 mb-5 bg-body rounded"><th scope="row">'+itemCount+'</th><td>{{item_form.type}}</td><td>{{ item_form.quantity }}</td><td>{{item_form.sub_type_business}}</td></tr>')
-            $("#items_body").append(row)
-        });
+            let itemCount = 1;
+            $("#add_button").click(function (e) {
+                e.preventDefault();
+                itemCount++;
+                const row = $('<tr class="shadow p-3 mb-5 bg-body rounded"><td scope="row">' + itemCount + '</td><td>{{item_form.type}}</td><td>{{ item_form.quantity }}</td><td>{{item_form.sub_type_business}}</td></tr>')
+                $("#items_body").append(row)
+
+                row.click(function () {
+                    items_row_clicked(row);
+                });
+
+            });
         {% endspaceless %}
 
-        $("remove_button").click(function (e) {
-            e.preventDefault();
 
-            
-        })
-
-        $('#items_body tr').click(function(e) {
-            e.preventDefault()
-            console.log("yesy")
-            
-            $that = $(this);
-            
-            //$that.parent().find('tr').removeClass('active');
-            //$that.addClass('active');
+        $("#remove_button").click(function (e) {
+            if (itemCount > 1) {
+                itemCount--;
+                let el = $("#items_body .selected")
+                el.nextAll("tr").each(function () {
+                    $(this).find("td:first").html(function (i, val) {
+                        return val - 1
+                    })
+                });
+                if (el.next().is("tr")) {
+                    el.next("tr").addClass("selected");
+                } else {
+                    el.prev("tr").addClass("selected");
+                }
+                el.remove();
+            }
         });
 
-        $('#id_type').change(function() {
+
+        $("#items_body tr").click(function (e) {
+            items_row_clicked($(this));
+        });
+
+
+        $('#id_type').change(function () {
             //const valueSelected = $(this).val()
             //const row = $(this).parent()
             //row.last().remove()

@@ -62,8 +62,13 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'input_page' %}">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'analytics_index' %}">Analytics</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">Analytics</a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
+                    <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'news' %}">News</a>
