@@ -160,26 +160,27 @@
 
                 <div style="display: grid; grid-template-rows: 4fr 1fr; grid-gap: 1em;">
                     <div id="items_form">
+
                         <h3 class="d-flex justify-content-center">Items</h3>
-                        <div class="float-right">
-                            <span>test</span>
+                        <div class="d-flex justify-content-end">
+                            <button id="remove_button" type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                            <button id="add_button" type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
                         </div><br>
-                        <table class="table">
+
+                        <table class="table shadow p-3 mb-5 bg-body rounded">
                             <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Sub Type</th>
-                            </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Sub Type</th>
+                                </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>{{ item_form.quantity }}</td>
-                                <td>{{ item_form.type }}</td>
-                                <td></td>
-                            </tr>
+                            <tbody id="items_body">
                             </tbody>
                         </table>
                     </div>
@@ -242,6 +243,14 @@
             }
         }
 
+        {% spaceless %}
+        $("#add_button").click(function (e) {
+            e.preventDefault();
+            var itemCount = $("#items_body").children().length + 1
+            const row = $('<tr class="shadow p-3 mb-5 bg-body rounded"><th scope="row">'+itemCount+'</th><td>{{item_form.type}}</td><td>{{ item_form.quantity }}</td><td></td></tr>')
+            $("#items_body").append(row)
+        });
+        {% endspaceless %}
 
         $("#clear_fields").click(function (e) {
             e.preventDefault();
