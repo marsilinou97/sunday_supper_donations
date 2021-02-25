@@ -52,7 +52,7 @@ def SelectAllGiftCards():
     a = GiftCard.objects.all()
     for giftcard in a:
         row = {}
-        row["type"] = giftcard.type.name
+        row["business_name"] = giftcard.business_name.name
         row["amount"] = giftcard.amount
 
         # Not all of these try blocks are necessary; just in case.
