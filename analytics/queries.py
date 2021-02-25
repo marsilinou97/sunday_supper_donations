@@ -6,37 +6,6 @@ Not sure if this is a good place to put this code, if you need to move it feel f
 """
 
 """
-Helper function for queries that returns a list containing a donor's first and last names.
-"""
-def FindDonorNames(donor):
-    anon = None
-    known = None
-
-    """
-    These two try blocks ARE necessary; we don't know if the donor is anonymous yet.
-    A Model.DoesNotExist exception WILL be thrown by get() if get() returns nothing,
-    so it's expected that an exception will be raised in one of the two try blocks.
-    """
-    try:
-        anon = AnonymousDonor.objects.get(pk=donor)
-        first_name = "ANONYMOUS"
-        last_name = ""
-    except:
-        print("Not Anonymous")
-    try:
-        known = IdentifiedDonor.objects.get(pk=donor)
-        first_name = known.first_name
-        last_name = known.last_name
-    except:
-        print("Anonymous")
-
-    # Just in case both donor try blocks catch exceptions:
-    if anon == None and known == None:
-        first_name = "NODONORS"
-        last_name = "ERROR"
-    return [first_name,last_name]
-
-"""
 Query the db to get Funds that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
     type, amount, quantity, date_received, first_name, last_name
