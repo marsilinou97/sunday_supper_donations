@@ -39,7 +39,7 @@
 
         .itemAttribSubWrapper {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
         }
 
         .anonymous {
@@ -70,7 +70,7 @@
                 <div class="wrapperY">
                     <div class="wrapperX">
                         <div id="donation_form">
-                            <h3>Donation Infomation</h3>
+                            <h3 class="d-flex justify-content-center">Donation Infomation</h3>
                             <div>
                                 <div class="wrapperX">
                                     <span>
@@ -90,7 +90,7 @@
                         </div>
 
                         <div id="funds_form">
-                            <h3>Funds</h3>
+                            <h3 class="d-flex justify-content-center">Funds</h3>
                             <div class="wrapperY">
                                 <span>
                                     <b>{{ funds_form.type.label }}</b>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <div id="donor_form">
-                        <h3>Donor Infomation</h3>
+                        <h3 class="d-flex justify-content-center">Donor Infomation</h3>
                         <div class="wrapperX">
                             <span>
                                 <b>{{ donor_form.first_name.label }}</b>
@@ -160,7 +160,10 @@
 
                 <div style="display: grid; grid-template-rows: 4fr 1fr; grid-gap: 1em;">
                     <div id="items_form">
-                        <h3>Items</h3>
+                        <h3 class="d-flex justify-content-center">Items</h3>
+                        <div class="float-right">
+                            <span>test</span>
+                        </div><br>
                         <table class="table">
                             <thead>
                             <tr>
