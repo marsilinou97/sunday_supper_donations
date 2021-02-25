@@ -14,7 +14,6 @@ us_states = {
     'South Dakota': 'sd', 'Tennessee': 'tn', 'Texas': 'tx', 'Utah': 'ut', 'Vermont': 'vt', 'Virgin Islands': 'vi',
     'Virginia': 'va', 'Washington': 'wa', 'West Virginia': 'wv', 'Wisconsin': 'wi', 'Wyoming': 'wy'}
 
-
 # Create your views here.
 # 2 following def is for DonorInformationForm.
 def handle_get_req(request):

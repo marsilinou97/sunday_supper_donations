@@ -247,10 +247,34 @@
         $("#add_button").click(function (e) {
             e.preventDefault();
             var itemCount = $("#items_body").children().length + 1
-            const row = $('<tr class="shadow p-3 mb-5 bg-body rounded"><th scope="row">'+itemCount+'</th><td>{{item_form.type}}</td><td>{{ item_form.quantity }}</td><td></td></tr>')
+            const row = $('<tr class="shadow p-3 mb-5 bg-body rounded"><th scope="row">'+itemCount+'</th><td>{{item_form.type}}</td><td>{{ item_form.quantity }}</td><td>{{item_form.sub_type_business}}</td></tr>')
             $("#items_body").append(row)
         });
         {% endspaceless %}
+
+        $("remove_button").click(function (e) {
+            e.preventDefault();
+
+            
+        })
+
+        $('#items_body tr').click(function(e) {
+            e.preventDefault()
+            console.log("yesy")
+            
+            $that = $(this);
+            
+            //$that.parent().find('tr').removeClass('active');
+            //$that.addClass('active');
+        });
+
+        $('#id_type').change(function() {
+            //const valueSelected = $(this).val()
+            //const row = $(this).parent()
+            //row.last().remove()
+
+            console.log("tes")
+        });
 
         $("#clear_fields").click(function (e) {
             e.preventDefault();

@@ -75,12 +75,43 @@ class DonationForm(forms.ModelForm):
 
 
 class ItemForm(forms.Form):
-    type = forms.ChoiceField(required=False)
+
+    #TODO: Make models that holds the choices defined here
+    item_choices = (
+        ("1","Gift Cards"),
+        ("2","Food"),
+        ("3","Clothing"),
+        ("4","Misc.")
+    )
+
+    DONATION_TYPES = [
+                  ('giftcard', 'Gift Cards'),
+                  ('clothing', 'Clothing'),
+                  ('food', 'Food'),
+                  ('misc', 'Miscellaneous')
+                  ]
+
+    clothing_types = [
+        ('men','Men'),
+        ('women','Women'),
+        ('children','Children')
+    ]
+
+    business = [
+        ('tar','Target'),
+        ('bestbuy','BestBuy')
+    ]
+
+    type = forms.ChoiceField(required=False, choices=DONATION_TYPES)
     quantity = forms.IntegerField(required=False)
+    sub_type_name = forms.CharField(required=False)
+    sub_type_clothing = forms.ChoiceField(required=False, choices=clothing_types)
+    sub_type_business = forms.ChoiceField(required=False, choices=business)
+    
 
     class Meta:
         # model = input
-        fields = ['type', 'quantity', 'name']
+        fields = ['type', 'quantity', 'sub_type_name','sub_type_clothing','sub_type_business']
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
@@ -90,8 +121,11 @@ class ItemForm(forms.Form):
             # Add class to each of the form elements
             visible.field.widget.attrs['class'] = 'form-control'
 
-        self.fields["type"].widget.attrs.update({"placeholder": "type"})
+        self.fields["type"].widget.attrs.update({"placeholder": "Type"})
         self.fields["quantity"].widget.attrs.update({"placeholder": "0"})
+        self.fields["sub_type_name"].widget.attrs.update({"placeholder": "Name"})
+        self.fields["sub_type_clothing"].widget.attrs.update({"placeholder": "Type"})
+        self.fields["sub_type_business"].widget.attrs.update({"placeholder": "Business"})
 
 
 class FundsForm(forms.Form):
