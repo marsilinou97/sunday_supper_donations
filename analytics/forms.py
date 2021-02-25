@@ -34,7 +34,7 @@ class RawDataForm(forms.Form):
 
         self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
         self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
-        self.fields["donation_date"].widget.attrs.update({"placeholder": "Donation Date"})
+        self.fields["donation_date"].widget.attrs.update({"placeholder": "YYYY-MM-DD"})
         self.fields["donation_type"].widget.attrs.update({"placeholder": "Donation Type"})
 
 
