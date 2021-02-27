@@ -78,7 +78,7 @@
     <div class="donor-info-form">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
-            <h2>YEWWW</h2>
+            <h2>Input page</h2>
             <hr>
 
             <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
@@ -203,20 +203,7 @@
                             </thead>
                             <tbody id="items_body">
                             <tr class="shadow p-3 mb-5 bg-body rounded">
-                                <td scope="row">1</td>
-                                <td><select name="type" class="form-control" placeholder="Type" id="id_type">
-                                    <option value="giftcard">Gift Cards</option>
-                                    <option value="clothing">Clothing</option>
-                                    <option value="food">Food</option>
-                                    <option value="misc">Miscellaneous</option>
-                                </select></td>
-                                <td><input type="number" name="quantity" class="form-control" placeholder="0"
-                                           id="id_quantity"></td>
-                                <td><select name="sub_type_business" class="form-control" placeholder="Business"
-                                            id="id_sub_type_business">
-                                    <option value="tar">Target</option>
-                                    <option value="bestbuy">BestBuy</option>
-                                </select></td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -286,7 +273,7 @@
         }
 
         {% spaceless %}
-            let itemCount = 1;
+            let itemCount = 0;
             $("#add_button").click(function (e) {
                 e.preventDefault();
                 itemCount++;
@@ -294,10 +281,30 @@
                 $("#items_body").append(row)
 
                 row.click(function () {
+                    {#Add event listener to new rows#}
                     items_row_clicked(row);
                 });
 
+                $('#items_body tr').each(function () {
+                    $(this).find("select").change(function (e) {
+                        {#TODO: move that logic to a function to bind it to the new rows #}
+                        {#TODO: logic for replacing subtype#}
+                        let selected = this.value;
+                        if (selected === "giftcard") {
+                            $($(this).parents().eq(1).find("select")[1]).replaceWith($(giftcard));
+                        } else if (selected === 'clothing') {
+                            $($(this).parents().eq(1).find("select")[1]).replaceWith($(clothing));
+                        } else if (selected === 'food') {
+                            $($(this).parents().eq(1).find("select")[1]).replaceWith($(food));
+                        } else if (selected === 'misc') {
+                            $($(this).parents().eq(1).find("select")[1]).replaceWith($(misc));
+                        }
+                    })
+                });
+
+
             });
+            $("#add_button").click();
         {% endspaceless %}
 
 
@@ -319,19 +326,37 @@
             }
         });
 
-
+        {#Add event listener to currnet tabel rows#}
         $("#items_body tr").click(function (e) {
             items_row_clicked($(this));
         });
 
 
-        $('#id_type').change(function () {
-            //const valueSelected = $(this).val()
-            //const row = $(this).parent()
-            //row.last().remove()
+        let giftcard = '<select name="type" class="form-control" placeholder="Type" id="id_type"> <option value="Starbucks">Starbucks</option><option value="Target">Target</option><option value="Fandango">Fandango</option><option value="Walmart">Walmart</option><option value="Whole">Whole Foods</option><option value="Rei">Rei</option><option value="Netflix">Netflix</option><option value="Disney">Disney</option><option value="eBay">eBay</option><option value="American">American Express</option> <option value="Chick">Chick-Fil-A</option> <option value="McDonald">McDonald\'s</option> <option value="Google">Google Play</option> <option value="Best">Best Buy</option> <option value="iTunes">iTunes</option> <option value="Visa">Visa</option> <option value="Gamestop">Gamestop</option> <option value="Etsy">Etsy</option> <option value="Ikea">Ikea</option> <option value="Cracker">Cracker Barrel</option> <option value="Nordstrom">Nordstrom</option> <option value="Texas">Texas Roadhouse</option> <option value="Olive">Olive Garden</option> <option value="T">T.J. Maxx</option> <option value="Chipotle">Chipotle</option> <option value="Nike">Nike</option> <option value="Sephora">Sephora</option> <option value="Home">Home Depot</option> <option value="Amazon">Amazon</option> <option value="Costco">Costco</option> <option value="Old">Old Navy</option> <option value="American">American Airlines</option> <option value="Wawa">Wawa</option> <option value="Macy">Macy’s</option> <option value="Apple">Apple Store</option> <option value="Chili">Chili\'s Restaurant</option> <option value="Cabela">Cabela\'s</option> <option value="Ticketmaster">Ticketmaster</option> <option value="Michaels">Michaels</option> <option value="Kohl">Kohl\'s</option> <option value="Lowe">Lowe’s</option> <option value="Mastercard">Mastercard</option> <option value="Applebee">Applebee\'s</option> <option value="Red">Red Lobster</option> <option value="Subway">Subway</option> <option value="JCPenney">JCPenney</option> <option value="Dunkin">Dunkin Donuts</option> <option value="Burger">Burger King</option> <option value="Hobby">Hobby Lobbys</option> <option value="Taco">Taco Bell</option> <option value="Amazon">Amazon</option> <option value="Visa">Visa</option> <option value="Walmart">Walmart</option> <option value="Target">Target</option> <option value="Starbucks">Starbucks</option> <option value="eBay">eBay</option> <option value="American">American Express</option> <option value="iTunes">iTunes</option> <option value="Google">Google Play</option> <option value="Disney">Disney</option> <option value="Sephora">Sephora</option> <option value="Netflix">Netflix</option> <option value="Home">Home Depot</option> <option value="Chick">Chick-Fil-A</option> <option value="Best">Best Buy</option> <option value="McDonald">McDonald\'s</option> <option value="Gamestop">Gamestop</option> <option value="Dunkin">Dunkin Donuts</option> <option value="MasterCard">MasterCard</option> <option value="Fandango">Fandango</option> <option value="Etsy">Etsy</option> <option value="Rei">Rei</option> <option value="Macy">Macy’s</option> <option value="Olive">Olive Garden</option> <option value="Texas">Texas Roadhouse</option> <option value="Taco">Taco Bell</option> <option value="Chipotle">Chipotle</option> <option value="Nordstrom">Nordstrom</option> <option value="Ikea">Ikea</option> <option value="Subway">Subway</option> <option value="Lowe">Lowe’s</option> <option value="Kohl">Kohl\'s</option> <option value="Hobby">Hobby Lobbys</option> <option value="Nike">Nike</option> <option value="Ticketmaster">Ticketmaster</option> <option value="Whole">Whole Foods</option> <option value="Apple">Apple Store</option> <option value="Red">Red Lobster</option> <option value="Michaels">Michaels</option> <option value="T">T.J. Maxx</option> <option value="Costco">Costco</option> <option value="Cabela">Cabela\'s</option> <option value="Applebee">Applebee\'s</option> <option value="Chili">Chili\'s Restaurant</option> <option value="Burger">Burger King</option> <option value="Old">Old Navy</option> <option value="JCPenney">JCPenney</option> <option value="Cracker">Cracker Barrel</option> <option value="Wawa">Wawa</option> <option value="American">American Airlines</option> </select>';
+        let food = '<select name="type" class="form-control" placeholder="Type" id="id_type"><option>Food 1</option><option>Food 2</option><option>Food 3</option></select>'
+        let clothing = '<select name="type" class="form-control" placeholder="Type" id="id_type"><option>Clothing 1</option><option>Clothing 2</option><option>Clothing 3</option></select>'
+        let misc = '<select name="type" class="form-control" placeholder="Type" id="id_type"><option>Misc 1</option><option>Misc 2</option><option>Misc 3</option></select>'
+        $("table tbody tr td select:last").replaceWith($(giftcard));
 
-            console.log("tes")
+        $('#items_body tr').each(function () {
+            $(this).find("select:first").change(function (e) {
+                {#TODO: move that logic to a function to bind it to the new rows #}
+                {#TODO: logic for replacing subtype#}
+                let selected = this.value;
+                if (selected === "giftcard") {
+                    $($(this).parents().eq(2).find("select")[1]).replaceWith($(giftcard));
+                } else if (selected === 'clothing') {
+                    $($(this).parents().eq(2).find("select")[1]).replaceWith($(clothing));
+                } else if (selected === 'food') {
+                    $($(this).parents().eq(2).find("select")[1]).replaceWith($(food));
+                } else if (selected === 'misc') {
+                    $($(this).parents().eq(2).find("select")[1]).replaceWith($(misc));
+                }
+
+                {#  $(this).parents().eq(2).find("select")[1] this is the subtype dropdown for the corresponding type #}
+            })
         });
+
 
         $("#clear_fields").click(function (e) {
             e.preventDefault();

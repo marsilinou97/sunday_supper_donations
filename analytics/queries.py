@@ -1,6 +1,6 @@
 from django.db import models
 from input.models import *
-import sys # debugging
+import sys  # debugging
 
 """
 Not sure if this is a good place to put this code, if you need to move it feel free. -Brad
@@ -22,10 +22,12 @@ Example:
 
     This should strip the results of any
 """
+
+
 def FilterResults(
-                    results,
-                    filters={}
-                    ):
+        results,
+        filters={}
+):
     if filters != {}:
         i = 0
         while i < len(results):
@@ -36,19 +38,26 @@ def FilterResults(
                         results.remove(results[i])
                         removed = True
                 except:
-                    print(sys.exc_info()[0]) # debugging
+                    print(sys.exc_info()[0])  # debugging
                     print(sys.exc_info()[1])
                     print(sys.exc_info()[2])
             if not removed:
                 i += 1
     return results
 
+
 """
 Query the db to get Funds that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
     type, amount, quantity, date_received, first_name, last_name
 """
+# TODO: Enhance the caching, only store most recent N rows, update cache when adding/removing data
+temp_caching = {}
+
+
 def SelectAllFunds():
+    if "SelectAllFunds" in temp_caching.keys():
+        return temp_caching["SelectAllFunds"]
     results = []
     a = Fund.objects.all()
     for fund in a:
@@ -78,14 +87,20 @@ def SelectAllFunds():
         row["last_name"] = names[1]
 
         results.append(row)
+        temp_caching["SelectAllFunds"] = results
     return results
+
 
 """
 Query the db to get GiftCards that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
     business_name, amount, quantity, date_received, first_name, last_name
 """
+
+
 def SelectAllGiftCards():
+    if "SelectAllGiftCards" in temp_caching.keys():
+        return temp_caching["SelectAllGiftCards"]
     results = []
     a = GiftCard.objects.all()
     for giftcard in a:
@@ -115,14 +130,20 @@ def SelectAllGiftCards():
         row["last_name"] = names[1]
 
         results.append(row)
+        temp_caching["SelectAllGiftCards"] = results
     return results
+
 
 """
 Query the db to get Clothings that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
     type, quantity, date_received, first_name, last_name
 """
+
+
 def SelectAllClothings():
+    if "SelectAllClothings" in temp_caching.keys():
+        return temp_caching["SelectAllClothings"]
     results = []
     a = Clothing.objects.all()
     for clothing in a:
@@ -151,14 +172,20 @@ def SelectAllClothings():
         row["last_name"] = names[1]
 
         results.append(row)
+        temp_caching["SelectAllClothings"] = results
     return results
+
 
 """
 Query the db to get Food Items that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
     name, quantity, date_received, first_name, last_name
 """
+
+
 def SelectAllFood():
+    if "SelectAllFood" in temp_caching.keys():
+        return temp_caching["SelectAllFood"]
     results = []
     a = Food.objects.all()
     for food in a:
@@ -187,14 +214,20 @@ def SelectAllFood():
         row["last_name"] = names[1]
 
         results.append(row)
+        temp_caching["SelectAllFood"] = results
     return results
+
 
 """
 Query the db to get Miscellaneous Items that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
     misc_name, quantity, date_received, first_name, last_name
 """
+
+
 def SelectAllMiscellaneous():
+    if "SelectAllMiscellaneous" in temp_caching.keys():
+        return temp_caching["SelectAllMiscellaneous"]
     results = []
     a = Miscellaneous.objects.all()
     for misc in a:
@@ -223,4 +256,5 @@ def SelectAllMiscellaneous():
         row["last_name"] = names[1]
 
         results.append(row)
+        temp_caching["SelectAllMiscellaneous"] = results
     return results

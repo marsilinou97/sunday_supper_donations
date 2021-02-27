@@ -86,6 +86,8 @@ DATABASES = {
         'PASSWORD': os.getenv("sunday_supper_donation_db_pwd"),
         'HOST': 'ziggy.db.elephantsql.com',
         'PORT': '5432',
+        'CONN_MAX_AGE': 300,
+        'THREADED': True
     }
 }
 
@@ -127,4 +129,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),]
+    os.path.join(BASE_DIR, 'static'), ]
