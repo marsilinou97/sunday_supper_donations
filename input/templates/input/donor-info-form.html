@@ -202,9 +202,14 @@
                             </tr>
                             </thead>
                             <tbody id="items_body">
-                            <tr class="shadow p-3 mb-5 bg-body rounded">
-
-                            </tr>
+                            {{item_formset.management_form}}
+                                {% for item_form in item_formset%}
+                                    <tr class="shadow p-3 mb-5 bg-body rounded">
+                                        <td>{{item_form.type}}</td>
+                                        <td>{{ item_form.quantity }}</td>
+                                        <td>{{item_form.sub_type_business}}</td>
+                                    </tr>'
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -292,14 +297,13 @@
 
 
             });
-            $("#add_button").click();
         {% endspaceless %}
 
 
         $("#remove_button").click(function (e) {
             if (itemCount > 1) {
                 itemCount--;
-                let el = $("#items_body .selected")
+                let el = $("#items_body.selected")
                 el.nextAll("tr").each(function () {
                     $(this).find("td:first").html(function (i, val) {
                         return val - 1
