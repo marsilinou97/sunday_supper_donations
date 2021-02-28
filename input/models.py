@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 # Django models documentation: https://docs.djangoproject.com/en/3.1/topics/db/models/
 
@@ -10,6 +11,7 @@ Donor superclass
 
 
 class Donor(models.Model):
+    id =  models.AutoField(primary_key=True)
     def __str__(self):
         return f"{self.pk}"
     pass
@@ -221,7 +223,6 @@ def InsertDonor(
                 zipcode = None
                 ):
 
-    donor = None
     """
     Query IdentifiedDonor table for any matches; if the resulting queryset is empty,
     we can create the next one.
@@ -244,23 +245,22 @@ def InsertDonor(
         https://docs.djangoproject.com/en/3.1/topics/db/models/#automatic-primary-key-fields
         -Brad
         """
-        nextId = Donor.objects.last().id
-        nextId += 1
-        donor = Donor(nextId)
+        donor = Donor()
         donor.save()
 
         # Build and save the IdentifiedDonor
-        them = IdentifiedDonor()
-        them.donor = donor
-        them.first_name = first_name
-        them.last_name = last_name
-        them.email_address = email_address
-        them.phone_number = phone_number
-        them.address_line1 = address_line1
-        them.address_line2 = address_line2
-        them.city = city
-        them.state = state
-        them.zipcode = zipcode
+        them = IdentifiedDonor(
+            donor = donor,
+            first_name = first_name,
+            last_name = last_name,
+            email_address = email_address,
+            phone_number = phone_number,
+            address_line1 = address_line1,
+            address_line2 = address_line2,
+            city = city,
+            state = state,
+            zipcode = zipcode
+        )
         them.save()
         print(them,"created")
     else:
