@@ -97,6 +97,7 @@ def index(request):
         item_formset = formset_factory(ItemForm, extra=0)
         formset = item_formset()
         print(formset)
+        #form set
         return render(request, 'input/donor-info-form.html',
                       {
                           'donor_form': DonorInformationForm(),
