@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
+from django.forms import formset_factory
 from django.contrib import messages
 
 from .models import IdentifiedDonor, Donor, InsertDonor
@@ -93,13 +94,17 @@ def index(request):
         return handle_post_req(request)
 
     elif request.method == 'GET':
+        item_formset = formset_factory(ItemForm, extra=0)
+        formset = item_formset()
+        print(formset)
         return render(request, 'input/donor-info-form.html',
                       {
                           'donor_form': DonorInformationForm(),
                           'donation_info_form': DonationForm(),
                           'funds_form': FundsForm(),
                           'item_form': ItemForm(),
-                          'states': us_states
+                          'states': us_states,
+                          'item_formset': formset
                       })
     else:
         messages.error(request, "Error")
