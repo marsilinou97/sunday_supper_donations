@@ -333,7 +333,8 @@
                 {#TODO: move that logic to a function to bind it to the new rows #}
                 {#TODO: logic for replacing subtype#}
                 let selected = e.target.value;
-                let subTypeField = $($(row.children()[3]).children()[0])
+                {#let subTypeField = $($(row.children()[3]).children()[0])#}
+                let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
 
                 if (selected === "giftcard") {
                     subTypeField.replaceWith($(giftcard));
