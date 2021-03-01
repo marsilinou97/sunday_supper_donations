@@ -45,16 +45,14 @@ def FilterResults(
                 i += 1
     return results
 
+# TODO: Enhance the caching, only store most recent N rows, update cache when adding/removing data
+temp_caching = {}
 
 """
 Query the db to get Funds that were donated and all relevant info
 Returns a list of dictionaries with the following fields:
-    type, amount, quantity, date_received, first_name, last_name
+type, amount, quantity, date_received, first_name, last_name
 """
-# TODO: Enhance the caching, only store most recent N rows, update cache when adding/removing data
-temp_caching = {}
-
-
 def SelectAllFunds():
     if "SelectAllFunds" in temp_caching.keys():
         return temp_caching["SelectAllFunds"]
@@ -248,3 +246,44 @@ def SelectAllMiscellaneous():
             results.append(row)
         temp_caching["SelectAllMiscellaneous"] = results
     return results
+
+"""
+Returns counts of all Item subclasses in the db. Accounts for quantity of each Item.
+Return type is a dictionary.
+"""
+def countItems():
+    counts = {}
+
+    try:
+        # Count each Item type
+        counts["funds"] = 0
+        for item in SelectAllFunds():
+            counts["funds"] += int(item["quantity"])
+
+        counts["giftcards"] = 0
+        for item in SelectAllGiftCards():
+            counts["giftcards"] += int(item["quantity"])
+
+        counts["clothing"] = 0
+        for item in SelectAllClothings():
+            counts["clothing"] += int(item["quantity"])
+
+        counts["food"] = 0
+        for item in SelectAllFood():
+            counts["food"] += int(item["quantity"])
+
+        counts["misc"] = 0
+        for item in SelectAllMiscellaneous():
+            counts["misc"] += int(item["quantity"])
+
+        # Sum them
+        counts["all"] = 0
+        for key in counts:
+            counts["all"] += counts[key]
+
+        # counts["all"] will be added to itself, so divide by 2 and cast as int to compensate
+        counts["all"] = int(counts["all"] / 2)
+    except:
+        for error in sys.exc_info():
+            print(error)
+    return counts
