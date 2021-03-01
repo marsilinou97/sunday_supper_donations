@@ -5,7 +5,7 @@
 {% block content%}
 
 
-    <form method="post">
+    <form method="post" class="text-center">
         {%csrf_token%}
 
         {{form}}
@@ -15,10 +15,36 @@
     </form>
 
 
-            {% if filter_type == 'all' %}
-                 <h1 class="mb-5 mt-5 text-center"> All Donations</h1>
+<form>
+ <fieldset>
 
-                 <h3 class ="mb-3 mt -5 tex-left"> Funds</h3>
+  <legend>Show Donation Types:</legend>
+
+  <label for="all" class="">Select All:</label>
+  <input class="donation_select m-1" type="checkbox" id="all" name="all" value="All" checked="true">
+
+  <label for="fund">Funds:</label>
+  <input class="donation_select m-1"  type="checkbox" id="fund" name="fund" value="Funds" checked="true">
+
+  <label for="gift">Gift Cards:</label>
+  <input  class="donation_select m-1" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
+
+  <label for="clothing">Clothing:</label>
+  <input class="donation_select m-1" type="checkbox" id="clothing" name="clothing" value="Clothing" checked="true">
+
+  <label for="food">Food:</label>
+  <input class="donation_select m-1"  type="checkbox" id="food" name="food" value="Food" checked="true">
+
+  <label for="misc">Miscellaneous:</label>
+  <input class="donation_select m-1"  type="checkbox" id="misc" name="misc" value="Misc" checked="true">
+ </fieldset>
+</form>
+
+
+
+                 <h1 class="mb-5 mt-5 text-center">Donations</h1>
+
+                 <h3 id="fundheader" class ="mb-3 mt-5 text-left"> Funds</h3>
 
 
                  <table id="fundtable" class="table table-striped table-bordered" style="width:100%">
@@ -58,7 +84,7 @@
                  </table>
 
 
-                 <h3 class ="mb-3 mt -5 tex-left">Gift Cards</h3>
+                 <h3 id="giftcardheader" class ="mb-3 mt-5 text-left">Gift Cards</h3>
 
                  <table id="giftcardtable" class="table table-striped table-bordered" style="width:100%">
 
@@ -98,9 +124,9 @@
                  </table>
 
 
-                 <h3 class ="mb-3 mt -5 tex-left">Clothing</h3>
+                 <h3 id="clothingheader" class ="mb-3 mt-5 text-left">Clothing</h3>
 
-                 <table id="clothingtable" class="table table-striped table-bordered" style="width:100%">
+                 <table  id="clothingtable" class="table table-striped table-bordered" style="width:100%">
 
                         <thead>
                             <tr>
@@ -134,7 +160,7 @@
                  </table>
 
 
-                 <h3 class ="mb-3 mt -5 tex-left">Foods</h3>
+                 <h3 id="foodheader"  class ="mb-3 mt-5 tex-left">Foods</h3>
 
                  <table id="foodtable" class="table table-striped table-bordered" style="width:100%">
 
@@ -171,9 +197,9 @@
 
 
 
-                 <h3 class ="mb-3 mt -5 tex-left">Miscellaneous</h3>
+                 <h3 id="mischeader"  class ="mb-3 mt-5 text-left">Miscellaneous</h3>
 
-                 <table id="miscellaneoustable" class="table table-striped table-bordered" style="width:100%">
+                 <table id="misctable" class="table table-striped table-bordered" style="width:100%">
 
 
                         <thead>
@@ -181,6 +207,7 @@
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Date Received</th>
+                                <th>Type</th>
                                 <th>Quantity</th>
                             </tr>
                         </thead>
@@ -190,161 +217,7 @@
                                 <td>{{misc.first_name}}</td>
                                 <td>{{misc.last_name}}</td>
                                 <td>{{misc.date_received}}</td>
-                                <td>{{misc.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-            {%elif filter_type == "fund" %}
-
-                 <h1 class="mb-5 mt-5 text-center"> Fund Donations</h1>
-
-                 <h3 class ="mb-3 mt -5 tex-left"> Funds</h3>
-
-                <table class="table table-striped table-bordered" style="width:100%">
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for fund in funds %}
-                            <tr>
-                                <td>{{fund.first_name}}</td>
-                                <td>{{fund.last_name}}</td>
-                                <td>{{fund.date_received}}</td>
-                                <td>{{fund.type}}</td>
-                                <td>${{fund.amount}}</td>
-                                <td>{{fund.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-            {%elif filter_type == "giftcard" %}
-
-                 <h1 class="mb-5 mt-5 text-center"> Giftcard Donations</h1>
-
-                 <h3 class ="mb-3 mt -5 tex-left"> Giftcards</h3>
-
-                <table class="table table-striped table-bordered" style="width:100%">
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Business Name</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for giftcard in giftcards %}
-                            <tr>
-                                <td>{{giftcard.first_name}}</td>
-                                <td>{{giftcard.last_name}}</td>
-                                <td>{{giftcard.date_received}}</td>
-                                <td>{{giftcard.business_name}}</td>
-                                <td>${{giftcard.amount}}</td>
-                                <td>{{giftcard.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Business Name</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-             {%elif filter_type == "clothing" %}
-
-                 <h1 class="mb-5 mt-5 text-center"> Clothing Donations</h1>
-
-                 <h3 class ="mb-3 mt -5 tex-left"> Clothing </h3>
-
-                <table class="table table-striped table-bordered" style="width:100%">
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for cloth in clothing %}
-                            <tr>
-                                <td>{{cloth.first_name}}</td>
-                                <td>{{cloth.last_name}}</td>
-                                <td>{{cloth.date_received}}</td>
-                                <td>{{cloth.type}}</td>
-                                <td>{{cloth.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-            {%elif filter_type == "misc" %}
-
-                 <h1 class="mb-5 mt-5 text-center"> Miscellaneous Donations</h1>
-
-                 <h3 class ="mb-3 mt -5 tex-left"> Miscellaneous </h3>
-
-                <table class="table table-striped table-bordered" style="width:100%">
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for misc in miscellaneous %}
-                            <tr>
-                                <td>{{misc.first_name}}</td>
-                                <td>{{misc.last_name}}</td>
-                                <td>{{misc.date_received}}</td>
+                                <td>{{misc.misc_name}}</td>
                                 <td>{{misc.quantity}}</td>
                             </tr>
                         {% endfor %}
@@ -359,47 +232,109 @@
                             </tr>
                         </tfoot>
                  </table>
-            {%elif filter_type == 'food' %}
-
-                 <h1 class="mb-5 mt-5 text-center"> Food Donations</h1>
-
-                 <h3 class ="mb-3 mt -5 tex-left"> Food </h3>
-
-                <table class="table table-striped table-bordered" style="width:100%">
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for food in foods %}
-                            <tr>
-                                <td>{{food.first_name}}</td>
-                                <td>{{food.last_name}}</td>
-                                <td>{{food.date_received}}</td>
-                                <td>{{food.name}}</td>
-                                <td>{{food.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
 
 
-            {% endif %}
+<script type="text/javascript">
+
+
+$(document).ready(function()
+{
+
+
+
+  $('#fund').change(function()
+  {
+    if(this.checked == true)
+    {
+         $('#fundheader').show();
+         $('#fundtable').show();
+    }
+    else{
+        $('#fundheader').hide();
+        $('#fundtable').hide();
+    }
+  });
+
+
+  $('#gift').change(function()
+  {
+    if(this.checked == true)
+    {
+         $('#giftcardheader').show();
+         $('#giftcardtable').show();
+    }
+    else{
+        $('#giftcardheader').hide();
+        $('#giftcardtable').hide();
+    }
+  });
+
+
+  $('#clothing').change(function()
+  {
+    if(this.checked == true)
+    {
+         $('#clothingheader').show();
+         $('#clothingtable').show();
+
+    }
+    else{
+        $('#clothingheader').hide();
+        $('#clothingtable').hide();
+
+    }
+  });
+
+
+  $('#food').change(function()
+  {
+    if(this.checked == true)
+    {
+         $('#foodheader').show();
+         $('#foodtable').show();
+    }
+    else{
+        $('#foodheader').hide();
+        $('#foodtable').hide();
+    }
+  });
+
+  $('#misc').change(function()
+  {
+    if(this.checked == true)
+    {
+         $('#mischeader').show();
+         $('#misctable').show();
+    }
+    else{
+        $('#mischeader').hide();
+        $('#misctable').hide();
+    }
+  });
+
+
+
+   $('#all').change(function()
+  {
+    if(this.checked == true)
+    {
+         $('h3').show();
+         $('table').show();
+         $("input:checkbox").prop('checked',true);
+    }
+    else{
+        $('h3').hide();
+        $('table').hide();
+        $("input:checkbox").prop('checked',false);
+
+    }
+  });
+
+
+});
+
+
+</script>
 
 
 {% endblock %}
