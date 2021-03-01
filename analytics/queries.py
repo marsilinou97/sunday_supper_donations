@@ -87,7 +87,7 @@ def SelectAllFunds():
         row["last_name"] = names[1]
 
         results.append(row)
-        temp_caching["SelectAllFunds"] = results
+    temp_caching["SelectAllFunds"] = results
     return results
 
 
@@ -130,7 +130,7 @@ def SelectAllGiftCards():
         row["last_name"] = names[1]
 
         results.append(row)
-        temp_caching["SelectAllGiftCards"] = results
+    temp_caching["SelectAllGiftCards"] = results
     return results
 
 
@@ -172,7 +172,7 @@ def SelectAllClothings():
         row["last_name"] = names[1]
 
         results.append(row)
-        temp_caching["SelectAllClothings"] = results
+    temp_caching["SelectAllClothings"] = results
     return results
 
 
@@ -214,7 +214,7 @@ def SelectAllFood():
         row["last_name"] = names[1]
 
         results.append(row)
-        temp_caching["SelectAllFood"] = results
+    temp_caching["SelectAllFood"] = results
     return results
 
 
@@ -256,5 +256,5 @@ def SelectAllMiscellaneous():
         row["last_name"] = names[1]
 
         results.append(row)
-        temp_caching["SelectAllMiscellaneous"] = results
+    temp_caching["SelectAllMiscellaneous"] = results
     return results

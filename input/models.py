@@ -6,34 +6,9 @@ import uuid
 
 
 """
-Donor superclass
+Donor
 """
-
-
 class Donor(models.Model):
-    id =  models.AutoField(primary_key=True)
-    def __str__(self):
-        return f"{self.pk}"
-    pass
-
-
-"""
-Donor subclasses
-"""
-
-
-class AnonymousDonor(models.Model):
-    donor = models.OneToOneField(Donor, on_delete=models.CASCADE, primary_key=True)
-
-    def __str__(self):
-        return f"{self.pk} Anonymous"
-
-class IdentifiedDonor(models.Model):
-    # Donors FK
-    donor = models.OneToOneField(Donor, on_delete=models.CASCADE, primary_key=True)
-
-    date_of_birth = models.DateField(blank=True, null=True)
-
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
@@ -46,6 +21,28 @@ class IdentifiedDonor(models.Model):
     state = models.CharField(max_length=13, blank=True, null=True)
     zipcode = models.CharField(max_length=10, blank=True, null=True)
 
+    def __init__(
+                self,
+                first_name,
+                last_name,
+                email_address="",
+                phone_number="",
+                address_line1="",
+                address_line2="",
+                city="",
+                state="",
+                zipcode=""
+                ):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email_address = email_address
+        self.phone_number = phone_number
+        self.address_line1 = address_line1
+        self.address_line2 = address_line2
+        self.city = city
+        self.state = state
+        self.zipcode = zipcode
+
     def __str__(self):
         return f"{self.pk} {self.first_name} {self.last_name} {self.email_address}"
 
@@ -53,8 +50,6 @@ class IdentifiedDonor(models.Model):
 """
 Donations
 """
-
-
 class Donation(models.Model):
     # Donors FK
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
@@ -66,6 +61,20 @@ class Donation(models.Model):
     thanks_sent = models.BooleanField(blank=True, null=True)
     comments = models.TextField(blank=True, null=True)
 
+    def __init__(
+                self,
+                donor=None,
+                user="",
+                date_received="",
+                thanks_sent="",
+                comments=""
+                ):
+        self.donor = donor
+        self.user = user
+        self.date_received = date_received
+        self.thanks_sent = thanks_sent
+        self.comments = comments
+
     def __str__(self):
         return f"{self.donor} {self.date_received}  {self.user}"
 
@@ -73,15 +82,21 @@ class Donation(models.Model):
 """
 Items
 """
-
-
 class Item(models.Model):
     # Auto generated pk
-    donations_id = models.ForeignKey(Donation, on_delete=models.CASCADE)
+    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)
     quantity = models.CharField(max_length=30)
 
+    def __init__(
+                self,
+                donation,
+                quantity
+                ):
+        self.donation = donation
+        self.quantity = quantity
+
     def __str__(self):
-        return f"{self.donations_id} {self.quantity}"
+        return f"{self.donation} {self.quantity}"
 
 
 """
@@ -93,6 +108,9 @@ class Business(models.Model):
     # Enumeration for GiftCards table; see Giftcard
     name = models.CharField(primary_key=True, max_length=50)
 
+    def __init__(self,name):
+        self.name = name
+
     def __str__(self):
         return f"{self.name}"
 
@@ -101,6 +119,9 @@ class ClothingType(models.Model):
     # Enumeration for Clothing table; see Clothing
     name = models.CharField(primary_key=True, max_length=50)
 
+    def __init__(self,name):
+        self.name = name
+
     def __str__(self):
         return f"{self.name}"
 
@@ -108,6 +129,9 @@ class ClothingType(models.Model):
 class FundType(models.Model):
     # Enumeration for Funds table
     name = models.CharField(primary_key=True, max_length=50)
+
+    def __init__(self,name):
+        self.name = name
 
     def __str__(self):
         return f"{self.name}"
@@ -119,96 +143,100 @@ Item subclasses
 
 
 class Clothing(models.Model):
-    items_id = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     type = models.ForeignKey(ClothingType, on_delete=models.CASCADE)
 
+    def __init__(
+                self,
+                item,
+                type
+                ):
+        self.item = item
+        self.type = type
+
     def __str__(self):
-        return f"{self.items_id} {self.type}"
+        return f"{self.item} {self.type}"
 
 
 class Food(models.Model):
-    items_id = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=50)
 
+    def __init__(
+                self,
+                item,
+                name
+                ):
+        self.item = item
+        self.name = name
+
     def __str__(self):
-        return f"{self.items_id} {self.name}"
+        return f"{self.item} {self.name}"
 
 
 class Fund(models.Model):
-    items_id = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     type = models.ForeignKey(FundType, on_delete=models.CASCADE)
     amount = models.CharField(max_length=10)
 
+    def __init__(
+                self,
+                item,
+                type,
+                amount
+                ):
+        self.item = item
+        self.type = type
+        self.amount = amount
+
     def __str__(self):
-        return f"{self.items_id} {self.type} {self.amount}"
+        return f"{self.item} {self.type} {self.amount}"
 
 
 class GiftCard(models.Model):
-    items_id = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     business_name = models.ForeignKey(Business, on_delete=models.CASCADE)
     amount = models.CharField(max_length=10)
 
+    def __init__(
+                self,
+                item,
+                business_name,
+                amount
+                ):
+        self.item = item
+        self.business_name = business_name
+        self.amount = amount
+
     def __str__(self):
-        return f"{self.items_id} {self.business_name} {self.amount}"
+        return f"{self.item} {self.business_name} {self.amount}"
 
 
 class Miscellaneous(models.Model):
-    items_id = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=50)
 
+    def __init__(
+                self,
+                item,
+                name
+                ):
+        self.item = item
+        self.name = name
+
     def __str__(self):
-        return f"{self.items_id} {self.name}"
+        return f"{self.item} {self.name}"
 
 """
 Debug function; prints all rows in all tables
 """
 def tableDebug():
-    x = [AnonymousDonor,IdentifiedDonor,Donor,Donation,Item,Fund,GiftCard,Clothing,Food,Miscellaneous,FundType,Business,ClothingType,User]
+    x = [Donor,Donation,Item,Fund,GiftCard,Clothing,Food,Miscellaneous,FundType,Business,ClothingType,User]
     for x1 in x:
         print(x1.objects.all())
 
 """
-Helper function for queries that returns a list containing a donor's first and last names.
-"""
-def FindDonorNames(donor):
-    anon = None
-    known = None
-
-    """
-    These two try blocks ARE necessary; we don't know if the donor is anonymous yet.
-    A Model.DoesNotExist exception WILL be thrown by get() if get() returns nothing,
-    so it's expected that an exception will be raised in one of the two try blocks.
-    """
-    try:
-        anon = AnonymousDonor.objects.get(pk=donor)
-        first_name = "ANONYMOUS"
-        last_name = ""
-    except:
-        print("Not Anonymous")
-    try:
-        known = IdentifiedDonor.objects.get(pk=donor)
-        first_name = known.first_name
-        last_name = known.last_name
-    except:
-        print("Anonymous")
-
-    # Just in case both donor try blocks catch exceptions:
-    if anon == None and known == None:
-        first_name = "NODONORS"
-        last_name = "ERROR"
-    return [first_name,last_name]
-
-"""
-Helper function for queries that returns a donor with a matching first and last names.
-TODO uniqueness
-"""
-def FindDonor(first_name,last_name):
-    them = IdentifiedDonor.objects.filter(first_name=first_name,last_name=last_name)
-    donor = Donor.objects.get(id=them.donor.id)
-    return donor
-
-"""
-Insert a Donor into the table for IdentifiedDonors. Checks for uniqueness before insertion.
+Insert a Donor into the table for Donors. Checks for uniqueness before insertion.
 """
 def InsertDonor(
                 first_name, # Required
@@ -224,33 +252,19 @@ def InsertDonor(
                 ):
 
     """
-    Query IdentifiedDonor table for any matches; if the resulting queryset is empty,
+    Query Donor table for any matches; if the resulting queryset is empty,
     we can create the next one.
 
     If we need to add more uniqueness constraints that's fine, add them after the
     last_name argument.
     """
-    donors = IdentifiedDonor.objects.filter(
-                                            first_name=first_name,
-                                            last_name=last_name
-                                            )
+    donors = Donor.objects.filter(
+                                first_name=first_name,
+                                last_name=last_name
+                                )
     if len(donors) == 0:
-        """
-        Get the next id for the new donor. As far as I can tell, we don't have
-        a way to get django to do this for us in this case, since the pk for
-        IdentifiedDonor is a OneToOneField object, not an AutoField object.
-        Maybe there's a way to extend both of those classes, but I don't think we
-        know enough to do that right now.
-        https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.OneToOneField
-        https://docs.djangoproject.com/en/3.1/topics/db/models/#automatic-primary-key-fields
-        -Brad
-        """
-        donor = Donor()
-        donor.save()
-
-        # Build and save the IdentifiedDonor
-        them = IdentifiedDonor(
-            donor = donor,
+        # Build and save the Donor
+        them = Donor(
             first_name = first_name,
             last_name = last_name,
             email_address = email_address,
@@ -276,22 +290,23 @@ calls to InsertItem()).
 """
 def InsertDonation(
                     donor,
+                    items,
                     date_received=None,
                     thanks_sent=None,
                     user=None,
-                    comments=None,
-                    items=[]
+                    comments=None
                     ):
     if len(items) == 0:
         print("Donations need an item")
     else:
         # Set up the Donation
-        donation = Donation()
-        donation.donor = donor
-        donation.date_received = date_received
-        donation.thanks_sent = thanks_sent
-        donation.user = user
-        donation.comments = comments
+        donation = Donation(
+                            donor = donor,
+                            date_received = date_received,
+                            thanks_sent = thanks_sent,
+                            user = user,
+                            comments = comments
+                            )
         donation.save()
 
         # Add the Items
@@ -321,7 +336,7 @@ depending on the subclass you use when calling.
 
 Usage:
     InsertItem(
-                donation.donations_id,
+                donation.donation,
                 "1",
                 Fund,
                 amount="20",
@@ -330,48 +345,39 @@ Usage:
 """
 
 def InsertItem(
-                donations_id, # Required
+                donation, # Required
                 quantity,
                 subclass,
-                type=None, # Optional
-                amount=None,
-                name=None,
-                fundTypeName=None,
-                businessName=None,
-                clothingTypeName=None,
+                type="", # Optional
+                amount="",
+                name="",
+                fundTypeName="",
+                businessName="",
+                clothingTypeName="",
                 ):
     subclasses = [Fund,GiftCard,Clothing,Food,Miscellaneous]
     if subclass in subclasses:
-        item = Item()
-        item.donations_id = donations_id
-        item.quantity = quantity
+        item = Item(donation,quantity)
         item.save()
         if subclass == Fund:
-            fund = Fund()
-            fund.items_id = item
-            fund.type = FundType().objects.get(name=FundTypeName)
-            fund.amount = amount
+            fund = Fund(item,
+                        FundType.objects.get(name=FundTypeName),
+                        amount)
             fund.save()
         elif subclass == GiftCard:
-            giftcard = GiftCard()
-            giftcard.items_id = item
-            giftcard.business_name = Business().objects.get(name=businessName)
-            giftcard.amount = amount
+            giftcard = GiftCard(item,
+                                Business.objects.get(name=businessName),
+                                amount)
             giftcard.save()
         elif subclass == Clothing:
-            clothing = Clothing()
-            clothing.items_id = item
-            clothing.type = ClothingType().objects.get(name=clothingTypeName)
+            clothing = Clothing(item,
+                                ClothingType.objects.get(name=clothingTypeName))
             clothing.save()
         elif subclass == Food:
-            food = Food()
-            food.items_id = item
-            food.name = name
+            food = Food(item,name)
             food.save()
         elif subclass == Miscellaneous:
-            misc = Miscellaneous()
-            misc.items_id = item
-            misc.name = name
+            misc = Miscellaneous(item,name)
             misc.save()
     else:
         print("Item subclass not recognized")
