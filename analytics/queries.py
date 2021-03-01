@@ -79,7 +79,6 @@ def SelectAllFunds():
                 print("Donation doesn't exist")
             try:
                 d = Donor.objects.get(id=c.donor.id)
-                print(d)
                 row["first_name"] = d.first_name
                 row["last_name"] = d.last_name
             except:
@@ -121,7 +120,6 @@ def SelectAllGiftCards():
                 print("Donation doesn't exist")
             try:
                 d = Donor.objects.get(id=c.donor.id)
-                print(d)
                 row["first_name"] = d.first_name
                 row["last_name"] = d.last_name
             except:
@@ -162,7 +160,6 @@ def SelectAllClothings():
                 print("Donation doesn't exist")
             try:
                 d = Donor.objects.get(id=c.donor.id)
-                print(d)
                 row["first_name"] = d.first_name
                 row["last_name"] = d.last_name
             except:
@@ -203,7 +200,6 @@ def SelectAllFood():
                 print("Donation doesn't exist")
             try:
                 d = Donor.objects.get(id=c.donor.id)
-                print(d)
                 row["first_name"] = d.first_name
                 row["last_name"] = d.last_name
             except:
@@ -244,7 +240,6 @@ def SelectAllMiscellaneous():
                 print("Donation doesn't exist")
             try:
                 d = Donor.objects.get(id=c.donor.id)
-                print(d)
                 row["first_name"] = d.first_name
                 row["last_name"] = d.last_name
             except:
