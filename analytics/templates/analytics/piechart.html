@@ -13,11 +13,13 @@
 var myChart = new Chart(ctx, {
     type: 'pie',
     data: {
+
+        <!-- Donation Categories -->
         labels: ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Miscellaneous'],
         datasets: [{
             label: '# of Votes',
 
-            <!-- Add counts passed from pie_chart view context when we have data in DB  data: [12, 19, 3, 5, 2], -->
+            <!-- Donation Category Counts -->
             data: [{{funds}}, {{giftcards}}, {{clothing}}, {{food}}, {{misc}}],
 
             backgroundColor: [
