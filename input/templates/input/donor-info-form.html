@@ -141,8 +141,8 @@
                                 {{ donor_form.email }}
                             </span>
                             <span>
-                                <b>{{ donor_form.dob.label }}</b>
-                                {{ donor_form.dob }}
+                                <b>{{ donor_form.phone_number.label }}</b>
+                                {{ donor_form.phone_number }}
                             </span>
                         </div>
                         <div class="wrapperX">
@@ -277,24 +277,42 @@
             $(e).addClass("selected");
         }
 
+        let formset_total_forms = parseInt($("#id_form-TOTAL_FORMS")[0].value);
+
         {% spaceless %}
             let itemCount = 0;
             $("#add_button").click(function (e) {
                 e.preventDefault();
-                itemCount++;
-                const row = $('<tr class="shadow p-3 mb-5 bg-body rounded"><td scope="row">' + itemCount + '</td><td>{{item_form.type}}</td><td>{{ item_form.quantity }}</td><td>{{item_form.sub_type_business}}</td></tr>')
+
+                let typeId = "id_form-"+ formset_total_forms + "-type"
+                let quantityId = "id_form-"+ formset_total_forms + "-quantity"
+                let subtypeId = "id_form-"+ formset_total_forms  + "-sub_type_business"
+
+                let row_count = $('<td scope="row">' + (formset_total_forms + 1).toString() + '</td>')
+                let type = $('{{item_form.type}}').attr({id: typeId, name: typeId})
+                let quantity = $('{{item_form.quantity}}').attr({id: quantityId, name: quantityId})
+                let subType = $('{{item_form.sub_type_business}}').attr({id: subtypeId, name: subtypeId})
+                
+                let row  = $('<tr class="shadow p-3 mb-5 bg-body rounded"></tr>')
+                row.append(row_count)
+                row.append("<td>"+type[0].outerHTML+"</td>")
+                row.append("<td>"+quantity[0].outerHTML+"</td>")
+                row.append("<td>"+subType[0].outerHTML+"</td>")
+
                 $("#items_body").append(row)
 
+                formset_total_forms += 1
+                
                 row.click(function () {
                     {#Add event listener to new rows#}
                     items_row_clicked(row);
                 });
-
+                
                 row.find("select:first").change(function (e) {
                     {#Add change listener to type field#}
                     changeSubTypeField(e, row)
                 })
-
+                $("#id_form-TOTAL_FORMS").attr("value", formset_total_forms)
 
             });
         {% endspaceless %}
@@ -337,18 +355,30 @@
                 {#TODO: move that logic to a function to bind it to the new rows #}
                 {#TODO: logic for replacing subtype#}
                 let selected = e.target.value;
-                {#let subTypeField = $($(row.children()[3]).children()[0])#}
-                let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
+                let subTypeField = $($(row.children()[3]).children()[0])
+                //let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
+
+                let subTypeId = "id_form-"+ row[0].rowIndex  + "-"
+                
 
                 if (selected === "giftcard") {
-                    subTypeField.replaceWith($(giftcard));
+                    subTypeId += "sub_type_business"
+                    subTypeField.replaceWith($(giftcard).attr({id: subTypeId, name: subTypeId}));
+                    console.log("GC")
                 } else if (selected === 'clothing') {
-                    subTypeField.replaceWith($(clothing));
+                    subTypeId += "sub_type_clothing"
+                    subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
+                    console.log("CL")
                 } else if (selected === 'food') {
-                    subTypeField.replaceWith($(food))
+                    subTypeId += "sub_type_name"
+                    subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
+                    console.log("FO")
                 } else if (selected === 'misc') {
-                    subTypeField.replaceWith($(misc))
+                    subTypeId += "sub_type_name"
+                    subTypeField.replaceWith($(misc).attr({id: subTypeId, name: subTypeId}));
+                    console.log("MI")
                 }
+                
 
                 {#  $(this).parents().eq(2).find("select")[1] this is the subtype dropdown for the corresponding type #}
         }
