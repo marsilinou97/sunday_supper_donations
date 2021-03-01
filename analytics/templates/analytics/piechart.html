@@ -17,8 +17,8 @@ var myChart = new Chart(ctx, {
         datasets: [{
             label: '# of Votes',
 
-            <!-- Add counts passed from pie_chart view context when we have data in DB -->
-            data: [12, 19, 3, 5, 2],
+            <!-- Add counts passed from pie_chart view context when we have data in DB  data: [12, 19, 3, 5, 2], -->
+            data: [{{funds}}, {{giftcards}}, {{clothing}}, {{food}}, {{misc}}],
 
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
