@@ -355,9 +355,8 @@
                 {#TODO: move that logic to a function to bind it to the new rows #}
                 {#TODO: logic for replacing subtype#}
                 let selected = e.target.value;
-                {#let subTypeField = $($(row.children()[3]).children()[0])#}
-                let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
-                console.log(row[0].rowIndex)
+                let subTypeField = $($(row.children()[3]).children()[0])
+                //let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
 
                 let subTypeId = "id_form-"+ row[0].rowIndex  + "-"
                 
@@ -365,18 +364,20 @@
                 if (selected === "giftcard") {
                     subTypeId += "sub_type_business"
                     subTypeField.replaceWith($(giftcard).attr({id: subTypeId, name: subTypeId}));
+                    console.log("GC")
                 } else if (selected === 'clothing') {
                     subTypeId += "sub_type_clothing"
                     subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
+                    console.log("CL")
                 } else if (selected === 'food') {
                     subTypeId += "sub_type_name"
-                    subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}))
+                    subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
+                    console.log("FO")
                 } else if (selected === 'misc') {
                     subTypeId += "sub_type_name"
-                    subTypeField.replaceWith($(misc).attr({id: subTypeId, name: subTypeId}))
+                    subTypeField.replaceWith($(misc).attr({id: subTypeId, name: subTypeId}));
+                    console.log("MI")
                 }
-
-                console.log(subTypeId)
                 
 
                 {#  $(this).parents().eq(2).find("select")[1] this is the subtype dropdown for the corresponding type #}
