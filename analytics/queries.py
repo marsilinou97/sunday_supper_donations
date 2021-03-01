@@ -60,34 +60,35 @@ def SelectAllFunds():
         return temp_caching["SelectAllFunds"]
     results = []
     a = Fund.objects.all()
-    for fund in a:
-        row = {}
-        row["type"] = fund.type.name
-        row["amount"] = fund.amount
+    if a.exists():
+        for fund in a:
+            row = {}
+            row["type"] = fund.type.name
+            row["amount"] = fund.amount
 
-        # Not all of these try blocks are necessary; just in case.
-        try:
-            b = Item.objects.get(id=fund.items_id.id)
-            row["quantity"] = b.quantity
-        except:
-            print("Item doesn't exist")
-        try:
-            c = Donation.objects.get(id=b.donations_id.id)
-            row["date_received"] = str(c.date_received)
-        except:
-            print("Donation doesn't exist")
-        try:
-            d = Donor.objects.get(id=c.donor.id)
-            print(d)
-        except:
-            print("Donor doesn't exist")
+            # Not all of these try blocks are necessary; just in case.
+            try:
+                b = Item.objects.get(id=fund.item.id)
+                row["quantity"] = b.quantity
+            except:
+                print("Item doesn't exist")
+            try:
+                c = Donation.objects.get(id=b.donation.id)
+                row["date_received"] = str(c.date_received)
+            except:
+                print("Donation doesn't exist")
+            try:
+                d = Donor.objects.get(id=c.donor.id)
+                print(d)
+            except:
+                print("Donor doesn't exist")
 
-        names = FindDonorNames(d)
-        row["first_name"] = names[0]
-        row["last_name"] = names[1]
+            names = FindDonorNames(d)
+            row["first_name"] = names[0]
+            row["last_name"] = names[1]
 
-        results.append(row)
-    temp_caching["SelectAllFunds"] = results
+            results.append(row)
+        temp_caching["SelectAllFunds"] = results
     return results
 
 
@@ -103,34 +104,35 @@ def SelectAllGiftCards():
         return temp_caching["SelectAllGiftCards"]
     results = []
     a = GiftCard.objects.all()
-    for giftcard in a:
-        row = {}
-        row["business_name"] = giftcard.business_name.name
-        row["amount"] = giftcard.amount
+    if a.exists():
+        for giftcard in a:
+            row = {}
+            row["business_name"] = giftcard.business_name.name
+            row["amount"] = giftcard.amount
 
-        # Not all of these try blocks are necessary; just in case.
-        try:
-            b = Item.objects.get(id=giftcard.items_id.id)
-            row["quantity"] = b.quantity
-        except:
-            print("Item doesn't exist")
-        try:
-            c = Donation.objects.get(id=b.donations_id.id)
-            row["date_received"] = str(c.date_received)
-        except:
-            print("Donation doesn't exist")
-        try:
-            d = Donor.objects.get(id=c.donor.id)
-            print(d)
-        except:
-            print("Donor doesn't exist")
+            # Not all of these try blocks are necessary; just in case.
+            try:
+                b = Item.objects.get(id=giftcard.item.id)
+                row["quantity"] = b.quantity
+            except:
+                print("Item doesn't exist")
+            try:
+                c = Donation.objects.get(id=b.donation.id)
+                row["date_received"] = str(c.date_received)
+            except:
+                print("Donation doesn't exist")
+            try:
+                d = Donor.objects.get(id=c.donor.id)
+                print(d)
+            except:
+                print("Donor doesn't exist")
 
-        names = FindDonorNames(d)
-        row["first_name"] = names[0]
-        row["last_name"] = names[1]
+            names = FindDonorNames(d)
+            row["first_name"] = names[0]
+            row["last_name"] = names[1]
 
-        results.append(row)
-    temp_caching["SelectAllGiftCards"] = results
+            results.append(row)
+        temp_caching["SelectAllGiftCards"] = results
     return results
 
 
@@ -146,33 +148,34 @@ def SelectAllClothings():
         return temp_caching["SelectAllClothings"]
     results = []
     a = Clothing.objects.all()
-    for clothing in a:
-        row = {}
-        row["type"] = clothing.type.name
+    if a.exists():
+        for clothing in a:
+            row = {}
+            row["type"] = clothing.type.name
 
-        # Not all of these try blocks are necessary; just in case.
-        try:
-            b = Item.objects.get(id=clothing.items_id.id)
-            row["quantity"] = b.quantity
-        except:
-            print("Item doesn't exist")
-        try:
-            c = Donation.objects.get(id=b.donations_id.id)
-            row["date_received"] = str(c.date_received)
-        except:
-            print("Donation doesn't exist")
-        try:
-            d = Donor.objects.get(id=c.donor.id)
-            print(d)
-        except:
-            print("Donor doesn't exist")
+            # Not all of these try blocks are necessary; just in case.
+            try:
+                b = Item.objects.get(id=clothing.item.id)
+                row["quantity"] = b.quantity
+            except:
+                print("Item doesn't exist")
+            try:
+                c = Donation.objects.get(id=b.donation.id)
+                row["date_received"] = str(c.date_received)
+            except:
+                print("Donation doesn't exist")
+            try:
+                d = Donor.objects.get(id=c.donor.id)
+                print(d)
+            except:
+                print("Donor doesn't exist")
 
-        names = FindDonorNames(d)
-        row["first_name"] = names[0]
-        row["last_name"] = names[1]
+            names = FindDonorNames(d)
+            row["first_name"] = names[0]
+            row["last_name"] = names[1]
 
-        results.append(row)
-    temp_caching["SelectAllClothings"] = results
+            results.append(row)
+        temp_caching["SelectAllClothings"] = results
     return results
 
 
@@ -188,33 +191,34 @@ def SelectAllFood():
         return temp_caching["SelectAllFood"]
     results = []
     a = Food.objects.all()
-    for food in a:
-        row = {}
-        row["misc_name"] = food.name
+    if a.exists():
+        for food in a:
+            row = {}
+            row["misc_name"] = food.name
 
-        # Not all of these try blocks are necessary; just in case.
-        try:
-            b = Item.objects.get(id=food.items_id.id)
-            row["quantity"] = b.quantity
-        except:
-            print("Item doesn't exist")
-        try:
-            c = Donation.objects.get(id=b.donations_id.id)
-            row["date_received"] = str(c.date_received)
-        except:
-            print("Donation doesn't exist")
-        try:
-            d = Donor.objects.get(id=c.donor.id)
-            print(d)
-        except:
-            print("Donor doesn't exist")
+            # Not all of these try blocks are necessary; just in case.
+            try:
+                b = Item.objects.get(id=food.item.id)
+                row["quantity"] = b.quantity
+            except:
+                print("Item doesn't exist")
+            try:
+                c = Donation.objects.get(id=b.donation.id)
+                row["date_received"] = str(c.date_received)
+            except:
+                print("Donation doesn't exist")
+            try:
+                d = Donor.objects.get(id=c.donor.id)
+                print(d)
+            except:
+                print("Donor doesn't exist")
 
-        names = FindDonorNames(d)
-        row["first_name"] = names[0]
-        row["last_name"] = names[1]
+            names = FindDonorNames(d)
+            row["first_name"] = names[0]
+            row["last_name"] = names[1]
 
-        results.append(row)
-    temp_caching["SelectAllFood"] = results
+            results.append(row)
+        temp_caching["SelectAllFood"] = results
     return results
 
 
@@ -230,31 +234,32 @@ def SelectAllMiscellaneous():
         return temp_caching["SelectAllMiscellaneous"]
     results = []
     a = Miscellaneous.objects.all()
-    for misc in a:
-        row = {}
-        row["misc_name"] = misc.name
+    if a.exists():
+        for misc in a:
+            row = {}
+            row["misc_name"] = misc.name
 
-        # Not all of these try blocks are necessary; just in case.
-        try:
-            b = Item.objects.get(id=misc.items_id.id)
-            row["quantity"] = b.quantity
-        except:
-            print("Item doesn't exist")
-        try:
-            c = Donation.objects.get(id=b.donations_id.id)
-            row["date_received"] = str(c.date_received)
-        except:
-            print("Donation doesn't exist")
-        try:
-            d = Donor.objects.get(id=c.donor.id)
-            print(d)
-        except:
-            print("Donor doesn't exist")
+            # Not all of these try blocks are necessary; just in case.
+            try:
+                b = Item.objects.get(id=misc.item.id)
+                row["quantity"] = b.quantity
+            except:
+                print("Item doesn't exist")
+            try:
+                c = Donation.objects.get(id=b.donation.id)
+                row["date_received"] = str(c.date_received)
+            except:
+                print("Donation doesn't exist")
+            try:
+                d = Donor.objects.get(id=c.donor.id)
+                print(d)
+            except:
+                print("Donor doesn't exist")
 
-        names = FindDonorNames(d)
-        row["first_name"] = names[0]
-        row["last_name"] = names[1]
+            names = FindDonorNames(d)
+            row["first_name"] = names[0]
+            row["last_name"] = names[1]
 
-        results.append(row)
-    temp_caching["SelectAllMiscellaneous"] = results
+            results.append(row)
+        temp_caching["SelectAllMiscellaneous"] = results
     return results
