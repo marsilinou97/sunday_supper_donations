@@ -80,12 +80,10 @@ def SelectAllFunds():
             try:
                 d = Donor.objects.get(id=c.donor.id)
                 print(d)
+                row["first_name"] = d.first_name
+                row["last_name"] = d.last_name
             except:
                 print("Donor doesn't exist")
-
-            names = FindDonorNames(d)
-            row["first_name"] = names[0]
-            row["last_name"] = names[1]
 
             results.append(row)
         temp_caching["SelectAllFunds"] = results
@@ -124,12 +122,10 @@ def SelectAllGiftCards():
             try:
                 d = Donor.objects.get(id=c.donor.id)
                 print(d)
+                row["first_name"] = d.first_name
+                row["last_name"] = d.last_name
             except:
                 print("Donor doesn't exist")
-
-            names = FindDonorNames(d)
-            row["first_name"] = names[0]
-            row["last_name"] = names[1]
 
             results.append(row)
         temp_caching["SelectAllGiftCards"] = results
@@ -167,12 +163,10 @@ def SelectAllClothings():
             try:
                 d = Donor.objects.get(id=c.donor.id)
                 print(d)
+                row["first_name"] = d.first_name
+                row["last_name"] = d.last_name
             except:
                 print("Donor doesn't exist")
-
-            names = FindDonorNames(d)
-            row["first_name"] = names[0]
-            row["last_name"] = names[1]
 
             results.append(row)
         temp_caching["SelectAllClothings"] = results
@@ -210,12 +204,10 @@ def SelectAllFood():
             try:
                 d = Donor.objects.get(id=c.donor.id)
                 print(d)
+                row["first_name"] = d.first_name
+                row["last_name"] = d.last_name
             except:
                 print("Donor doesn't exist")
-
-            names = FindDonorNames(d)
-            row["first_name"] = names[0]
-            row["last_name"] = names[1]
 
             results.append(row)
         temp_caching["SelectAllFood"] = results
@@ -253,12 +245,10 @@ def SelectAllMiscellaneous():
             try:
                 d = Donor.objects.get(id=c.donor.id)
                 print(d)
+                row["first_name"] = d.first_name
+                row["last_name"] = d.last_name
             except:
                 print("Donor doesn't exist")
-
-            names = FindDonorNames(d)
-            row["first_name"] = names[0]
-            row["last_name"] = names[1]
 
             results.append(row)
         temp_caching["SelectAllMiscellaneous"] = results
