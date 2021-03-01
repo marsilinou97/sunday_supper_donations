@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from django import forms
 from .models import *
 from .helpers import remove_html_tags
@@ -9,9 +8,7 @@ class DonorInformationForm(forms.Form):
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
-    dob = forms.DateField(required=False,
-                          widget=forms.DateInput(attrs={'type': 'date', "min": "1900-01-01",
-                                                        "max": datetime.today().strftime('%Y-%m-%d')}))
+    phone_number = forms.CharField(required=False)
     address1 = forms.CharField(required=False)
     address2 = forms.CharField(required=False)
     city = forms.CharField(required=False)
@@ -20,7 +17,7 @@ class DonorInformationForm(forms.Form):
 
     class Meta:
         # model = input
-        fields = ['first_name', 'last_name', 'dob', 'address1', 'address2', 'city', 'state', 'zip', 'email']
+        fields = ['first_name', 'last_name', 'phone_number', 'address1', 'address2', 'city', 'state', 'zip', 'email']
 
     def __init__(self, *args, **kwargs):
         super(DonorInformationForm, self).__init__(*args, **kwargs)
@@ -32,7 +29,7 @@ class DonorInformationForm(forms.Form):
 
         self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
         self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
-        self.fields["dob"].widget.attrs.update({"placeholder": "D.O.B"})
+        self.fields["phone_number"].widget.attrs.update({"placeholder": "Phone Number"})
         self.fields["address1"].widget.attrs.update({"placeholder": "Address Line 1"})
         self.fields["address2"].widget.attrs.update({"placeholder": "Address Line 2"})
         self.fields["city"].widget.attrs.update({"placeholder": "City"})
