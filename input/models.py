@@ -21,7 +21,7 @@ class Donor(models.Model):
     state = models.CharField(max_length=13, blank=True, null=True)
     zipcode = models.CharField(max_length=10, blank=True, null=True)
 
-    def __init__(
+    def update(
                 self,
                 first_name,
                 last_name,
@@ -61,7 +61,7 @@ class Donation(models.Model):
     thanks_sent = models.BooleanField(blank=True, null=True)
     comments = models.TextField(blank=True, null=True)
 
-    def __init__(
+    def update(
                 self,
                 donor=None,
                 user="",
@@ -87,7 +87,7 @@ class Item(models.Model):
     donation = models.ForeignKey(Donation, on_delete=models.CASCADE)
     quantity = models.CharField(max_length=30)
 
-    def __init__(
+    def update(
                 self,
                 donation,
                 quantity
@@ -108,7 +108,7 @@ class Business(models.Model):
     # Enumeration for GiftCards table; see Giftcard
     name = models.CharField(primary_key=True, max_length=50)
 
-    def __init__(self,name):
+    def update(self,name):
         self.name = name
 
     def __str__(self):
@@ -119,7 +119,7 @@ class ClothingType(models.Model):
     # Enumeration for Clothing table; see Clothing
     name = models.CharField(primary_key=True, max_length=50)
 
-    def __init__(self,name):
+    def update(self,name):
         self.name = name
 
     def __str__(self):
@@ -130,7 +130,7 @@ class FundType(models.Model):
     # Enumeration for Funds table
     name = models.CharField(primary_key=True, max_length=50)
 
-    def __init__(self,name):
+    def update(self,name):
         self.name = name
 
     def __str__(self):
@@ -146,7 +146,7 @@ class Clothing(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     type = models.ForeignKey(ClothingType, on_delete=models.CASCADE)
 
-    def __init__(
+    def update(
                 self,
                 item,
                 type
@@ -162,7 +162,7 @@ class Food(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=50)
 
-    def __init__(
+    def update(
                 self,
                 item,
                 name
@@ -179,7 +179,7 @@ class Fund(models.Model):
     type = models.ForeignKey(FundType, on_delete=models.CASCADE)
     amount = models.CharField(max_length=10)
 
-    def __init__(
+    def update(
                 self,
                 item,
                 type,
@@ -198,7 +198,7 @@ class GiftCard(models.Model):
     business_name = models.ForeignKey(Business, on_delete=models.CASCADE)
     amount = models.CharField(max_length=10)
 
-    def __init__(
+    def update(
                 self,
                 item,
                 business_name,
@@ -216,7 +216,7 @@ class Miscellaneous(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=50)
 
-    def __init__(
+    def update(
                 self,
                 item,
                 name
@@ -233,7 +233,10 @@ Debug function; prints all rows in all tables
 def tableDebug():
     x = [Donor,Donation,Item,Fund,GiftCard,Clothing,Food,Miscellaneous,FundType,Business,ClothingType,User]
     for x1 in x:
-        print(x1.objects.all())
+        try:
+            print(x1.objects.all())
+        except:
+            print("Exception on table",x1)
 
 """
 Insert a Donor into the table for Donors. Checks for uniqueness before insertion.
@@ -250,7 +253,7 @@ def InsertDonor(
                 state = None,
                 zipcode = None
                 ):
-
+    them = None
     """
     Query Donor table for any matches; if the resulting queryset is empty,
     we can create the next one.
@@ -264,7 +267,8 @@ def InsertDonor(
                                 )
     if len(donors) == 0:
         # Build and save the Donor
-        them = Donor(
+        them = Donor()
+        them.update(
             first_name = first_name,
             last_name = last_name,
             email_address = email_address,
@@ -279,7 +283,7 @@ def InsertDonor(
         print(them,"created")
     else:
         print("Donor",first_name,last_name,"already exists")
-    return donor
+    return them
 
 """
 Insert a Donation into the table for Donations. Also calls InsertItem(). The argument
@@ -300,7 +304,8 @@ def InsertDonation(
         print("Donations need an item")
     else:
         # Set up the Donation
-        donation = Donation(
+        donation = Donation()
+        donation.update(
                             donor = donor,
                             date_received = date_received,
                             thanks_sent = thanks_sent,
@@ -357,27 +362,33 @@ def InsertItem(
                 ):
     subclasses = [Fund,GiftCard,Clothing,Food,Miscellaneous]
     if subclass in subclasses:
-        item = Item(donation,quantity)
+        item = Item()
+        item.update(donation,quantity)
         item.save()
         if subclass == Fund:
-            fund = Fund(item,
+            fund = Fund()
+            fund.update(item,
                         FundType.objects.get(name=FundTypeName),
                         amount)
             fund.save()
         elif subclass == GiftCard:
-            giftcard = GiftCard(item,
+            giftcard = GiftCard()
+            giftcard.update(item,
                                 Business.objects.get(name=businessName),
                                 amount)
             giftcard.save()
         elif subclass == Clothing:
-            clothing = Clothing(item,
+            clothing = Clothing()
+            clothing.update(item,
                                 ClothingType.objects.get(name=clothingTypeName))
             clothing.save()
         elif subclass == Food:
-            food = Food(item,name)
+            food = Food()
+            food.update(item,name)
             food.save()
         elif subclass == Miscellaneous:
-            misc = Miscellaneous(item,name)
+            misc = Miscellaneous()
+            misc.update(item,name)
             misc.save()
     else:
         print("Item subclass not recognized")
