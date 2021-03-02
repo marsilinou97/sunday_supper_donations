@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .forms import RawDataForm
 from .queries import *
+from input.models import *
 
 
 def index(request):
@@ -8,107 +9,92 @@ def index(request):
 
 
 def raw_data(request):
-
     form = RawDataForm()
+
+    funds = SelectAllFunds()
+    food = SelectAllFood()
+    clothing = SelectAllClothings()
+    giftcards = SelectAllGiftCards()
+    miscellaneous = SelectAllMiscellaneous()
 
     # Handles GET request
     if request.method == 'GET':
-        return render(request, 'analytics/rawdata.html', {'form': form})
+
+        context = {
+            "form": form,
+            "funds": funds,
+            "clothing": clothing,
+            "foods": food,
+            "giftcards": giftcards,
+            "miscellaneous": miscellaneous
+        }
+
     else:
         # Handles POST request
 
         form = RawDataForm(request.POST)
 
         if form.is_valid():
-
             # retrieve valid filter fields from form
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             donation_date = form.cleaned_data['donation_date']
-            donation_type = form.cleaned_data['donation_type']
 
+            # Filter tables based on form fields before returning context
+            # Set the filters
+            filters = {}
+            if first_name != "" and first_name is not None:
+                filters["first_name"] = first_name
+            if last_name != "" and last_name is not None:
+                filters["last_name"] = last_name
+            if donation_date is not None:
+                filters["date_received"] = donation_date
 
+            # If any of the filters were used, filter the results
+            if len(filters) > 0:
+                f_funds = FilterResults(funds,filters)
+                f_clothing = FilterResults(clothing,filters)
+                f_giftcards = FilterResults(giftcards,filters)
+                f_food = FilterResults(food,filters)
+                f_miscellaneous = FilterResults(miscellaneous,filters)
 
-            # Handles case where donation category filter set to All
-            if donation_type == 'all':
-                filter_type = donation_type
-                funds = SelectAllFunds()
-                clothing = SelectAllClothings()
-                giftcards = SelectAllGiftCards()
-                miscellaneous = SelectAllMiscellaneous()
+                # Reset the filters for next time
+                filters = {}
+                del temp_caching["SelectAllFunds"]
+                del temp_caching["SelectAllClothings"]
+                del temp_caching["SelectAllGiftCards"]
+                del temp_caching["SelectAllFood"]
+                del temp_caching["SelectAllMiscellaneous"]
 
-                # Need to filter all donations based on form filter fields before returning context
-
+                # Set the context
                 context = {
                     "form": form,
-                    "funds": funds,
-                    "clothing": clothing,
-                    "giftcards": giftcards,
-                    "miscellaneous": miscellaneous,
-                    'filter_type': filter_type
-                }
-            # Handles case where filter set to Funds
-            elif donation_type == "fund":
-                filter_type = donation_type
-                funds = SelectAllFunds()
-
-                # Need to filter funds based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "funds": funds,
-                    'filter_type': filter_type
+                    "funds": f_funds,
+                    "clothing": f_clothing,
+                    "giftcards": f_giftcards,
+                    "foods": f_food,
+                    "miscellaneous": f_miscellaneous
                 }
 
-            # Handles case where donation category filter set to Giftcards
-            elif donation_type == 'giftcard':
-                filter_type = donation_type
-                giftcards = SelectAllGiftCards()
-
-                # Need to filter giftcards based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "giftcards": giftcards,
-                    'filter_type': filter_type
-                }
-
-            # Handles case where donation category filter set to clothing
-            elif donation_type == 'clothing':
-                filter_type = donation_type
-                clothing = SelectAllClothings()
-
-                # Need to filter clothing based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "clothing": clothing,
-                    'filter_type': filter_type
-                }
-
-            # Handles case where donation category filter set to miscellaneous
-            elif donation_type == 'misc':
-                filter_type = donation_type
-                miscellaneous = SelectAllMiscellaneous()
-
-                # Need to filter miscellaneous based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "miscellaneous": miscellaneous,
-                    'filter_type': filter_type
-                }
+            # If none of the filters were used, the don't filter anything
             else:
-                '''
-                   Need to Handle case for Food
-                '''
+                context = {
+                    "form": form,
+                    "funds": funds,
+                    "clothing": clothing,
+                    "giftcards": giftcards,
+                    "food": food,
+                    "miscellaneous": miscellaneous
+                }
+
+    # Return populated context based on HTTP request
+    return render(request, 'analytics/rawdata.html', context)
 
 
 
+def pie_chart(request):
 
-            return render(request, 'analytics/rawdata.html', context)
+    # Get counts for all donation categories
+    context = countItems()
 
-        else:
-            # Form not valid
-            return render(request, 'analytics/rawdata.html', {'form': form})
-
+    return render(request, 'analytics/piechart.html', context)

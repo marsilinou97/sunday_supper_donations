@@ -3,7 +3,7 @@ from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
 from django.forms import formset_factory
 from django.contrib import messages
 
-from .models import IdentifiedDonor, Donor, InsertDonor
+from .models import Donor, InsertDonor
 
 us_states = {
     'Alabama': 'al', 'Alaska': 'ak', 'American Samoa': 'as', 'Arizona': 'az', 'Arkansas': 'ar', 'California': 'ca',
