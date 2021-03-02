@@ -1,341 +1,335 @@
-{% extends 'users/base.html'%}
+{% extends 'users/base.html' %}
 
 
 
-{% block content%}
+{% block content %}
 
 
     <form method="post" class="text-center">
-        {%csrf_token%}
+        {% csrf_token %}
 
-        {{form}}
+        {{ form }}
 
         <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
 
     </form>
 
 
-<form>
- <fieldset>
+    <form>
+        <fieldset>
 
-  <legend>Show Donation Types:</legend>
+            <legend>Show Donation Types:</legend>
 
-  <label for="all">Select All:</label>
-  <input class="donation_select m-3" type="checkbox" id="all" name="all" value="All" checked="true">
-
-  <label for="fund">Funds:</label>
-  <input class="donation_select m-3"  type="checkbox" id="fund" name="fund" value="Funds" checked="true">
-
-  <label for="gift">Gift Cards:</label>
-  <input  class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
-
-  <label for="clothing">Clothing:</label>
-  <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing" checked="true">
-
-  <label for="food">Food:</label>
-  <input class="donation_select m-3"  type="checkbox" id="food" name="food" value="Food" checked="true">
-
-  <label for="misc">Miscellaneous:</label>
-  <input class="donation_select m-3"  type="checkbox" id="misc" name="misc" value="Misc" checked="true">
- </fieldset>
-</form>
+            <div id="input-group">
+                <label for="all">Select All:</label>
+                <input class="donation_select m-3" type="checkbox" id="all" name="all" value="All" checked="true">
+            </div>
 
 
+            <div id="input-group">
+                <label for="fund">Funds:</label>
+                <input class="donation_select m-3" type="checkbox" id="fund" name="fund" value="Funds" checked="true">
+            </div>
 
-                 <h1 class="mb-5 mt-5 text-center">Donations</h1>
+            <div id="input-group">
+                <label for="gift">Gift Cards:</label>
+                <input class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
+            </div>
 
-                 <h3 id="fundheader" class ="mb-3 mt-5 text-left"> Funds</h3>
+            <div id="input-group">
+                <label for="clothing">Clothing:</label>
+                <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
+                       checked="true">
+            </div>
 
+            <div id="input-group">
+                <label for="food">Food:</label>
+                <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked="true">
+            </div>
 
-                 <table id="fundtable" class="table table-striped table-bordered" style="width:100%">
+            <div id="input-group">
+                <label for="misc">Miscellaneous:</label>
+                <input class="donation_select m-3" type="checkbox" id="misc" name="misc" value="Misc" checked="true">
+            </div>
 
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for fund in funds %}
-                            <tr>
-                                <td>{{fund.first_name}}</td>
-                                <td>{{fund.last_name}}</td>
-                                <td>{{fund.date_received}}</td>
-                                <td>{{fund.type}}</td>
-                                <td>${{fund.amount}}</td>
-                                <td>{{fund.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-
-
-                 <h3 id="giftcardheader" class ="mb-3 mt-5 text-left">Gift Cards</h3>
-
-                 <table id="giftcardtable" class="table table-striped table-bordered" style="width:100%">
-
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Business Name</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for giftcard in giftcards %}
-                            <tr>
-                                <td>{{giftcard.first_name}}</td>
-                                <td>{{giftcard.last_name}}</td>
-                                <td>{{giftcard.date_received}}</td>
-                                <td>{{giftcard.business_name}}</td>
-                                <td>${{giftcard.amount}}</td>
-                                <td>{{giftcard.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Business Name</th>
-                                <th>Amount</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-
-
-                 <h3 id="clothingheader" class ="mb-3 mt-5 text-left">Clothing</h3>
-
-                 <table  id="clothingtable" class="table table-striped table-bordered" style="width:100%">
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                         {% for cloth in clothing %}
-                            <tr>
-                                <td>{{cloth.first_name}}</td>
-                                <td>{{cloth.last_name}}</td>
-                                <td>{{cloth.date_received}}</td>
-                                <td>{{cloth.type}}</td>
-                                <td>{{cloth.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
-
-
-                 <h3 id="foodheader"  class ="mb-3 mt-5 tex-left">Foods</h3>
-
-                 <table id="foodtable" class="table table-striped table-bordered" style="width:100%">
-
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for food in foods %}
-                            <tr>
-                                <td>{{food.first_name}}</td>
-                                <td>{{food.last_name}}</td>
-                                <td>{{food.date_received}}</td>
-                                <td>{{food.name}}</td>
-                                <td>{{food.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
+        </fieldset>
+    </form>
 
 
 
-                 <h3 id="mischeader"  class ="mb-3 mt-5 text-left">Miscellaneous</h3>
+    <h1 class="mb-5 mt-5 text-center">Donations</h1>
 
-                 <table id="misctable" class="table table-striped table-bordered" style="width:100%">
-
-
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for misc in miscellaneous %}
-                            <tr>
-                                <td>{{misc.first_name}}</td>
-                                <td>{{misc.last_name}}</td>
-                                <td>{{misc.date_received}}</td>
-                                <td>{{misc.misc_name}}</td>
-                                <td>{{misc.quantity}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Date Received</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </tfoot>
-                 </table>
+    <h3 id="fundheader" class="mb-3 mt-5 text-left"> Funds</h3>
 
 
-<script type="text/javascript">
+    <table id="fundtable" class="table table-striped table-bordered" style="width:100%">
+
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for fund in funds %}
+            <tr>
+                <td>{{ fund.first_name }}</td>
+                <td>{{ fund.last_name }}</td>
+                <td>{{ fund.date_received }}</td>
+                <td>{{ fund.type }}</td>
+                <td>${{ fund.amount }}</td>
+                <td>{{ fund.quantity }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Quantity</th>
+        </tr>
+        </tfoot>
+    </table>
 
 
-$(document).ready(function()
-{
+    <h3 id="giftcardheader" class="mb-3 mt-5 text-left">Gift Cards</h3>
+
+    <table id="giftcardtable" class="table table-striped table-bordered" style="width:100%">
+
+
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Business Name</th>
+            <th>Amount</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for giftcard in giftcards %}
+            <tr>
+                <td>{{ giftcard.first_name }}</td>
+                <td>{{ giftcard.last_name }}</td>
+                <td>{{ giftcard.date_received }}</td>
+                <td>{{ giftcard.business_name }}</td>
+                <td>${{ giftcard.amount }}</td>
+                <td>{{ giftcard.quantity }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Business Name</th>
+            <th>Amount</th>
+            <th>Quantity</th>
+        </tr>
+        </tfoot>
+    </table>
+
+
+    <h3 id="clothingheader" class="mb-3 mt-5 text-left">Clothing</h3>
+
+    <table id="clothingtable" class="table table-striped table-bordered" style="width:100%">
+
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cloth in clothing %}
+            <tr>
+                <td>{{ cloth.first_name }}</td>
+                <td>{{ cloth.last_name }}</td>
+                <td>{{ cloth.date_received }}</td>
+                <td>{{ cloth.type }}</td>
+                <td>{{ cloth.quantity }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Quantity</th>
+        </tr>
+        </tfoot>
+    </table>
+
+
+    <h3 id="foodheader" class="mb-3 mt-5 tex-left">Foods</h3>
+
+    <table id="foodtable" class="table table-striped table-bordered" style="width:100%">
+
+
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for food in foods %}
+            <tr>
+                <td>{{ food.first_name }}</td>
+                <td>{{ food.last_name }}</td>
+                <td>{{ food.date_received }}</td>
+                <td>{{ food.name }}</td>
+                <td>{{ food.quantity }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Quantity</th>
+        </tr>
+        </tfoot>
+    </table>
 
 
 
-  $('#fund').change(function()
-  {
-    if(this.checked == true)
-    {
-         $('#fundheader').show();
-         $('#fundtable').show();
-    }
-    else{
-        $('#fundheader').hide();
-        $('#fundtable').hide();
-    }
-  });
+    <h3 id="mischeader" class="mb-3 mt-5 text-left">Miscellaneous</h3>
+
+    <table id="misctable" class="table table-striped table-bordered" style="width:100%">
 
 
-  $('#gift').change(function()
-  {
-    if(this.checked == true)
-    {
-         $('#giftcardheader').show();
-         $('#giftcardtable').show();
-    }
-    else{
-        $('#giftcardheader').hide();
-        $('#giftcardtable').hide();
-    }
-  });
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for misc in miscellaneous %}
+            <tr>
+                <td>{{ misc.first_name }}</td>
+                <td>{{ misc.last_name }}</td>
+                <td>{{ misc.date_received }}</td>
+                <td>{{ misc.misc_name }}</td>
+                <td>{{ misc.quantity }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Received</th>
+            <th>Type</th>
+            <th>Quantity</th>
+        </tr>
+        </tfoot>
+    </table>
 
 
-  $('#clothing').change(function()
-  {
-    if(this.checked == true)
-    {
-         $('#clothingheader').show();
-         $('#clothingtable').show();
-
-    }
-    else{
-        $('#clothingheader').hide();
-        $('#clothingtable').hide();
-
-    }
-  });
+    <script type="text/javascript">
 
 
-  $('#food').change(function()
-  {
-    if(this.checked == true)
-    {
-         $('#foodheader').show();
-         $('#foodtable').show();
-    }
-    else{
-        $('#foodheader').hide();
-        $('#foodtable').hide();
-    }
-  });
-
-  $('#misc').change(function()
-  {
-    if(this.checked == true)
-    {
-         $('#mischeader').show();
-         $('#misctable').show();
-    }
-    else{
-        $('#mischeader').hide();
-        $('#misctable').hide();
-    }
-  });
+        $(document).ready(function () {
 
 
-
-   $('#all').change(function()
-  {
-    if(this.checked == true)
-    {
-         $('h3').show();
-         $('table').show();
-         $("input:checkbox").prop('checked',true);
-    }
-    else{
-        $('h3').hide();
-        $('table').hide();
-        $("input:checkbox").prop('checked',false);
-
-    }
-  });
+            $('#fund').change(function () {
+                if (this.checked === true) {
+                    $('#fundheader').slideDown(300);
+                    $('#fundtable').slideDown(300);
+                } else {
+                    $('#fundheader').slideUp(300);
+                    $('#fundtable').slideUp(300);
+                }
+            });
 
 
-});
+            $('#gift').change(function () {
+
+                if (this.checked === true) {
+                    $('#giftcardheader').slideDown(300);
+                    $('#giftcardtable').slideDown(300);
+                } else {
+                    $('#giftcardheader').slideUp(300);
+                    $('#giftcardtable').slideUp(300);
+                }
+            });
 
 
-</script>
+            $('#clothing').change(function () {
+                if (this.checked === true) {
+                    $('#clothingheader').slideDown(300);
+                    $('#clothingtable').slideDown(300);
+
+                } else {
+                    $('#clothingheader').slideUp(300);
+                    $('#clothingtable').slideUp(300);
+
+                }
+            });
+
+
+            $('#food').change(function () {
+                if (this.checked === true) {
+                    $('#foodheader').slideDown(300);
+                    $('#foodtable').slideDown(300);
+                } else {
+                    $('#foodheader').slideUp(300);
+                    $('#foodtable').slideUp(300);
+                }
+            });
+
+            $('#misc').change(function () {
+                if (this.checked === true) {
+                    $('#mischeader').slideDown(300);
+                    $('#misctable').slideDown(300);
+                } else {
+                    $('#mischeader').slideUp(300);
+                    $('#misctable').slideUp(300);
+                }
+            });
+
+
+            $('#all').change(function () {
+                if (this.checked === true) {
+                    $('h3').slideDown(300);
+                    $('table').slideDown(300);
+                    $("input[type=checkbox].donation_select").prop('checked', true);
+                } else {
+                    $('h3').slideUp(300);
+                    $('table').slideUp(300);
+                    $("input[type=checkbox].donation_select").prop('checked', false);
+
+                }
+            });
+        });
+
+
+    </script>
 
 
 {% endblock %}

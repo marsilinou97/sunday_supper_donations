@@ -5,7 +5,7 @@ from django import forms
 class RawDataForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=False)
     last_name = forms.CharField(max_length=50, required=False)
-    donation_date = forms.DateField(required=False)
+    donation_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
 
 
     class Meta:
