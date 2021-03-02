@@ -183,7 +183,7 @@ def SelectAllFood():
     if a.exists():
         for food in a:
             row = {}
-            row["misc_name"] = food.name
+            row["name"] = food.name
 
             # Not all of these try blocks are necessary; just in case.
             try:

@@ -24,6 +24,7 @@ def raw_data(request):
             "form": form,
             "funds": funds,
             "clothing": clothing,
+            "foods": food,
             "giftcards": giftcards,
             "miscellaneous": miscellaneous
         }
@@ -71,7 +72,7 @@ def raw_data(request):
                     "funds": f_funds,
                     "clothing": f_clothing,
                     "giftcards": f_giftcards,
-                    "food": f_food,
+                    "foods": f_food,
                     "miscellaneous": f_miscellaneous
                 }
 
