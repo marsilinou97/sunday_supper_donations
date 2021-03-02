@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'sunday_supper_donations.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("sunday_supper_donation_db_user"),
+        'NAME': os.getenv("sunday_supper_donation_db_name"),
         'USER': os.getenv("sunday_supper_donation_db_user"),
         'PASSWORD': os.getenv("sunday_supper_donation_db_pwd"),
-        'HOST': 'ziggy.db.elephantsql.com',
+        'HOST': 'ec2-3-214-3-162.compute-1.amazonaws.com',
         'PORT': '5432',
         'THREADED': True
     }
