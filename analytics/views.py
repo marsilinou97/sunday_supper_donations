@@ -48,7 +48,7 @@ def raw_data(request):
             if last_name != "" and last_name is not None:
                 filters["last_name"] = last_name
             if donation_date is not None:
-                filters["donation_date"] = donation_date
+                filters["date_received"] = donation_date
 
             # If any of the filters were used, filter the results
             if len(filters) > 0:

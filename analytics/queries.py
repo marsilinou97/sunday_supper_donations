@@ -33,6 +33,7 @@ def FilterResults(
         while i < len(results):
             removed = False
             for key in filters:
+                print(key)
                 try:
                     if not removed and results[i][key] != filters[key]:
                         results.remove(results[i])
@@ -72,7 +73,7 @@ def SelectAllFunds():
                 print("Item doesn't exist")
             try:
                 c = Donation.objects.get(id=b.donation.id)
-                row["date_received"] = str(c.date_received)
+                row["date_received"] = c.date_received
             except:
                 print("Donation doesn't exist")
             try:
@@ -113,7 +114,7 @@ def SelectAllGiftCards():
                 print("Item doesn't exist")
             try:
                 c = Donation.objects.get(id=b.donation.id)
-                row["date_received"] = str(c.date_received)
+                row["date_received"] = c.date_received
             except:
                 print("Donation doesn't exist")
             try:
@@ -153,7 +154,7 @@ def SelectAllClothings():
                 print("Item doesn't exist")
             try:
                 c = Donation.objects.get(id=b.donation.id)
-                row["date_received"] = str(c.date_received)
+                row["date_received"] = c.date_received
             except:
                 print("Donation doesn't exist")
             try:
@@ -193,7 +194,7 @@ def SelectAllFood():
                 print("Item doesn't exist")
             try:
                 c = Donation.objects.get(id=b.donation.id)
-                row["date_received"] = str(c.date_received)
+                row["date_received"] = c.date_received
             except:
                 print("Donation doesn't exist")
             try:
@@ -233,7 +234,7 @@ def SelectAllMiscellaneous():
                 print("Item doesn't exist")
             try:
                 c = Donation.objects.get(id=b.donation.id)
-                row["date_received"] = str(c.date_received)
+                row["date_received"] = c.date_received
             except:
                 print("Donation doesn't exist")
             try:
