@@ -85,7 +85,7 @@ Items
 class Item(models.Model):
     # Auto generated pk
     donation = models.ForeignKey(Donation, on_delete=models.CASCADE)
-    quantity = models.CharField(max_length=30)
+    quantity = models.IntegerField()
 
     def update(
                 self,
