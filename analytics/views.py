@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from .forms import RawDataForm
 from .queries import *
+from input.models import *
+from .vars import *
+from django.shortcuts import redirect
+from django.http import HttpResponse
 
 
 def index(request):
@@ -8,107 +12,88 @@ def index(request):
 
 
 def raw_data(request):
-
     form = RawDataForm()
 
-    # Handles GET request
     if request.method == 'GET':
-        return render(request, 'analytics/rawdata.html', {'form': form})
-    else:
-        # Handles POST request
+        tables_data = get_tables_data(raw_data_query)
+        context = {
+            "form": form,
+            "funds": tables_data['funds'],
+            "clothing": tables_data['clothing'],
+            "foods": tables_data['foods'],
+            "giftcards": tables_data['giftcards'],
+            "miscellaneous": tables_data['miscellaneous']
+        }
+        return render(request, 'analytics/rawdata.html', context)
 
+    elif request.method == 'POST':
+        # Handles POST request
         form = RawDataForm(request.POST)
 
         if form.is_valid():
+            filters, query_filter = get_filters_and_query(form)
 
-            # retrieve valid filter fields from form
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            donation_date = form.cleaned_data['donation_date']
-            donation_type = form.cleaned_data['donation_type']
+            if not filters:
+                # If no filters supplied redirect to the raw data page
+                return redirect("analytics_rawdata")
 
+            tables_data = get_tables_data(query_filter, filters)
 
+            context = {
+                "form": form,
+                "funds": tables_data['funds'],
+                "clothing": tables_data['clothing'],
+                "foods": tables_data['foods'],
+                "giftcards": tables_data['giftcards'],
+                "miscellaneous": tables_data['miscellaneous']
+            }
 
-            # Handles case where donation category filter set to All
-            if donation_type == 'all':
-                filter_type = donation_type
-                funds = SelectAllFunds()
-                clothing = SelectAllClothings()
-                giftcards = SelectAllGiftCards()
-                miscellaneous = SelectAllMiscellaneous()
-
-                # Need to filter all donations based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "funds": funds,
-                    "clothing": clothing,
-                    "giftcards": giftcards,
-                    "miscellaneous": miscellaneous,
-                    'filter_type': filter_type
-                }
-            # Handles case where filter set to Funds
-            elif donation_type == "fund":
-                filter_type = donation_type
-                funds = SelectAllFunds()
-
-                # Need to filter funds based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "funds": funds,
-                    'filter_type': filter_type
-                }
-
-            # Handles case where donation category filter set to Giftcards
-            elif donation_type == 'giftcard':
-                filter_type = donation_type
-                giftcards = SelectAllGiftCards()
-
-                # Need to filter giftcards based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "giftcards": giftcards,
-                    'filter_type': filter_type
-                }
-
-            # Handles case where donation category filter set to clothing
-            elif donation_type == 'clothing':
-                filter_type = donation_type
-                clothing = SelectAllClothings()
-
-                # Need to filter clothing based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "clothing": clothing,
-                    'filter_type': filter_type
-                }
-
-            # Handles case where donation category filter set to miscellaneous
-            elif donation_type == 'misc':
-                filter_type = donation_type
-                miscellaneous = SelectAllMiscellaneous()
-
-                # Need to filter miscellaneous based on form filter fields before returning context
-
-                context = {
-                    "form": form,
-                    "miscellaneous": miscellaneous,
-                    'filter_type': filter_type
-                }
-            else:
-                '''
-                   Need to Handle case for Food
-                '''
+        # Return populated context based on HTTP request
+        return render(request, 'analytics/rawdata.html', context)
+    else:
+        HttpResponse("Error...")
 
 
+def pie_chart(request):
+    if request.method == 'GET':
+        context = execute_fetch_raw_query(pie_chart_query, fetch_all=True)
+        context = {k: v for k, v in context}
+        context["all"] = sum(context.values())
+        return render(request, 'analytics/piechart.html', context)
+    else:
+        HttpResponse("Error...")
 
 
-            return render(request, 'analytics/rawdata.html', context)
+def get_filters_and_query(form):
+    filters = {}
+    temp_filter_query = filter_query
+    first_name = form.cleaned_data['first_name']
+    last_name = form.cleaned_data['last_name']
+    donation_date_from = form.cleaned_data['donation_date_from']
+    donation_date_to = form.cleaned_data['donation_date_to']
 
-        else:
-            # Form not valid
-            return render(request, 'analytics/rawdata.html', {'form': form})
+    if first_name:
+        filters["first_name"] = first_name
+        temp_filter_query += f" first_name ILIKE %(first_name)s AND "
+    if last_name:
+        filters["last_name"] = last_name
+        temp_filter_query += f" last_name ILIKE %(last_name)s AND "
+    if donation_date_from and donation_date_to:
+        filters["date_received_from"] = donation_date_from
+        filters["date_received_to"] = donation_date_to
+        temp_filter_query += f" date_received BETWEEN %(date_received_from)s AND %(date_received_to)s  AND "
+    elif donation_date_from:
+        filters["date_received_from"] = donation_date_from
+        filters["date_received_to"] = donation_date_from
+        temp_filter_query += f" date_received BETWEEN %(date_received_from)s AND %(date_received_to)s  AND "
+    temp_filter_query = temp_filter_query[:-4] + " ORDER BY date_received DESC "
+    return filters, temp_filter_query
 
+
+def get_tables_data(query, params={}):
+    results = {'funds': [], 'clothing': [], 'foods': [], 'giftcards': [], 'miscellaneous': []}
+    res = execute_fetch_raw_query(query, fetch_all=True, params=params)
+    for r in res:
+        row_type = r[0]
+        results[row_type].append(dict(zip(table_headers[row_type], r[1:])))
+    return results

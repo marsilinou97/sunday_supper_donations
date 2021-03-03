@@ -29,6 +29,17 @@
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.js"
             integrity="sha512-8R2upKpclvhu7Nl8wd2zyQjLInCrt93Ph+5E3F540qrnNtOKUcKEFY3Wvd6h8pum64O0pevDDhymefOxjFliOA=="
             crossorigin="anonymous"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+    <!-- Bootstrap Table Filters Documentation: https://bootstrap-table.com/docs/extensions/filter-control/ -->
+    <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+
 </head>
 
 <script>
@@ -68,6 +79,7 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
                     <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
+                    <li><a class="dropdown-item " href="{% url 'analytics_piechart' %}">Pie Chart</a></li>
                 </ul>
             </li>
             <li class="nav-item">

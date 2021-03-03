@@ -1,9 +1,7 @@
 from django.contrib import admin
-from .models import Donor, AnonymousDonor, IdentifiedDonor, Donation, Item, Business, ClothingType, FundType, Clothing, Food, Fund, GiftCard, Miscellaneous
+from .models import Donor, Donation, Item, Business, ClothingType, FundType, Clothing, Food, Fund, GiftCard, Miscellaneous
 # Register your models here.
 admin.site.register(Donor)
-admin.site.register(AnonymousDonor)
-admin.site.register(IdentifiedDonor)
 admin.site.register(Donation)
 admin.site.register(Item)
 admin.site.register(Business)
