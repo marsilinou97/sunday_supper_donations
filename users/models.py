@@ -2,7 +2,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
 class RegistrationToken(models.Model):
     token = models.CharField(max_length=128)
     date_created = models.DateField(auto_now_add=True)
