@@ -158,3 +158,9 @@ div#input-group {
 fieldset {
     text-align: center;
 }
+
+.alert {
+    text-align: left;
+    width: 30vw;
+    margin: 0 auto;
+}

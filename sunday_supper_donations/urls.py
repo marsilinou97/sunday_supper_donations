@@ -29,5 +29,5 @@ urlpatterns = [
     path('news/', news_views.index, name="news"),
     # adjusted analytics url routing
     path('analytics/', include('analytics.urls')),
-    path('maketoken/', users_views.registration_token),
+    path('maketoken/', users_views.registration_token, name='maketoken'),
 ]

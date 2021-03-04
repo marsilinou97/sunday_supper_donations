@@ -1,20 +1,25 @@
+import random
+import string
+
 from django.contrib import messages
-from django.db.transaction import commit
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from .forms import UserRegisterForm, RegistrationTokenForm
-from .helpers import token_exists
-from django.contrib.auth.decorators import login_required
+from .helpers import validate_token
+from helpers import remove_html_tags
+TOKEN_OPTIONS = string.ascii_uppercase + string.ascii_lowercase + string.digits
 
 
 def handle_post_req(request):
     form = UserRegisterForm(request.POST)
     if form.is_valid():
 
-        token = form.cleaned_data.get('token', '')
+        token = remove_html_tags(form.cleaned_data.get('token', ''))
 
-        token_error_msg = token_exists(token)
+        token_error_msg = validate_token(token)
         if token_error_msg:
             messages.error(request, f"Please make sure registration token is valid, {token_error_msg}")
             print("Please make sure registration token is valid")
@@ -46,16 +51,10 @@ def register(request):
         return HttpResponse("What???")
 
 
-import random, string
-
-token_options = string.ascii_uppercase + string.ascii_lowercase + string.digits
-from django.urls import reverse
-
-
 @login_required
 def registration_token(request):
     if request.method == 'POST':
-        token = ''.join(random.choices(token_options, k=20))
+        token = ''.join(random.choices(TOKEN_OPTIONS, k=20))
         form = RegistrationTokenForm(data=request.POST)
         if form.is_valid():
             form = form.save(commit=False)
@@ -69,9 +68,10 @@ def registration_token(request):
                               reverse('register'),
                               "?token=" + token)
                            })
-        return render(request, 'users/create_token.html')
+        else:
+            messages.error(request, f"Please make sure registration token is valid, {form.errors}")
+            return render(request, 'users/create_token.html')
     elif request.method == 'GET':
         return render(request, 'users/create_token.html', {'form': RegistrationTokenForm()})
     else:
         HttpResponse("ERROR...")
-
