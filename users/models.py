@@ -7,7 +7,7 @@ class RegistrationToken(models.Model):
     date_created = models.DateField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
-    expiration_period = models.SmallIntegerField(default=7)
+    expiration_period = models.SmallIntegerField(default=5)
 
     def __str__(self):
         return "Token: {}".format(self.token)

@@ -29,7 +29,7 @@ class UserRegisterForm(UserCreationForm):
 class RegistrationTokenForm(forms.ModelForm):
     class Meta:
         model = RegistrationToken
-        fields = []
+        fields = ['expiration_period']
 
     def __init__(self, *args, **kwargs):
         super(RegistrationTokenForm, self).__init__(*args, **kwargs)

@@ -74,3 +74,4 @@ def registration_token(request):
         return render(request, 'users/create_token.html', {'form': RegistrationTokenForm()})
     else:
         HttpResponse("ERROR...")
+
