@@ -11,15 +11,22 @@ from django.contrib.auth.decorators import login_required
 def handle_post_req(request):
     form = UserRegisterForm(request.POST)
     if form.is_valid():
+
         token = form.cleaned_data.get('token', '')
-        if not token or not token_exists(token):
-            messages.error(request, "Please make sure registration token is valid")
+
+        token_error_msg = token_exists(token)
+        if token_error_msg:
+            messages.error(request, f"Please make sure registration token is valid, {token_error_msg}")
+            print("Please make sure registration token is valid")
+
         else:
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
+            print(f'Account created for {username}!')
+
     else:
-        messages.error(request, "Please make sure all fields are correct")
+        messages.error(request, f"Please make sure all fields are correct {form.errors}")
         print("Form is invalid")
 
     return redirect('register')
