@@ -11,7 +11,6 @@
         {{ form }}
 
         <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
-
     </form>
 
 
@@ -26,34 +25,36 @@
             </div>
 
 
-            <div id="input-group">
+            <div class="input-group">
                 <label for="fund">Funds:</label>
                 <input class="donation_select m-3" type="checkbox" id="fund" name="fund" value="Funds" checked="true">
             </div>
 
-            <div id="input-group">
+            <div class="input-group">
                 <label for="gift">Gift Cards:</label>
                 <input class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
             </div>
 
-            <div id="input-group">
+            <div class="input-group">
                 <label for="clothing">Clothing:</label>
                 <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
                        checked="true">
             </div>
 
-            <div id="input-group">
+            <div class="input-group">
                 <label for="food">Food:</label>
                 <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked="true">
             </div>
 
-            <div id="input-group">
+            <div class="input-group">
                 <label for="misc">Miscellaneous:</label>
                 <input class="donation_select m-3" type="checkbox" id="misc" name="misc" value="Misc" checked="true">
             </div>
 
         </fieldset>
     </form>
+
+    <button id="export" class="btn btn-primary btn-md">Export</button>
 
 
 
@@ -219,26 +220,32 @@
 
         $(document).ready(function () {
 
+            let tablesData = [[],[],[],[],[]]
+
 
             $('#fund').change(function () {
                 if (this.checked === true) {
                     $('#fundheader').slideDown(300);
                     $('#fundtable').slideDown(300);
+                    tablesData[0] = tableToAOA('fundheader','fundtable')
                 } else {
                     $('#fundheader').slideUp(300);
                     $('#fundtable').slideUp(300);
+                    tablesData[0] = []
                 }
             });
 
-
+            
             $('#gift').change(function () {
 
                 if (this.checked === true) {
                     $('#giftcardheader').slideDown(300);
                     $('#giftcardtable').slideDown(300);
+                    tablesData[1] = tableToAOA('giftcardheader','giftcardtable')
                 } else {
                     $('#giftcardheader').slideUp(300);
                     $('#giftcardtable').slideUp(300);
+                    tablesData[1] = []
                 }
             });
 
@@ -247,32 +254,37 @@
                 if (this.checked === true) {
                     $('#clothingheader').slideDown(300);
                     $('#clothingtable').slideDown(300);
-
+                    tablesData[2] = tableToAOA('clothingheader','clothingtable')
                 } else {
                     $('#clothingheader').slideUp(300);
                     $('#clothingtable').slideUp(300);
-
+                    tablesData[2]= []
                 }
             });
 
-
+            
             $('#food').change(function () {
                 if (this.checked === true) {
                     $('#foodheader').slideDown(300);
                     $('#foodtable').slideDown(300);
+                    tablesData[3] = tableToAOA('foodheader','foodtable')
                 } else {
                     $('#foodheader').slideUp(300);
                     $('#foodtable').slideUp(300);
+                    tablesData[3] = []
                 }
             });
 
+            
             $('#misc').change(function () {
                 if (this.checked === true) {
                     $('#mischeader').slideDown(300);
                     $('#misctable').slideDown(300);
+                    tablesData[4] = tableToAOA('mischeader','misctable')
                 } else {
                     $('#mischeader').slideUp(300);
                     $('#misctable').slideUp(300);
+                    tablesData[4] = []
                 }
             });
 
@@ -282,18 +294,67 @@
                     $('h3').slideDown(300);
                     $('table').slideDown(300);
                     $("input[type=checkbox].donation_select").prop('checked', true);
+                    tablesData[0] = tableToAOA('fundheader','fundtable')
+                    tablesData[1] = tableToAOA('giftcardheader','giftcardtable')
+                    tablesData[2] = tableToAOA('clothingheader','clothingtable')
+                    tablesData[3] = tableToAOA('foodheader','foodtable')
+                    tablesData[4] = tableToAOA('mischeader','misctable')
                 } else {
                     $('h3').slideUp(300);
                     $('table').slideUp(300);
                     $("input[type=checkbox].donation_select").prop('checked', false);
-
+                    tablesData = [[],[],[],[],[]]
                 }
             });
+
+
+            {#Handles export feature#}
+            $('#export').click(function(){
+                const wb = XLSX.utils.book_new();
+                wb.Props = {
+                    Title: 'Test',
+                    Author: 'Sunday Supper',
+                    CreateDate: new Date()
+                }
+                
+                const sheetNames = ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Misc.']
+                for(var i = 0; i < sheetNames.length; i++){
+                    wb.SheetNames.push(sheetNames[i])
+                    wb.Sheets[sheetNames[i]] = XLSX.utils.aoa_to_sheet(tablesData[i])
+                }
+
+                const excelFileName = (new Date()).toString()
+                
+                const wbOut = XLSX.writeFile(wb, excelFileName+".xlsx", {bookType: 'xlsx', type: 'binary'}) 
+
+            })
         });
+
+        let tableToAOA = function(headerId, tableID){
+            let header = [[$('#'+headerId).text()]]
+
+            var tableheader = $('#' + tableID + ' tr').map(function(){
+                return [
+                    $('th',this).map(function(){
+                        return $(this).text();
+                    }).get()
+                ];
+            }).get();
+
+            var tableData = $('#' + tableID + ' tr').map(function(){
+                return [
+                    $('td',this).map(function(){
+                        return $(this).text();
+                    }).get()
+                ];
+            }).get();
+
+            let AoA = header.concat(tableheader.concat(tableData));
+            return AoA
+        }
 
 
     </script>
-
 
 <script>
   $(function() {

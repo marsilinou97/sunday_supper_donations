@@ -63,6 +63,16 @@ def pie_chart(request):
     else:
         HttpResponse("Error...")
 
+def line_chart(request):
+
+        # TODO: 1.) Create form for linechart.html
+        # TODO: 2.) Run queries based on donor information passed in from the line chart form
+        # TODO: 3.) Pass context with donor data to linechart.html
+        # TODO: 4.) Render data passed in from context in the linechart.html template
+
+        return render(request, 'analytics/linechart.html')
+
+
 
 def get_filters_and_query(form):
     filters = {}

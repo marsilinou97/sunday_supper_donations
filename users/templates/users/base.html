@@ -39,6 +39,8 @@
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
+    {#Adds sheetjs  https://github.com/SheetJS/sheetjs#}
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
 </head>
 
@@ -80,6 +82,8 @@
                     <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
                     <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
                     <li><a class="dropdown-item " href="{% url 'analytics_piechart' %}">Pie Chart</a></li>
+                    <li><a class="dropdown-item " href="{% url 'analytics_linechart' %}">Line Chart</a></li>
+
                 </ul>
             </li>
             <li class="nav-item">
