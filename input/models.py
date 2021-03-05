@@ -368,7 +368,7 @@ def InsertItem(
         if subclass == Fund:
             fund = Fund()
             fund.update(item,
-                        FundType.objects.get(name=FundTypeName),
+                        FundType.objects.get(name=fundTypeName),
                         amount)
             fund.save()
         elif subclass == GiftCard:

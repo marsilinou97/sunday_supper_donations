@@ -4,7 +4,7 @@ from .models import *
 from .helpers import remove_html_tags
 
 
-class DonorInformationForm(forms.Form):
+class DonorInformationForm(forms.ModelForm):
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
@@ -16,7 +16,7 @@ class DonorInformationForm(forms.Form):
     zip = forms.CharField(required=False)
 
     class Meta:
-        # model = input
+        model = Donor
         fields = ['first_name', 'last_name', 'phone_number', 'address1', 'address2', 'city', 'state', 'zip', 'email']
 
     def __init__(self, *args, **kwargs):
@@ -38,7 +38,7 @@ class DonorInformationForm(forms.Form):
         self.fields["email"].widget.attrs.update({"placeholder": "Email"})
 
 
-class DonationForm(forms.ModelForm):
+class DonationForm(forms.Form):
     date_received = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
     thanks_sent = forms.BooleanField(required=False)
     comment = forms.CharField(
@@ -51,7 +51,7 @@ class DonationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Donation
+        #model = Donation
         fields = ['date_received', 'thanks_sent', 'comment']
 
     def __init__(self, *args, **kwargs):

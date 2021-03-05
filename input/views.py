@@ -1,9 +1,12 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
+
+from . import models
+from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
 from django.forms import formset_factory
 from django.contrib import messages
 
-from .models import Donor, InsertDonor
+from .models import InsertDonor, InsertDonation, InsertItem
 
 us_states = {
     'Alabama': 'al', 'Alaska': 'ak', 'American Samoa': 'as', 'Arizona': 'az', 'Arkansas': 'ar', 'California': 'ca',
@@ -26,67 +29,33 @@ def handle_get_req(request):
 
 
 def handle_post_req(request):
-    dic = {}
-    # __id__ = ""
-    # donationDic = {}  #  'date_received', 'comment', 'amount'
-    # donorDic = {}     # 'first_name', 'last_name', 'email','dob', 'address1', 'address2', 'city', 'state', 'zip',
-    # itemDic = {}      # 'type', 'quantity'
+    # Save the data that the user entered
+    user_input = {}
 
-    for a in request.POST:
-        dic[a] = request.POST[a]
-
-    newDonor = InsertDonor(dic['first_name'], dic['last_name'], dic['dob'], dic['email'],
-                           ' ', dic['address1'], dic['address2'], dic['city'], dic['state'],
-                           dic['zip'])
-    newDonor.save()
-
+    cur_user = User.objects.last()
     """
-    newDonation = DonationForm(dic['date_received'], dic['thanks_sent'], dic['comment'])
-    if newDonation.is_valid():
-        newDonation.save()
-    else:
-        return redirect('input_page')
-
-    if a is "csrfmiddlewaretoken":
-        __id__ = request.POST[a]
-    elif a is "date_received" or "comment" or "thanks_sent":
-        donationDic[a] = request.POST[a]
-    elif a is "first_name" or "last_name" or "email" or "dob" or "address1" or "address2" or "city" or "state" or "zip":
-        donorDic[a] = request.POST[a]
-    else:
-        itemDic[a] = request.POST[a]
+    if request.user.is_authenticated:  # authenticates the current user and can't be none
+        cur_user = request.user.username
     """
+    for a in request.POST:  # loops the input and populates the dictionary
+        user_input[a] = request.POST[a]
 
-    """
-    donation_form = DonationForm()
-    if donation_form.is_valid():
-        donation_form.save()
-    else:
-        return redirect('input_page')
-    """
+    print(user_input)
 
-    """
-    donation_form = DonationForm(request.POST, request.FILES)
-    funds_form = FundsForm(request.POST, request.FILES)
-    item_form = ItemForm(request.POST, request.FILES)
+    new_donor = DonorInformationForm(request.POST)
+    new_donor.save()
 
-    if donor_information_form.is_valid() and donation_form.is_valid() and item_form.is_valid() and funds_form.is_valid():
-        donor_information_form.save()
-        donor_pk = donor_information_form.save()  # saving donor pk
-        donation_form.instance.donor = donor_pk  # connects to donations
+    number_items = user_input['form-TOTAL_FORMS']
+    new_items = [{}] * number_items
+    for a in number_items:
+        print()
 
-        donation_form_pk = donation_form.save()  # saving donation
-        item_form.instance.donation = donation_form_pk  # connects to Items
+    new_donation = InsertDonation(new_donor, new_items, user_input['date_received'],
+                                  user_input['thanks_sent'], cur_user, user_input['comment'])
 
-        item_form_pk = item_form.save()  # saving the item
+    # InsertItem()
+    return redirect('input_page')
 
-        funds_form.instance.item = item_form_pk  # map funds with items
-        funds_form.instance.item.save()
-
-        messages.success(request, "Information is saved on the database")
-    else:
-        messages.error(request, "Error 1: Invalid Input")
-    """
 
 
 def index(request):
@@ -97,7 +66,7 @@ def index(request):
         item_formset = formset_factory(ItemForm, extra=0)
         formset = item_formset()
         print(formset)
-        #form set
+        # form set
         return render(request, 'input/donor-info-form.html',
                       {
                           'donor_form': DonorInformationForm(),
