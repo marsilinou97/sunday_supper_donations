@@ -33,10 +33,12 @@ def handle_post_req(request):
     user_input = {}
 
     cur_user = User.objects.last()
+
     """
     if request.user.is_authenticated:  # authenticates the current user and can't be none
-        cur_user = request.user.username
+        cur_user = request.User.username
     """
+
     for a in request.POST:  # loops the input and populates the dictionary
         user_input[a] = request.POST[a]
 
@@ -46,14 +48,27 @@ def handle_post_req(request):
     new_donor.save()
 
     number_items = user_input['form-TOTAL_FORMS']
-    new_items = [{}] * number_items
-    for a in number_items:
-        print()
+    items_list = []  # list of dictionary
 
-    new_donation = InsertDonation(new_donor, new_items, user_input['date_received'],
-                                  user_input['thanks_sent'], cur_user, user_input['comment'])
+    for i in number_items:
+        item_dic = {}
+        for a in user_input:
+            item_dic['id_form-' + a + 'type'] = user_input['id_form-' + a + '-type']
+            item_dic['id_form-' + a + '-quantity'] = user_input['id_form-' + a + '-quantity']
+            if 'id_form-' + a + '-sub_type_business' in user_input:
+                item_dic['id_form-' + a + '-sub_type_business'] = user_input['id_form-' + a + '-sub_type_business']
+            elif 'id_form-' + a + '-sub_type_clothing' in user_input:
+                item_dic['id_form-' + a + '-sub_type_clothing'] = user_input['id_form-' + a + '-sub_type_clothing']
+            elif 'id_form-' + a + '-sub_type_name' in user_input:
+                item_dic['id_form-' + a + '-sub_type_name'] = user_input['id_form-' + a + '-sub_type_name']
+        items_list.append(item_dic)
+    print(items_list)
 
-    # InsertItem()
+    """
+    InsertDonation(new_donor, items_list, user_input['date_received'], user_input['thanks_sent'], cur_user,
+                   user_input['comment'])
+    """
+
     return redirect('input_page')
 
 
