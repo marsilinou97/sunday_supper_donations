@@ -53,15 +53,22 @@ def handle_post_req(request):
     for i in number_items:
         item_dic = {}
         for a in user_input:
-            item_dic['id_form-' + a + 'type'] = user_input['id_form-' + a + '-type']
-            item_dic['id_form-' + a + '-quantity'] = user_input['id_form-' + a + '-quantity']
+            item_dic['subclass'] = user_input['id_form-' + a + '-type']
+            item_dic['quantity'] = user_input['id_form-' + a + '-quantity']
             if 'id_form-' + a + '-sub_type_business' in user_input:
-                item_dic['id_form-' + a + '-sub_type_business'] = user_input['id_form-' + a + '-sub_type_business']
+                item_dic['businessName'] = user_input['id_form-' + a + '-sub_type_business']
             elif 'id_form-' + a + '-sub_type_clothing' in user_input:
-                item_dic['id_form-' + a + '-sub_type_clothing'] = user_input['id_form-' + a + '-sub_type_clothing']
+                item_dic['clothingTypeName'] = user_input['id_form-' + a + '-sub_type_clothing']
             elif 'id_form-' + a + '-sub_type_name' in user_input:
-                item_dic['id_form-' + a + '-sub_type_name'] = user_input['id_form-' + a + '-sub_type_name']
+                item_dic['name'] = user_input['id_form-' + a + '-sub_type_name']
         items_list.append(item_dic)
+
+    # This one is for funds
+    items_list.append({
+        
+    })
+
+    
     print(items_list)
 
     """
