@@ -5,10 +5,15 @@ from input.models import *
 from .vars import *
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.template import Template, Context
 
 
 def index(request):
-    return render(request, 'analytics/analytics.html')
+    # render(request, 'analytics/number_of_donations_per_month.html', {'results': results})
+    pie_context = get_pie_chart_context()
+    context = {"results": get_line_chart_data()}
+    context.update(pie_context)
+    return render(request, 'analytics/analytics.html', context)
 
 
 def raw_data(request):
@@ -54,11 +59,16 @@ def raw_data(request):
         HttpResponse("Error...")
 
 
+def get_pie_chart_context():
+    context = execute_fetch_raw_query(pie_chart_query, fetch_all=True)
+    context = {k: v for k, v in context}
+    context["all"] = sum(context.values())
+    return context
+
+
 def pie_chart(request):
     if request.method == 'GET':
-        context = execute_fetch_raw_query(pie_chart_query, fetch_all=True)
-        context = {k: v for k, v in context}
-        context["all"] = sum(context.values())
+        context = get_pie_chart_context()
         return render(request, 'analytics/piechart.html', context)
     else:
         HttpResponse("Error...")
@@ -67,25 +77,30 @@ def pie_chart(request):
 get_zeros_list = lambda n: [0 for _ in range(n)]
 
 
+def get_line_chart_data():
+    q = """SELECT 'funds', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity FROM input_fund f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'food', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity FROM input_food f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'miscellaneous', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_miscellaneous f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'clothing', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_clothing f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'gifcards', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_giftcard f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth  ORDER BY 1"""
+    res = execute_fetch_raw_query(query=q, fetch_all=True)
+
+    results = {'funds': [get_zeros_list(12), get_zeros_list(12)], 'food': [get_zeros_list(12), get_zeros_list(12)],
+               'miscellaneous': [get_zeros_list(12), get_zeros_list(12)],
+               'clothing': [get_zeros_list(12), get_zeros_list(12)],
+               'gifcards': [get_zeros_list(12), get_zeros_list(12)]}
+
+    for item_type, month, number_of_donations, total_quantity in res:
+        month = month.strip()
+        results[item_type][0][INDEXED_MONTHS[month]] = results[item_type][0][INDEXED_MONTHS[month]] + total_quantity
+        results[item_type][1][INDEXED_MONTHS[month]] = results[item_type][1][
+                                                           INDEXED_MONTHS[month]] + number_of_donations
+    return results
+
+
 def line_chart(request):
     # TODO: 1.) Create form for linechart.html
     # TODO: 2.) Run queries based on donor information passed in from the line chart form
     # TODO: 3.) Pass context with donor data to linechart.html
     # TODO: 4.) Render data passed in from context in the linechart.html template
     if request.method == 'GET':
-        q = """SELECT 'funds', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity FROM input_fund f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'food', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity FROM input_food f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'miscellaneous', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_miscellaneous f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'clothing', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_clothing f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'gifcards', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_giftcard f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth  ORDER BY 1"""
-        res = execute_fetch_raw_query(query=q, fetch_all=True)
-
-        results = {'funds': [get_zeros_list(12), get_zeros_list(12)], 'food': [get_zeros_list(12), get_zeros_list(12)],
-                   'miscellaneous': [get_zeros_list(12), get_zeros_list(12)],
-                   'clothing': [get_zeros_list(12), get_zeros_list(12)],
-                   'gifcards': [get_zeros_list(12), get_zeros_list(12)]}
-
-        for item_type, month, number_of_donations, total_quantity in res:
-            month = month.strip()
-            results[item_type][0][INDEXED_MONTHS[month]] = results[item_type][0][INDEXED_MONTHS[month]] + total_quantity
-            results[item_type][1][INDEXED_MONTHS[month]] = results[item_type][1][INDEXED_MONTHS[month]] + number_of_donations
-        print(results)
+        results = get_line_chart_data()
         return render(request, 'analytics/linechart.html', {'results': results})
     else:
         HttpResponse("Error...")

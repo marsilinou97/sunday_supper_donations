@@ -1,0 +1,65 @@
+<canvas id="line-chart0" width="800" height="450"></canvas>
+
+<script>
+    $(window).on('load', function () {
+        console.log({{ results.miscellaneous}})
+        var barChartData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Food',
+                backgroundColor: window.chartColors.red,
+                stack: 'Stack 0',
+                data: {{ results.food.0 }}
+
+            }, {
+                label: 'Funds',
+                backgroundColor: window.chartColors.blue,
+                stack: 'Stack 1',
+                data:{{ results.funds.0 }}
+            }, {
+                label: 'Clothing',
+                backgroundColor: window.chartColors.green,
+                stack: 'Stack 2',
+                data: {{ results.clothing.0 }}
+
+            }, {
+                label: 'Miscellaneous',
+                backgroundColor: window.chartColors.orange,
+                stack: 'Stack 3',
+                data: {{ results.miscellaneous.0 }}
+
+            }, {
+                label: 'Gift cards',
+                backgroundColor: window.chartColors.purple,
+                stack: 'Stack 4',
+                data: {{ results.gifcards.0 }}
+
+            }]
+        };
+
+
+        new Chart(document.getElementById("line-chart0"), {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Number of donations per month'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+    });
+</script>

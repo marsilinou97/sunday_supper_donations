@@ -1,5 +1,15 @@
-{% extends 'users/base.html'%}
+{% extends 'users/base.html' %}
 
-{% block content%}
+{% block content %}
     <h1>Analytics Main page</h1>
+
+<div class="bd-example">
+    <div class="accordion" id="accordionExample">
+    {% include "analytics/linechart.html" %}
+    {% include "analytics/piechart.html" %}
+
+    </div>
+
+</div>
+
 {% endblock %}
