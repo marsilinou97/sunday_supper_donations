@@ -8,6 +8,7 @@
     <title>Sunday Supper</title>
 
     {#    TODO: remove all unused imports #}
+    {#    TODO: make all possible imports async and handle that using $(window).on('load', function() {CODE HERE} #}
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
@@ -25,6 +26,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+
+
     {# Load Dompurify #}
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.js"
             integrity="sha512-8R2upKpclvhu7Nl8wd2zyQjLInCrt93Ph+5E3F540qrnNtOKUcKEFY3Wvd6h8pum64O0pevDDhymefOxjFliOA=="
@@ -41,6 +48,10 @@
 
     {#Adds sheetjs  https://github.com/SheetJS/sheetjs#}
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+
+    {#    TODO: replace with a CDN #}
+    <link rel="stylesheet" type="text/css" href="https://getbootstrap.com/docs/5.0/assets/css/docs.css">
 
 </head>
 
@@ -93,6 +104,9 @@
                 {#TODO Display only if admin logged in#}
                 <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'maketoken' %}">Make token</a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -114,3 +128,5 @@
 
 </body>
 </html>
+
+

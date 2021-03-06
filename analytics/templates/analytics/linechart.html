@@ -1,40 +1,164 @@
-{% extends 'users/base.html'%}
+{% extends 'users/base.html' %}
 
-{% block content%}
-    <h1 class="text-center">Fund Donation Line Chart</h1>
+{% block content %}
+    <div class="bd-example">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        Number of donations per month
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                     data-bs-parent="#accordionExample" style="">
+                    <div class="accordion-body">
+                        <canvas id="line-chart" width="800" height="450"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Total quantity of each donation type
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                     data-bs-parent="#accordionExample" style="">
+                    <div class="accordion-body">
+
+                        <canvas id="line-chart2" width="800" height="450"></canvas>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
+        <script async src="https://www.chartjs.org/samples/latest/utils.js"></script>
 
-<canvas id="line-chart" width="800" height="450"></canvas>
+        <script>
+            $(window).on('load', function () {
+
+                console.log({{ results.miscellaneous}})
+                var barChartData = {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    datasets: [{
+                        label: 'Food',
+                        backgroundColor: window.chartColors.red,
+                        stack: 'Stack 0',
+                        data: {{ results.food.0 }}
+
+                    }, {
+                        label: 'Funds',
+                        backgroundColor: window.chartColors.blue,
+                        stack: 'Stack 1',
+                        data:{{ results.funds.0 }}
+                    }, {
+                        label: 'Clothing',
+                        backgroundColor: window.chartColors.green,
+                        stack: 'Stack 2',
+                        data: {{ results.clothing.0 }}
+
+                    }, {
+                        label: 'Miscellaneous',
+                        backgroundColor: window.chartColors.orange,
+                        stack: 'Stack 3',
+                        data: {{ results.miscellaneous.0 }}
+
+                    }, {
+                        label: 'Gift cards',
+                        backgroundColor: window.chartColors.purple,
+                        stack: 'Stack 4',
+                        data: {{ results.gifcards.0 }}
+
+                    }]
+                };
+                var barChartData2 = {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    datasets: [{
+                        label: 'Food',
+                        backgroundColor: window.chartColors.red,
+                        stack: 'Stack 0',
+                        data: {{ results.food.1 }}
+
+                    }, {
+                        label: 'Funds',
+                        backgroundColor: window.chartColors.blue,
+                        stack: 'Stack 1',
+                        data:{{ results.funds.1 }}
+                    }, {
+                        label: 'Clothing',
+                        backgroundColor: window.chartColors.green,
+                        stack: 'Stack 2',
+                        data: {{ results.clothing.1 }}
+
+                    }, {
+                        label: 'Miscellaneous',
+                        backgroundColor: window.chartColors.orange,
+                        stack: 'Stack 3',
+                        data: {{ results.miscellaneous.1 }}
+
+                    }, {
+                        label: 'Gift cards',
+                        backgroundColor: window.chartColors.purple,
+                        stack: 'Stack 4',
+                        data: {{ results.gifcards.1 }}
+
+                    }]
+                };
 
 
+                new Chart(document.getElementById("line-chart"), {
+                    type: 'bar',
+                    data: barChartData,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Number of donations per month'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                stacked: true,
+                            }],
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }
+                });
+                new Chart(document.getElementById("line-chart2"), {
+                    type: 'bar',
+                    data: barChartData2,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Total quantity of each donation type'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                stacked: true,
+                            }],
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }
+                });
+            });
 
-<script>
-
-new Chart(document.getElementById("line-chart"), {
-  type: 'line',
-  data: {
-    <!-- X-Axis Donation Received Date -->
-    labels: ['2021-01-10','2021-01-15','2021-01-19','2021-01-25','2021-03-04','2021-03-05'],
-    datasets: [{
-        <!-- Y-Axis Donation Amount in dollars -->
-        data: [20,100,50,40,50,125],
-        label: "Funds",
-        borderColor: "#3e95cd",
-        fill: false,
-        pointRadius: 5
-      },
-    ]
-  },
-  options: {
-    title: {
-      display: true,
-      text: 'Fund Donation History In Dollars'
-    }
-  }
-});
-
-</script>
+        </script>
 
 
 {% endblock %}
