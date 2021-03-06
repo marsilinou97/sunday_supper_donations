@@ -149,3 +149,18 @@ main.container {
 body, html {
     height: 100%;
 }
+
+div#input-group {
+    width: 14%;
+    display: inline-block;
+}
+
+fieldset {
+    text-align: center;
+}
+
+.alert {
+    text-align: left;
+    width: 30vw;
+    margin: 0 auto;
+}

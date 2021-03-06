@@ -2,21 +2,7 @@
 
 {% block content %}
 
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.tags == 'error' %}
-                <div class="alert alert-danger">
-                    {{ message }}
-                </div>
-            {% else %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-
+    {% include 'users/msg.html' %}
 
     <div class="signup-form">
         <form action="" method="post">

@@ -1,7 +1,7 @@
 from datetime import datetime
 from django import forms
 from .models import *
-from .helpers import remove_html_tags
+from helpers import remove_html_tags
 
 
 class DonorInformationForm(forms.ModelForm):

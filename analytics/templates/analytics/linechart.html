@@ -1,0 +1,40 @@
+{% extends 'users/base.html'%}
+
+{% block content%}
+    <h1 class="text-center">Fund Donation Line Chart</h1>
+
+
+
+<canvas id="line-chart" width="800" height="450"></canvas>
+
+
+
+<script>
+
+new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    <!-- X-Axis Donation Received Date -->
+    labels: ['2021-01-10','2021-01-15','2021-01-19','2021-01-25','2021-03-04','2021-03-05'],
+    datasets: [{
+        <!-- Y-Axis Donation Amount in dollars -->
+        data: [20,100,50,40,50,125],
+        label: "Funds",
+        borderColor: "#3e95cd",
+        fill: false,
+        pointRadius: 5
+      },
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Fund Donation History In Dollars'
+    }
+  }
+});
+
+</script>
+
+
+{% endblock %}

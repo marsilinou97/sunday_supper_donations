@@ -1,17 +1,15 @@
 from django import forms
-
+from helpers import remove_html_tags
 
 
 class RawDataForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=False)
     last_name = forms.CharField(max_length=50, required=False)
-    donation_date = forms.DateField(required=False)
-
+    donation_date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    donation_date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
-
-
-        fields = ['first_name', 'last_name', 'donation_date']
+        fields = ['first_name', 'last_name', 'donation_date_from', 'donation_date_to']
 
     def __init__(self, *args, **kwargs):
         super(RawDataForm, self).__init__(*args, **kwargs)
@@ -27,8 +25,10 @@ class RawDataForm(forms.Form):
 
         self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
         self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
-        self.fields["donation_date"].widget.attrs.update({"placeholder": "YYYY-MM-DD"})
+        self.fields["donation_date_from"].widget.attrs.update({"placeholder": "YYYY-MM-DD"})
+        self.fields["donation_date_to"].widget.attrs.update({"placeholder": "YYYY-MM-DD"})
 
-
-
-
+    def clean(self):
+        cleaned_data = super(RawDataForm, self).clean()
+        cleaned_data = remove_html_tags(cleaned_data)
+        return cleaned_data

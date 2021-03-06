@@ -1,0 +1,41 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+    <form method="post" class="text-center">
+        {% csrf_token %}
+
+        {% include 'users/msg.html' %}
+
+        {% if form %}
+            <div class="input-group">
+                <label for="expiration_period" style="padding-right: 10px;">Days to expire: </label>
+                <input type="number" name="expiration_period" id="expiration_period" value="7" max="20" min="1">
+            </div>
+        {% endif %}
+        {% if token %}
+            <h2>Click Link to copy</h2>
+            <a id="generated_link" style="font-size: 18pt;" onclick="copyLink($(this))" onmouseout="outFunc()"
+               href="#">{{ token }}</a>
+
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Create</button>
+
+    </form>
+
+
+
+    <script>
+        function copyLink(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(element).text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+
+        function outFunc() {
+            var tooltip = document.getElementById("myTooltip");
+            tooltip.innerHTML = "Copy to clipboard";
+        }
+    </script>
+{% endblock %}

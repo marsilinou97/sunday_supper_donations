@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import uuid
+import sys
 
 # Django models documentation: https://docs.djangoproject.com/en/3.1/topics/db/models/
 
@@ -85,7 +85,7 @@ Items
 class Item(models.Model):
     # Auto generated pk
     donation = models.ForeignKey(Donation, on_delete=models.CASCADE)
-    quantity = models.CharField(max_length=30)
+    quantity = models.IntegerField()
 
     def update(
                 self,
@@ -318,20 +318,57 @@ def InsertDonation(
         count = 0
         for item in items:
             try:
-                InsertItem(
-                            donation.id,
-                            item["quantity"],
-                            item["subclass"], # this name can probably be changed if needed
-                            item["type"],
-                            item["amount"],
-                            item["name"],
-                            item["fundTypeName"],
-                            item["businessName"],
-                            item["clothingTypeName"],
-                            )
-                count += 1
+                inserted = False
+                if item["subclass"] == Fund:
+                    InsertItem(
+                                donation,
+                                item["quantity"],
+                                item["subclass"],
+                                amount = item["amount"],
+                                fundTypeName = item["fundTypeName"],
+                                )
+                    inserted = True
+                elif item["subclass"] == GiftCard:
+                    InsertItem(
+                                donation,
+                                item["quantity"],
+                                item["subclass"],
+                                amount = item["amount"],
+                                businessName = item["businessName"],
+                                )
+                    inserted = True
+                elif item["subclass"] == Clothing:
+                    InsertItem(
+                                donation,
+                                item["quantity"],
+                                item["subclass"],
+                                clothingTypeName = item["clothingTypeName"],
+                                )
+                    inserted = True
+                elif item["subclass"] == Food:
+                    InsertItem(
+                                donation,
+                                item["quantity"],
+                                item["subclass"],
+                                name = item["name"],
+                                )
+                    inserted = True
+                elif item["subclass"] == Miscellaneous:
+                    InsertItem(
+                                donation,
+                                item["quantity"],
+                                item["subclass"],
+                                name = item["name"],
+                                )
+                    inserted = True
+                if inserted:
+                    count += 1
+                else:
+                    print("Could not insert Item",item)
             except:
-                print("Could not insert Item")
+                print("Could not insert Item",item)
+                for error in sys.exc_info():
+                    print(error)
         print("Inserted",count,"items")
 
 """
