@@ -1,36 +1,36 @@
 <canvas id="line-chart2" width="800" height="450"></canvas>
 
 <script>
-    var barChartData2 = {
+    let barChartData2 = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [{
             label: 'Food',
             backgroundColor: window.chartColors.red,
             stack: 'Stack 0',
-            data: {{ results.food.1 }}
+            data: {{ line_chart_context.food.1 }}
 
         }, {
             label: 'Funds',
             backgroundColor: window.chartColors.blue,
             stack: 'Stack 1',
-            data:{{ results.funds.1 }}
+            data:{{ line_chart_context.funds.1 }}
         }, {
             label: 'Clothing',
             backgroundColor: window.chartColors.green,
             stack: 'Stack 2',
-            data: {{ results.clothing.1 }}
+            data: {{ line_chart_context.clothing.1 }}
 
         }, {
             label: 'Miscellaneous',
             backgroundColor: window.chartColors.orange,
             stack: 'Stack 3',
-            data: {{ results.miscellaneous.1 }}
+            data: {{ line_chart_context.miscellaneous.1 }}
 
         }, {
             label: 'Gift cards',
             backgroundColor: window.chartColors.purple,
             stack: 'Stack 4',
-            data: {{ results.gifcards.1 }}
+            data: {{ line_chart_context.gifcards.1 }}
 
         }]
     };
