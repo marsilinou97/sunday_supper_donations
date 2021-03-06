@@ -164,3 +164,13 @@ fieldset {
     width: 30vw;
     margin: 0 auto;
 }
+
+.bd-example * {
+    font-size: 15pt
+}
+
+button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
+    background: #70dddd;
+    font-size: 16pt;
+    transition: all 1s;
+}

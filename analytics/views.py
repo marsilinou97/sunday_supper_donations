@@ -63,15 +63,32 @@ def pie_chart(request):
     else:
         HttpResponse("Error...")
 
+
+get_zeros_list = lambda n: [0 for _ in range(n)]
+
+
 def line_chart(request):
+    # TODO: 1.) Create form for linechart.html
+    # TODO: 2.) Run queries based on donor information passed in from the line chart form
+    # TODO: 3.) Pass context with donor data to linechart.html
+    # TODO: 4.) Render data passed in from context in the linechart.html template
+    if request.method == 'GET':
+        q = """SELECT 'funds', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity FROM input_fund f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'food', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity FROM input_food f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'miscellaneous', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_miscellaneous f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'clothing', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_clothing f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth UNION ALL SELECT 'gifcards', to_char(date_received, 'Month') AS monnth, count(*)                           number_of_donations, sum(quantity)                   AS quantity FROM input_giftcard f INNER JOIN input_item ii ON f.item_id = ii.id INNER JOIN input_donation i ON ii.donation_id = i.id GROUP BY monnth  ORDER BY 1"""
+        res = execute_fetch_raw_query(query=q, fetch_all=True)
 
-        # TODO: 1.) Create form for linechart.html
-        # TODO: 2.) Run queries based on donor information passed in from the line chart form
-        # TODO: 3.) Pass context with donor data to linechart.html
-        # TODO: 4.) Render data passed in from context in the linechart.html template
+        results = {'funds': [get_zeros_list(12), get_zeros_list(12)], 'food': [get_zeros_list(12), get_zeros_list(12)],
+                   'miscellaneous': [get_zeros_list(12), get_zeros_list(12)],
+                   'clothing': [get_zeros_list(12), get_zeros_list(12)],
+                   'gifcards': [get_zeros_list(12), get_zeros_list(12)]}
 
-        return render(request, 'analytics/linechart.html')
-
+        for item_type, month, number_of_donations, total_quantity in res:
+            month = month.strip()
+            results[item_type][0][INDEXED_MONTHS[month]] = results[item_type][0][INDEXED_MONTHS[month]] + total_quantity
+            results[item_type][1][INDEXED_MONTHS[month]] = results[item_type][1][INDEXED_MONTHS[month]] + number_of_donations
+        print(results)
+        return render(request, 'analytics/linechart.html', {'results': results})
+    else:
+        HttpResponse("Error...")
 
 
 def get_filters_and_query(form):
