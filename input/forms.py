@@ -51,7 +51,7 @@ class DonationForm(forms.Form):
     )
 
     class Meta:
-        #model = Donation
+        model = Donation
         fields = ['date_received', 'thanks_sent', 'comment']
 
     def __init__(self, *args, **kwargs):
@@ -126,8 +126,15 @@ class ItemForm(forms.Form):
 
 
 class FundsForm(forms.Form):
-    type = forms.ChoiceField(required=False)
+
     amount = forms.DecimalField(required=False)
+    fund_types = [
+        ('Cash', 'Cash'),
+        ('Check', 'Check'),
+        ('Electronic', 'Electronic')
+    ]
+
+    type = forms.ChoiceField(required=False, choices=fund_types)
 
     class Meta:
         # model = input
