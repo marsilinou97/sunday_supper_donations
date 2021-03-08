@@ -14,6 +14,10 @@ def index(request):
         pie_context = get_pie_chart_context(pie_chart_query)
         context = get_line_chart_context(lines_charts_query)
         context.update(pie_context)
+
+        form = RawDataForm()
+        context.update({"form": form})
+
         return render(request, 'analytics/analytics.html', context)
 
     elif request.method == 'POST':
@@ -30,8 +34,13 @@ def index(request):
             pie_context = get_pie_chart_context(pie_chart_filter_query)
             context = get_line_chart_context(lines_chart_filter_query)
             context.update(pie_context)
-            
-        return render(request, 'analytics/analytics.html', context)
+        
+            form = RawDataForm()
+            context.update({"form":form()})
+            return render(request, 'analytics/analytics.html', context)
+        
+        else:
+            HttpResponse("Error...")
             
 
 def raw_data(request):
@@ -103,7 +112,9 @@ def get_line_chart_context(requested_query):
 
 
 def get_pie_chart_context(requested_query):
+    print(requested_query)
     context = execute_fetch_raw_query(query=requested_query, fetch_all=True)
+    print(context)
     context = {k: v for k, v in context}
     context["all"] = sum(context.values())
     return context
