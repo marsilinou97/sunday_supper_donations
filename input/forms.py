@@ -95,6 +95,7 @@ class ItemForm(forms.Form):
     ]
 
     business = [
+        ("Trader Joe's","Trader Joe's"),
         ('tar','Target'),
         ('bestbuy','BestBuy')
     ]
@@ -104,7 +105,7 @@ class ItemForm(forms.Form):
     sub_type_name = forms.CharField(required=False)
     sub_type_clothing = forms.ChoiceField(required=False, choices=clothing_types)
     sub_type_business = forms.ChoiceField(required=False, choices=business)
-    
+
 
     class Meta:
         # model = input
@@ -129,6 +130,7 @@ class FundsForm(forms.Form):
 
     amount = forms.DecimalField(required=False)
     fund_types = [
+        (None,"Nada"),
         ('Cash', 'Cash'),
         ('Check', 'Check'),
         ('Electronic', 'Electronic')
