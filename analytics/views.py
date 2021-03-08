@@ -13,6 +13,13 @@ def index(request):
     pie_context = get_pie_chart_context()
     context = get_line_chart_context()
     context.update(pie_context)
+
+    form = RawDataForm()
+
+    context.update({"form":form})
+
+    
+
     return render(request, 'analytics/analytics.html', context)
 
 
