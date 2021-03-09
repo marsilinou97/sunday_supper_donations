@@ -1,5 +1,6 @@
-<canvas id="line-chart2" width="800" height="450"></canvas>
-
+<div class="chart-container">
+    <canvas id="line-chart2"></canvas>
+</div>
 <script>
     let barChartData2 = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -39,6 +40,8 @@
         type: 'bar',
         data: barChartData2,
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: 'Total quantity of each donation type'
@@ -47,7 +50,6 @@
                 mode: 'index',
                 intersect: false
             },
-            responsive: true,
             scales: {
                 xAxes: [{
                     stacked: true,

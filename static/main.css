@@ -173,3 +173,10 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
     font-size: 16pt;
     transition: all 1s;
 }
+
+.chart-container {
+  position: relative;
+  margin: auto;
+  height: 80vh;
+  width: 80vw;
+}

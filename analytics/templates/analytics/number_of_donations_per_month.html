@@ -1,4 +1,7 @@
-<canvas id="line-chart0" width="800" height="450"></canvas>
+<div class="chart-container">
+    <canvas id="line-chart0"></canvas>
+</div>
+
 
 <script>
     $(window).on('load', function () {
@@ -41,7 +44,12 @@
         new Chart(document.getElementById("line-chart0"), {
             type: 'bar',
             data: barChartData,
+
+            {# TODO: move to a var #}
             options: {
+                // Mobile view
+                responsive: true,
+                maintainAspectRatio: false,
                 title: {
                     display: true,
                     text: 'Number of donations per month'
@@ -50,7 +58,6 @@
                     mode: 'index',
                     intersect: false
                 },
-                responsive: true,
                 scales: {
                     xAxes: [{
                         stacked: true,

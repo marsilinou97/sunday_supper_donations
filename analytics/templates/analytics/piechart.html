@@ -9,8 +9,9 @@
          data-bs-parent="#accordionExample" style="">
         <div class="accordion-body">
             <h1 class="text-center">Donation Categories Pie Chart</h1>
-            <canvas id="myChart"></canvas>
-
+            <div class="chart-container">
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -50,6 +51,9 @@
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
             scales: {
                 yAxes: [{
                     ticks: {
