@@ -104,7 +104,7 @@
                                 </div>
                                 <span>
                                     <b>{{ donation_info_form.comment.label }}</b>
-                                    {{ donation_info_form.comments }}
+                                    {{ donation_info_form.comment }}
                                 </span>
                             </div>
                         </div>
@@ -195,10 +195,11 @@
                         <table class="table shadow p-3 mb-5 bg-body rounded">
                             <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Sub Type</th>
+                                <th class="col-1">#</th>
+                                <th class="col-3">Type</th>
+                                <th class="col-2">Qty.</th>
+                                <th class="col-3">Sub Type</th>
+                                <th class="col-3">Amount</th>
                             </tr>
                             </thead>
                             <tbody id="items_body">
@@ -286,18 +287,21 @@
 
                 let typeId = "id_form-"+ formset_total_forms + "-type"
                 let quantityId = "id_form-"+ formset_total_forms + "-quantity"
+                let amountId = "id_form-"+ formset_total_forms + "-amount"
                 let subtypeId = "id_form-"+ formset_total_forms  + "-sub_type_business"
 
-                let row_count = $('<td scope="row">' + (formset_total_forms + 1).toString() + '</td>')
+                let row_count = $('<td class="col">' + (formset_total_forms + 1).toString() + '</td>')
                 let type = $('{{item_form.type}}').attr({id: typeId, name: typeId})
                 let quantity = $('{{item_form.quantity}}').attr({id: quantityId, name: quantityId})
+                let amount = $('{{item_form.amount}}').attr({id: amountId, name: amountId})
                 let subType = $('{{item_form.sub_type_business}}').attr({id: subtypeId, name: subtypeId})
                 
                 let row  = $('<tr class="shadow p-3 mb-5 bg-body rounded"></tr>')
                 row.append(row_count)
-                row.append("<td>"+type[0].outerHTML+"</td>")
-                row.append("<td>"+quantity[0].outerHTML+"</td>")
-                row.append("<td>"+subType[0].outerHTML+"</td>")
+                row.append("<td class='col-3'>"+type[0].outerHTML+"</td>")
+                row.append("<td class='col-2'>"+quantity[0].outerHTML+"</td>")
+                row.append("<td class='col-3'>"+subType[0].outerHTML+"</td>")
+                row.append("<td class='col-3'>"+amount[0].outerHTML+"</td>")
 
                 $("#items_body").append(row)
 
@@ -369,6 +373,7 @@
                 {#TODO: logic for replacing subtype#}
                 let selected = e.target.value;
                 let subTypeField = $($(row.children()[3]).children()[0])
+                let amountField = $($(row.children()[4]).children()[0])
                 //let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
 
                 let subTypeId = "id_form-"+ row[0].rowIndex  + "-"
@@ -377,19 +382,20 @@
                 if (selected === "giftcard") {
                     subTypeId += "sub_type_business"
                     subTypeField.replaceWith($(giftcard).attr({id: subTypeId, name: subTypeId}));
-                    console.log("GC")
-                } else if (selected === 'clothing') {
-                    subTypeId += "sub_type_clothing"
-                    subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
-                    console.log("CL")
-                } else if (selected === 'food') {
-                    subTypeId += "sub_type_name"
-                    subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
-                    console.log("FO")
-                } else if (selected === 'misc') {
-                    subTypeId += "sub_type_name"
-                    subTypeField.replaceWith($(misc).attr({id: subTypeId, name: subTypeId}));
-                    console.log("MI")
+                    amountField.show()
+                } 
+                else{
+                    amountField.hide()
+                    if (selected === 'clothing') {
+                        subTypeId += "sub_type_clothing"
+                        subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
+                    } else if (selected === 'food') {
+                        subTypeId += "sub_type_name"
+                        subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
+                    } else if (selected === 'misc') {
+                        subTypeId += "sub_type_name"
+                        subTypeField.replaceWith($(misc).attr({id: subTypeId, name: subTypeId}));
+                    }
                 }
                 
 
