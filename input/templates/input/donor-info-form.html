@@ -301,7 +301,7 @@
 
                 $("#items_body").append(row)
 
-                formset_total_forms += 1
+                formset_total_forms++
                 
                 row.click(function () {
                     {#Add event listener to new rows#}
@@ -319,20 +319,33 @@
 
 
         $("#remove_button").click(function (e) {
-            if (itemCount > 1) {
-                itemCount--;
-                let el = $("#items_body.selected")
-                el.nextAll("tr").each(function () {
-                    $(this).find("td:first").html(function (i, val) {
-                        return val - 1
-                    })
-                });
-                if (el.next().is("tr")) {
-                    el.next("tr").addClass("selected");
-                } else {
-                    el.prev("tr").addClass("selected");
-                }
+            if (formset_total_forms > 0) {
+
+                formset_total_forms--;
+                let el = $("#items_body").children(".selected");
                 el.remove();
+                
+                $("#items_body").children("tr").each(function (rowIndex, row) {
+                    $(row).children().each(function (inputIndex, input) {
+                        if(inputIndex > 0){
+                            let inputField = $(input).children().first();
+
+                            let id = inputField.attr("id").split("-")
+                            id = id[0] + "-" + rowIndex + "-" + id[2]
+
+                            let name = inputField.attr("name").split("-")
+                            name = name[0] + "-" + rowIndex + "-" + name[2]
+                            
+                            inputField.attr({id: id, name: name})
+                        }
+                        else{
+                            $(input).text(rowIndex + 1)
+                        }
+                    })
+                })
+
+                $("#id_form-TOTAL_FORMS").attr("value", formset_total_forms)
+                
             }
         });
 
