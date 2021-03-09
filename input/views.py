@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
 from django.forms import formset_factory
 from django.contrib import messages
@@ -32,6 +31,8 @@ def handle_post_req(request):
     user_input = {}  # user input dictionary
     cur_user = User.objects.last()  # who is the current user
     # TODO: get the actual current user
+    # if request.user.is_authenticated:  # authenticates the current user and can't be none
+    #     cur_user = request.User.username
     user_input_items = {}  # items dictionary
     items_list = []  # list of dictionary for item types
     data = request.POST.dict() # Get request.POST as a regular dictionary
@@ -145,6 +146,8 @@ def handle_post_req(request):
     except:
         for error in sys.exc_info():
             print(error)
+
+    messages.success(request, 'Donation Saved.')
     return redirect('input_page')
 
     # number_items = 0
@@ -217,14 +220,7 @@ def handle_post_req(request):
     #     print(a)
     #     a["key"] = "value"
 
-
-
-    # if request.user.is_authenticated:  # authenticates the current user and can't be none
-    #     cur_user = request.User.username
-
-
     """
-
     # populating items_list with items thats not funds
     """
     # for i in range(0,number_items):

@@ -1,6 +1,7 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
+
     <style>
 
         .wrapperX {
@@ -75,6 +76,13 @@
             border-left: 2px pink solid;
         }
     </style>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success fade in text-center" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="donor-info-form">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
@@ -389,6 +397,11 @@
             $(this).closest('form').find("input, textarea").val("");
             $("#id_state option:eq(0)").prop('selected', true);
         });
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 2000);
 
     </script>
 
