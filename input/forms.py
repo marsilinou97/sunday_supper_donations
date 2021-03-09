@@ -105,11 +105,12 @@ class ItemForm(forms.Form):
     sub_type_name = forms.CharField(required=False)
     sub_type_clothing = forms.ChoiceField(required=False, choices=clothing_types)
     sub_type_business = forms.ChoiceField(required=False, choices=business)
+    amount = forms.DecimalField(required=False)
 
 
     class Meta:
         # model = input
-        fields = ['type', 'quantity', 'sub_type_name','sub_type_clothing','sub_type_business']
+        fields = ['type', 'quantity', 'sub_type_name','sub_type_clothing','sub_type_business', 'amount']
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
@@ -124,6 +125,7 @@ class ItemForm(forms.Form):
         self.fields["sub_type_name"].widget.attrs.update({"placeholder": "Name"})
         self.fields["sub_type_clothing"].widget.attrs.update({"placeholder": "Type"})
         self.fields["sub_type_business"].widget.attrs.update({"placeholder": "Business"})
+        self.fields["amount"].widget.attrs.update({"placeholder": "0"})
 
 
 class FundsForm(forms.Form):
