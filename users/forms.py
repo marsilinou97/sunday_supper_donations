@@ -7,8 +7,8 @@ from .models import RegistrationToken
 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
-    token = forms.CharField(required=True, disabled=False)
+    email = forms.EmailField(required=True, max_length=100)
+    token = forms.CharField(required=True, disabled=False, max_length=50)
 
     class Meta:
         model = User
