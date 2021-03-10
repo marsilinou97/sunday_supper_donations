@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
 from django.forms import formset_factory
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 import sys
@@ -175,7 +176,7 @@ def handle_post_req(request):
     return redirect('input_page')
 
 
-
+# @login_required
 def index(request):
     if request.method == 'POST':
         return handle_post_req(request)

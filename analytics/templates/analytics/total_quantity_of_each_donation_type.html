@@ -1,0 +1,61 @@
+<canvas id="line-chart2" width="800" height="450"></canvas>
+
+<script>
+    let barChartData2 = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [{
+            label: 'Food',
+            backgroundColor: window.chartColors.red,
+            stack: 'Stack 0',
+            data: {{ line_chart_context.food.1 }}
+
+        }, {
+            label: 'Funds',
+            backgroundColor: window.chartColors.blue,
+            stack: 'Stack 1',
+            data:{{ line_chart_context.funds.1 }}
+        }, {
+            label: 'Clothing',
+            backgroundColor: window.chartColors.green,
+            stack: 'Stack 2',
+            data: {{ line_chart_context.clothing.1 }}
+
+        }, {
+            label: 'Miscellaneous',
+            backgroundColor: window.chartColors.orange,
+            stack: 'Stack 3',
+            data: {{ line_chart_context.miscellaneous.1 }}
+
+        }, {
+            label: 'Gift cards',
+            backgroundColor: window.chartColors.purple,
+            stack: 'Stack 4',
+            data: {{ line_chart_context.gifcards.1 }}
+
+        }]
+    };
+
+    new Chart(document.getElementById("line-chart2"), {
+        type: 'bar',
+        data: barChartData2,
+        options: {
+            title: {
+                display: true,
+                text: 'Total quantity of each donation type'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+</script>

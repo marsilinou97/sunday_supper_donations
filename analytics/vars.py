@@ -1,8 +1,13 @@
+MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November',
+          'December']
+INDEXED_MONTHS = {'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5, 'July': 6, 'August': 7,
+                  'September': 8, 'October': 9, 'November': 10, 'December': 11}
+
 table_headers = {
     'funds': ('first_name', 'last_name', 'date_received', 'type', 'amount', 'quantity'),
     'clothing': ('first_name', 'last_name', 'date_received', 'XXXX', 'type', 'quantity'),
     'foods': ('first_name', 'last_name', 'date_received', 'XXXX', 'name', 'quantity'),
-    'giftcards': ('first_name', 'last_name', 'date_received', 'XXXX', 'business_name', 'amount', 'quantity'),
+    'giftcards': ('first_name', 'last_name', 'date_received', 'business_name', 'XXXX', 'amount', 'quantity'),
     'miscellaneous': ('first_name', 'last_name', 'date_received', 'XXXX', 'misc_name', 'quantity')}
 
 raw_data_query = """
@@ -89,7 +94,6 @@ filter_query = """
                                INNER JOIN input_donation d ON ii.donation_id = d.id
                                INNER JOIN input_donor id2 ON d.donor_id = id2.id
                       LIMIT 25)) results
-                       WHERE 
         """
 
 pie_chart_query = """
@@ -118,3 +122,96 @@ pie_chart_query = """
                  INNER JOIN input_miscellaneous i
                             ON ii.id = i.item_id;
         """
+
+stacked_lines_by_month_query = """
+                                    SELECT 'funds', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity
+                                    FROM input_fund f
+                                             INNER JOIN input_item ii ON f.item_id = ii.id
+                                             INNER JOIN input_donation i ON ii.donation_id = i.id
+                                    GROUP BY monnth
+                                    
+                                    
+                                    UNION ALL
+                                    
+                                    SELECT 'food', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity
+                                    FROM input_food f
+                                             INNER JOIN input_item ii ON f.item_id = ii.id
+                                             INNER JOIN input_donation i ON ii.donation_id = i.id
+                                    GROUP BY monnth
+                                    
+                                    UNION ALL
+                                    
+                                    SELECT 'miscellaneous',
+                                           to_char(date_received, 'Month') AS monnth,
+                                           count(*)                           number_of_donations,
+                                           sum(quantity)                   AS quantity
+                                    FROM input_miscellaneous f
+                                             INNER JOIN input_item ii ON f.item_id = ii.id
+                                             INNER JOIN input_donation i ON ii.donation_id = i.id
+                                    GROUP BY monnth
+                                    
+                                    UNION ALL
+                                    
+                                    SELECT 'clothing',
+                                           to_char(date_received, 'Month') AS monnth,
+                                           count(*)                           number_of_donations,
+                                           sum(quantity)                   AS quantity
+                                    FROM input_clothing f
+                                             INNER JOIN input_item ii ON f.item_id = ii.id
+                                             INNER JOIN input_donation i ON ii.donation_id = i.id
+                                    GROUP BY monnth
+                                    
+                                    UNION ALL
+                                    
+                                    SELECT 'giftcards',
+                                           to_char(date_received, 'Month') AS monnth,
+                                           count(*)                           number_of_donations,
+                                           sum(quantity)                   AS quantity
+                                    FROM input_giftcard f
+                                             INNER JOIN input_item ii ON f.item_id = ii.id
+                                             INNER JOIN input_donation i ON ii.donation_id = i.id
+                                    GROUP BY monnth
+"""
+
+lines_charts_query = """
+                        SELECT 'funds', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity
+                        FROM input_fund f
+                                 INNER JOIN input_item ii ON f.item_id = ii.id
+                                 INNER JOIN input_donation i ON ii.donation_id = i.id
+                        GROUP BY monnth
+                        UNION ALL
+                        SELECT 'food', to_char(date_received, 'Month') AS monnth, count(*) number_of_donations, sum(quantity) AS quantity
+                        FROM input_food f
+                                 INNER JOIN input_item ii ON f.item_id = ii.id
+                                 INNER JOIN input_donation i ON ii.donation_id = i.id
+                        GROUP BY monnth
+                        UNION ALL
+                        SELECT 'miscellaneous',
+                               to_char(date_received, 'Month') AS monnth,
+                               count(*)                           number_of_donations,
+                               sum(quantity)                   AS quantity
+                        FROM input_miscellaneous f
+                                 INNER JOIN input_item ii ON f.item_id = ii.id
+                                 INNER JOIN input_donation i ON ii.donation_id = i.id
+                        GROUP BY monnth
+                        UNION ALL
+                        SELECT 'clothing',
+                               to_char(date_received, 'Month') AS monnth,
+                               count(*)                           number_of_donations,
+                               sum(quantity)                   AS quantity
+                        FROM input_clothing f
+                                 INNER JOIN input_item ii ON f.item_id = ii.id
+                                 INNER JOIN input_donation i ON ii.donation_id = i.id
+                        GROUP BY monnth
+                        UNION ALL
+                        SELECT 'gifcards',
+                               to_char(date_received, 'Month') AS monnth,
+                               count(*)                           number_of_donations,
+                               sum(quantity)                   AS quantity
+                        FROM input_giftcard f
+                                 INNER JOIN input_item ii ON f.item_id = ii.id
+                                 INNER JOIN input_donation i ON ii.donation_id = i.id
+                        GROUP BY monnth
+                        ORDER BY 1
+
+"""

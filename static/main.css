@@ -1,4 +1,3 @@
-
 .form-control, .form-control:focus, .input-group-addon {
     border-color: #e1e1e1;
 }
@@ -7,13 +6,13 @@
     border-radius: 3px;
 }
 
-.signup-form {
+.signup-form, .login-form {
     width: 390px;
     margin: 0 auto;
     padding: 30px 0;
 }
 
-.signup-form form {
+.signup-form form, .login-form form {
     color: #999;
     border-radius: 3px;
     margin-bottom: 15px;
@@ -22,40 +21,40 @@
     padding: 30px;
 }
 
-.signup-form h2 {
+.signup-form h2, .login-form h2 {
     color: #333;
     font-weight: bold;
     margin-top: 0;
 }
 
-.signup-form hr {
+.signup-form hr, .login-form hr {
     margin: 0 -30px 20px;
 }
 
-.signup-form .form-group {
+.signup-form .form-group, .login-form .form-group {
     margin-bottom: 20px;
 }
 
-.signup-form label {
+.signup-form label, .login-form label {
     font-weight: normal;
     font-size: 13px;
 }
 
-.signup-form .form-control {
+.signup-form .form-control, .login-form .form-control {
     min-height: 38px;
     box-shadow: none !important;
 }
 
-.signup-form .input-group-addon {
+.signup-form .input-group-addon, .login-form .input-group-addon {
     max-width: 42px;
     text-align: center;
 }
 
-.signup-form input[type="checkbox"] {
+.signup-form input[type="checkbox"], .login-form input[type="checkbox"] {
     margin-top: 2px;
 }
 
-.signup-form .btn {
+.signup-form .btn, .login-form .btn {
     font-size: 16px;
     font-weight: bold;
     background: #19aa8d;
@@ -63,38 +62,38 @@
     min-width: 140px;
 }
 
-.signup-form .btn:hover, .signup-form .btn:focus {
+.signup-form .btn:hover, .signup-form .btn:focus, .login-form .btn:hover, .signup-form .btn:focus {
     background: #179b81;
     outline: none;
 }
 
-.signup-form a {
+.signup-form a, .login-form a {
     color: #fff;
     text-decoration: underline;
 }
 
-.signup-form a:hover {
+.signup-form a:hover, .login-form a:hover {
     text-decoration: none;
 }
 
-.signup-form form a {
+.signup-form form a, .login-form form a {
     color: #19aa8d;
     text-decoration: none;
 }
 
-.signup-form form a:hover {
+.signup-form form a:hover, .login-form form a:hover {
     text-decoration: underline;
 }
 
-.signup-form .fa {
+.signup-form .fa, .login-form .fa {
     font-size: 21px;
 }
 
-.signup-form .fa-paper-plane {
+.signup-form .fa-paper-plane, .login-form .fa-paper-plane {
     font-size: 18px;
 }
 
-.signup-form .fa-check {
+.signup-form .fa-check, .login-form .fa-check {
     color: #fff;
     left: 17px;
     top: 18px;
@@ -164,3 +163,19 @@ fieldset {
     width: 30vw;
     margin: 0 auto;
 }
+
+
+.bd-example * {
+    font-size: 15pt
+}
+
+button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
+    background: #70dddd;
+    font-size: 16pt;
+    transition: all 1s;
+}
+
+.signup-form a, .login-form a {
+    color: #337ab7;
+}
+
