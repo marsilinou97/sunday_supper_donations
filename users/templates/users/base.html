@@ -16,7 +16,7 @@
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
             crossorigin="anonymous"></script>
 
-<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+    <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -101,8 +101,24 @@
                 <a class="nav-link" href="{% url 'news' %}">News</a>
             </li>
             <li class="nav-item">
-                {#TODO Display only if admin logged in#}
-                <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                        </li>
+                    {% else %}
+                    {% endif %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'login' %}">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'maketoken' %}">Make token</a>
@@ -128,5 +144,3 @@
 
 </body>
 </html>
-
-

@@ -7,7 +7,7 @@ table_headers = {
     'funds': ('first_name', 'last_name', 'date_received', 'type', 'amount', 'quantity'),
     'clothing': ('first_name', 'last_name', 'date_received', 'XXXX', 'type', 'quantity'),
     'foods': ('first_name', 'last_name', 'date_received', 'XXXX', 'name', 'quantity'),
-    'giftcards': ('first_name', 'last_name', 'date_received', 'XXXX', 'business_name', 'amount', 'quantity'),
+    'giftcards': ('first_name', 'last_name', 'date_received', 'business_name', 'XXXX', 'amount', 'quantity'),
     'miscellaneous': ('first_name', 'last_name', 'date_received', 'XXXX', 'misc_name', 'quantity')}
 
 raw_data_query = """

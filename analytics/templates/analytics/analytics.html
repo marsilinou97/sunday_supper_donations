@@ -1,7 +1,21 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
-    <h1>Analytics Main page</h1>
+
+    <form method="post" class="text-center">
+        {% csrf_token %}
+
+        {{ form }}
+
+        <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
+    </form>
+
+
+
+
+    <h1 class="text-cetner">Analytics Main page</h1>
+
+
 
     <div class="bd-example">
         {#TODO: allow multiple expanded chart#}
