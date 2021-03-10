@@ -81,8 +81,8 @@ def handle_post_req(request):
         elif item_dict['subclass'] == 'clothing':
             item_dict["subclass"] = Clothing
             # get the Clothing enumerated value
-            if 'id_form-' + str(i-1) + '-sub_type_clothing' in data:
-                item_dict['clothingTypeName'] = data['id_form-' + str(i-1) + '-sub_type_clothing']
+            if 'id_form-' + str(i+1) + '-sub_type_clothing' in data:
+                item_dict['clothingTypeName'] = data['id_form-' + str(i+1) + '-sub_type_clothing']
             # else:
             #    item_dict['clothingTypeName'] = "men"
 
