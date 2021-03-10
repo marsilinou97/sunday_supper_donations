@@ -22,3 +22,14 @@ def validate_token(token):
             error_msg = "Token expired."
 
     return error_msg
+# might not be necessary anymore; my bad. Just gonna hang on to it in case. -Brad
+#
+# def validate_email(email):
+#     error_msg = ""
+#     if not email:
+#         error_msg = "Email can't be empty."
+#     else:
+#         email_exists = User.objects.raw("SELECT COUNT(email) FROM auth_user WHERE email = %s", [email])
+#         if len(email_exists) != 0:
+#             error_msg = "An account with that email address already exists."
+#     return error_msg

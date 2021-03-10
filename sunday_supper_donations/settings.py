@@ -99,6 +99,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS':{
+            'min_length':8, # I know this is the django default, just being explicit
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -131,3 +134,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'), ]
 
 LOGIN_REDIRECT_URL = 'news'
+LOGOUT_REDIRECT_URL = 'login'
