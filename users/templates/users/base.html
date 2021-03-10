@@ -90,8 +90,24 @@
                 <a class="nav-link" href="{% url 'news' %}">News</a>
             </li>
             <li class="nav-item">
-                {#TODO Display only if admin logged in#}
-                <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                {% if user.is_authenticated %}
+                    {%  if user.is_staff %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                        </li>
+                    {% else %}
+                    {% endif %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
             </li>
         </ul>
     </div>

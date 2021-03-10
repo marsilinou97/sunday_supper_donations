@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
 from django.forms import formset_factory
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import Donor, InsertDonor
 
@@ -88,7 +89,7 @@ def handle_post_req(request):
         messages.error(request, "Error 1: Invalid Input")
     """
 
-
+# @login_required
 def index(request):
     if request.method == 'POST':
         return handle_post_req(request)
