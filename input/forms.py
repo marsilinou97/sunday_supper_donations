@@ -1,17 +1,14 @@
 from datetime import datetime
-
 from django import forms
 from .models import *
 from helpers import remove_html_tags
 
 
-class DonorInformationForm(forms.Form):
+class DonorInformationForm(forms.ModelForm):
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
-    dob = forms.DateField(required=False,
-                          widget=forms.DateInput(attrs={'type': 'date', "min": "1900-01-01",
-                                                        "max": datetime.today().strftime('%Y-%m-%d')}))
+    phone_number = forms.CharField(required=False)
     address1 = forms.CharField(required=False)
     address2 = forms.CharField(required=False)
     city = forms.CharField(required=False)
@@ -19,8 +16,8 @@ class DonorInformationForm(forms.Form):
     zip = forms.CharField(required=False)
 
     class Meta:
-        # model = input
-        fields = ['first_name', 'last_name', 'dob', 'address1', 'address2', 'city', 'state', 'zip', 'email']
+        model = Donor
+        fields = ['first_name', 'last_name', 'phone_number', 'address1', 'address2', 'city', 'state', 'zip', 'email']
 
     def __init__(self, *args, **kwargs):
         super(DonorInformationForm, self).__init__(*args, **kwargs)
@@ -32,7 +29,7 @@ class DonorInformationForm(forms.Form):
 
         self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
         self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
-        self.fields["dob"].widget.attrs.update({"placeholder": "D.O.B"})
+        self.fields["phone_number"].widget.attrs.update({"placeholder": "Phone Number"})
         self.fields["address1"].widget.attrs.update({"placeholder": "Address Line 1"})
         self.fields["address2"].widget.attrs.update({"placeholder": "Address Line 2"})
         self.fields["city"].widget.attrs.update({"placeholder": "City"})
@@ -41,7 +38,7 @@ class DonorInformationForm(forms.Form):
         self.fields["email"].widget.attrs.update({"placeholder": "Email"})
 
 
-class DonationForm(forms.ModelForm):
+class DonationForm(forms.Form):
     date_received = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
     thanks_sent = forms.BooleanField(required=False)
     comment = forms.CharField(
@@ -98,6 +95,7 @@ class ItemForm(forms.Form):
     ]
 
     business = [
+        ("Trader Joe's","Trader Joe's"),
         ('tar','Target'),
         ('bestbuy','BestBuy')
     ]
@@ -107,11 +105,12 @@ class ItemForm(forms.Form):
     sub_type_name = forms.CharField(required=False)
     sub_type_clothing = forms.ChoiceField(required=False, choices=clothing_types)
     sub_type_business = forms.ChoiceField(required=False, choices=business)
-    
+    amount = forms.DecimalField(required=False)
+
 
     class Meta:
         # model = input
-        fields = ['type', 'quantity', 'sub_type_name','sub_type_clothing','sub_type_business']
+        fields = ['type', 'quantity', 'sub_type_name','sub_type_clothing','sub_type_business', 'amount']
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
@@ -126,11 +125,20 @@ class ItemForm(forms.Form):
         self.fields["sub_type_name"].widget.attrs.update({"placeholder": "Name"})
         self.fields["sub_type_clothing"].widget.attrs.update({"placeholder": "Type"})
         self.fields["sub_type_business"].widget.attrs.update({"placeholder": "Business"})
+        self.fields["amount"].widget.attrs.update({"placeholder": "0"})
 
 
 class FundsForm(forms.Form):
-    type = forms.ChoiceField(required=False)
+
     amount = forms.DecimalField(required=False)
+    fund_types = [
+        (None,"Nada"),
+        ('Cash', 'Cash'),
+        ('Check', 'Check'),
+        ('Electronic', 'Electronic')
+    ]
+
+    type = forms.ChoiceField(required=False, choices=fund_types)
 
     class Meta:
         # model = input
