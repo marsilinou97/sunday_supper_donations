@@ -7,14 +7,16 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from helpers import remove_html_tags
 from .forms import UserRegisterForm, RegistrationTokenForm
 from .helpers import validate_token
-from helpers import remove_html_tags
+
 TOKEN_OPTIONS = string.ascii_uppercase + string.ascii_lowercase + string.digits
 
 
 def handle_post_req(request):
     form = UserRegisterForm(request.POST)
+
     if form.is_valid():
 
         token = remove_html_tags(form.cleaned_data.get('token', ''))
@@ -31,6 +33,9 @@ def handle_post_req(request):
             print(f'Account created for {username}!')
 
     else:
+        form_errors = form.errors
+        if "password2" in form_errors:
+            form_errors["password"] = form_errors.pop("password2")
         messages.error(request, f"Please make sure all fields are correct {form.errors}")
         print("Form is invalid")
 
@@ -43,6 +48,9 @@ def handle_get_req(request):
 
 
 def register(request):
+    if request.user.is_authenticated:
+        # Logged in user can't register
+        return redirect("news")
     if request.method == 'POST':
         return handle_post_req(request)
     elif request.method == 'GET':

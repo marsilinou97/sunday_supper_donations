@@ -94,7 +94,6 @@ filter_query = """
                                INNER JOIN input_donation d ON ii.donation_id = d.id
                                INNER JOIN input_donor id2 ON d.donor_id = id2.id
                       LIMIT 25)) results
-                       WHERE 
         """
 
 pie_chart_query = """

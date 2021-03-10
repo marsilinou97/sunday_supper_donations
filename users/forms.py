@@ -1,12 +1,14 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
 from .models import RegistrationToken
 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
-    token = forms.CharField(required=True, disabled=False)
+    email = forms.EmailField(required=True, max_length=100)
+    token = forms.CharField(required=True, disabled=False, max_length=50)
 
     class Meta:
         model = User
@@ -24,6 +26,15 @@ class UserRegisterForm(UserCreationForm):
         self.fields["password1"].widget.attrs.update({"placeholder": "Password"})
         self.fields["password2"].widget.attrs.update({"placeholder": "Confirm Password"})
         self.fields["token"].widget.attrs.update({"placeholder": "Token"})
+
+
+class UserLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        self.fields["username"].widget.attrs.update({"placeholder": "Username"})
+        self.fields["password"].widget.attrs.update({"placeholder": "Password"})
 
 
 class RegistrationTokenForm(forms.ModelForm):
