@@ -334,7 +334,15 @@
             if (formset_total_forms > 0) {
 
                 formset_total_forms--;
+
+                $("#id_form-TOTAL_FORMS").attr("value", formset_total_forms)
                 let el = $("#items_body").children(".selected");
+                
+                if(el.length === 0){
+                    $("#items_body").children().last().remove()
+                    return;
+                }
+
                 el.remove();
                 
                 $("#items_body").children("tr").each(function (rowIndex, row) {
@@ -355,8 +363,6 @@
                         }
                     })
                 })
-
-                $("#id_form-TOTAL_FORMS").attr("value", formset_total_forms)
                 
             }
         });
