@@ -175,7 +175,6 @@ def handle_post_req(request):
     messages.success(request, 'Donation Saved.')
     return redirect('input_page')
 
-
 # @login_required
 def index(request):
     if request.method == 'POST':
