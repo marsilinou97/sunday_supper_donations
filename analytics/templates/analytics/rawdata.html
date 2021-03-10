@@ -9,8 +9,14 @@
         {% csrf_token %}
 
         {{ form }}
-
-        <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
+        <div class="row">
+            <div class="col">
+                <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
+            </div>
+            <div class="col">
+                <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Export</button>
+            </div>
+        </div>
     </form>
 
 
@@ -18,44 +24,42 @@
         <fieldset>
 
             <legend>Show Donation Types:</legend>
+            <div class="row">
+                <div class="col">
+                    <label for="all">Select All:</label>
+                    <input class="donation_select m-3" type="checkbox" id="all" name="all" value="All" checked="true">
+                </div>
 
-            <div id="input-group">
-                <label for="all">Select All:</label>
-                <input class="donation_select m-3" type="checkbox" id="all" name="all" value="All" checked="true">
-            </div>
 
+                <div class="col">
+                    <label for="fund">Funds:</label>
+                    <input class="donation_select m-3" type="checkbox" id="fund" name="fund" value="Funds" checked="true">
+                </div>
 
-            <div class="input-group">
-                <label for="fund">Funds:</label>
-                <input class="donation_select m-3" type="checkbox" id="fund" name="fund" value="Funds" checked="true">
-            </div>
+                <div class="col">
+                    <label for="gift">Gift Cards:</label>
+                    <input class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
+                </div>
 
-            <div class="input-group">
-                <label for="gift">Gift Cards:</label>
-                <input class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
-            </div>
+                <div class="col">
+                    <label for="clothing">Clothing:</label>
+                    <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
+                        checked="true">
+                </div>
 
-            <div class="input-group">
-                <label for="clothing">Clothing:</label>
-                <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
-                       checked="true">
-            </div>
+                <div class="col">
+                    <label for="food">Food:</label>
+                    <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked="true">
+                </div>
 
-            <div class="input-group">
-                <label for="food">Food:</label>
-                <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked="true">
-            </div>
-
-            <div class="input-group">
-                <label for="misc">Miscellaneous:</label>
-                <input class="donation_select m-3" type="checkbox" id="misc" name="misc" value="Misc" checked="true">
+                <div class="col">
+                    <label for="misc">Miscellaneous:</label>
+                    <input class="donation_select m-3" type="checkbox" id="misc" name="misc" value="Misc" checked="true">
+                </div>
             </div>
 
         </fieldset>
     </form>
-
-    <button id="export" class="btn btn-primary btn-md">Export</button>
-
 
 
     <h1 class="mb-5 mt-5 text-center">Donations</h1>
