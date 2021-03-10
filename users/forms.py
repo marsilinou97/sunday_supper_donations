@@ -31,9 +31,10 @@ class UserRegisterForm(UserCreationForm):
 class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
-        fields = self.visible_fields()
-        for visible in fields:
+        for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+        self.fields["username"].widget.attrs.update({"placeholder": "Username"})
+        self.fields["password"].widget.attrs.update({"placeholder": "Password"})
 
 
 class RegistrationTokenForm(forms.ModelForm):
