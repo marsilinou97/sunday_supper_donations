@@ -31,7 +31,7 @@ def handle_post_req(request):
             Handle case where email address already exists.
             TODO: This try/except block has a similar purpose with the else statement
             later on, but it's needed to prevent the page from crashing when the
-            user tries to register with an email address that already exists in the db.
+            user tries to register with an email address that already exists in the db
             """
             try:
                 form.save()

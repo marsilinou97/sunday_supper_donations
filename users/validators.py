@@ -39,17 +39,17 @@ class LowerCaseValidator:
 
 class SpecialCharacterValidator:
     def __init__(self):
-        self.special_case_letters = tuple("~!@#$%^&*_-+=`:;")
+        self.special_cases = tuple("~!@#$%^&*_-+=`:;")
 
     def validate(self, password, user=None):
         for i in range(0, len(password)):
-            if password[i] in self.special_case_letters:
+            if password[i] in self.special_cases:
                 return None
 
         raise ValidationError(
-            gettext("Password must contain at least 1 special case letter from ~!@#$%^&*_-+=`:;"),
+            gettext("Password must contain at least 1 character from ~!@#$%^&*_-+=`:;"),
             code='no_special_case_letters',
             params={})
 
     def get_help_text(self):
-        return gettext("Password must contain at least 1 special case letter from ~!@#$%^&*_-+=`:;")
+        return gettext("Password must contain at least 1 character from ~!@#$%^&*_-+=`:;")
