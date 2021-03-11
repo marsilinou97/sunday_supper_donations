@@ -318,7 +318,8 @@
 
 
             {#Handles export feature#}
-            $('#export').click(function () {
+            $('#export').click(function (e) {
+                e.preventDefault()
                 const wb = XLSX.utils.book_new();
                 wb.Props = {
                     Title: 'Test',
@@ -326,11 +327,21 @@
                     CreateDate: new Date()
                 }
 
+                var wscols = [
+                    {wch:20},
+                    {wch:20},
+                    {wch:20},
+                    {wch:20},
+                    {wch:20}
+                ];
+
                 const sheetNames = ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Misc.']
                 for (var i = 0; i < sheetNames.length; i++) {
                     wb.SheetNames.push(sheetNames[i])
                     wb.Sheets[sheetNames[i]] = XLSX.utils.aoa_to_sheet(tablesData[i])
+                    wb.Sheets[sheetNames[i]]['!cols'] = wscols
                 }
+
 
                 const excelFileName = (new Date()).toString()
 
@@ -359,7 +370,10 @@
             }).get();
 
             let AoA = header.concat(tableheader.concat(tableData));
-            return AoA
+
+            return AoA.filter(function (a){
+                return a.length > 0
+            })
         }
 
 
