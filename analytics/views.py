@@ -47,7 +47,9 @@ def raw_data(request):
     form = RawDataForm()
 
     if request.method == 'GET':
-        print(get_raw_data())
+        #raw_query = get_raw_data_query().all()
+        print(get_raw_data_query())
+        #print(raw_query.filter(item_type='Fund'))
 
         tables_data = get_raw_page_tables_data(raw_data_query)
         context = {
@@ -58,7 +60,7 @@ def raw_data(request):
             "giftcards": tables_data['giftcards'],
             "miscellaneous": tables_data['miscellaneous']
         }
-        return render(request, 'analytics/rawdata.html', context)
+        return render(request, 'analytics/rawdata.html',context)
 
     elif request.method == 'POST':
         # Handles POST request
