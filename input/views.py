@@ -165,8 +165,8 @@ def handle_post_req(request):
     print('address_line1: ' + data['address1'] + " |||| " + user_input['address1'])
     print('address_line2: ' + data['address2'] + " |||| " + user_input['address2'])
     print('city: ' + data['city'] + " |||| " + user_input['city'])
-    print('state: ' + data['state'] + " |||| " + user_input['state'])
-    print('zipcode: ' + data['zip'] + " |||| " + user_input['zip'])
+    # print('state: ' + data['state'] + " |||| ")
+    # print('zipcode: ' + data['zip'] + " |||| " + user_input['zip'])
 
 
 
