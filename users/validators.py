@@ -51,11 +51,11 @@ class SpecialCharacterValidator:
                 return None
 
         raise ValidationError(
-            gettext("Password must contain at least 1 special case letter"),
+            gettext("Password must contain at least 1 special case letter from ~!@#$%^&*_-+=`:;"),
             code='no_special_case_letters',
             params={})
 
     def get_help_text(self):
         # Write your code here Nate
         # Nate: fosure
-        return gettext("Password must contain at least 1 special case letter")
+        return gettext("Password must contain at least 1 special case letter from ~!@#$%^&*_-+=`:;")
