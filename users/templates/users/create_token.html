@@ -5,6 +5,9 @@
         {% csrf_token %}
 
         {% include 'users/msg.html' %}
+        <div class="alert alert-success fade in text-center" role="alert" style="display: none" id="success_message">
+            Copied
+        </div>
 
         {% if form %}
             <div class="input-group">
@@ -12,30 +15,31 @@
                 <input type="number" name="expiration_period" id="expiration_period" value="7" max="20" min="1">
             </div>
         {% endif %}
-        {% if token %}
-            <h2>Click Link to copy</h2>
-            <a id="generated_link" style="font-size: 18pt;" onclick="copyLink($(this))" onmouseout="outFunc()"
-               href="#">{{ token }}</a>
 
-        {% endif %}
         <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Create</button>
 
     </form>
+    {% if token %}
+        <p id="generated_link" style="font-size: 18pt;">{{ token }}</p>
 
+        <button onclick="copyLink()" id="copy_button" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Copy
+            link
+        </button>
+
+    {% endif %}
 
 
     <script>
-        function copyLink(element) {
+        $("#success_message").hide()
+        
+        function copyLink() {
             var $temp = $("<input>");
             $("body").append($temp);
-            $temp.val($(element).text()).select();
+            $temp.val($("#generated_link").text()).select();
             document.execCommand("copy");
             $temp.remove();
-        }
-
-        function outFunc() {
-            var tooltip = document.getElementById("myTooltip");
-            tooltip.innerHTML = "Copy to clipboard";
+            $("#res").text("Copied");
+            $("#success_message").slideDown().delay(5000).slideUp();
         }
     </script>
 {% endblock %}

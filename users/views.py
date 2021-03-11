@@ -40,7 +40,8 @@ def handle_post_req(request):
 
                 # TODO: implement more consistent error messages
                 if 'email' in str(e):
-                    messages.error(request,f"An account with the email address {request.POST['email']} already exists.")
+                    messages.error(request,
+                                   f"An account with the email address {request.POST['email']} already exists.")
                 else:
                     messages.error(request, f"Please make sure all fields are correct {form.errors}")
                 return redirect('register')
@@ -92,7 +93,8 @@ def registration_token(request):
                           {'token': "%s%s%s" % (
                               request.build_absolute_uri('/')[:-1],
                               reverse('register'),
-                              "?token=" + token)
+                              "?token=" + token),
+                           'form': RegistrationTokenForm()
                            })
         else:
             messages.error(request, f"Please make sure registration token is valid, {form.errors}")
