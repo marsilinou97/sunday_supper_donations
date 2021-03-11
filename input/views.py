@@ -49,7 +49,7 @@ def handle_post_req(request):
     if "amount" in data:
         amount = data["amount"]
     if "thanks_sent" in data:
-        if data["thanks_sent"] is "on":
+        if data["thanks_sent"] == "on":
             send_thanks = True
 
     # If there was a Fund donated, add it to the list
