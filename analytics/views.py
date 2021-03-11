@@ -3,8 +3,6 @@ from .forms import RawDataForm
 from .queries import *
 from input.models import *
 from .vars import *
-from django.shortcuts import redirect
-from django.http import HttpResponse
 
 get_zeros_list = lambda n: [0] * n
 
@@ -48,8 +46,7 @@ def raw_data(request):
 
     if request.method == 'GET':
         #raw_query = get_raw_data_query().all()
-        print(get_raw_data_query())
-        #print(raw_query.filter(item_type='Fund'))
+        get_raw_data_query()
 
         tables_data = get_raw_page_tables_data(raw_data_query)
         context = {
