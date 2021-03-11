@@ -223,63 +223,63 @@ Append WHERE clause to end of queries to apply filters
 
 '''
 
-# Get all funds for donor with filters
+# Get fund chart data
 fund_chart_query = """
-select amount, date_received
-from input_donor d
-inner join input_donation dn
-on d.id = dn.donor_id
-inner join input_item it
-on dn.id = it.donation_id
-inner join input_fund f
-on it.id = f.item_id
+SELECT amount, date_received
+FROM input_donor d
+INNER JOIN input_donation dn
+ON d.id = dn.donor_id
+INNER JOIN input_item it
+ON dn.id = it.donation_id
+INNER JOIN input_fund f
+ON it.id = f.item_id
 """
 
 
-# Get all giftcards for donor with filters
+# Get giftcard chart
 giftcard_chart_query = """
-select amount, date_received
-from input_donor d
-inner join input_donation dn
-on d.id = dn.donor_id
-inner join input_item it
-on dn.id = it.donation_id
-inner join input_giftcard g
-on it.id = g.item_id
+SELECT amount, date_received
+FROM input_donor d
+INNER join input_donation dn
+ON d.id = dn.donor_id
+INNER JOIN input_item it
+ON dn.id = it.donation_id
+INNER JOIN input_giftcard g
+ON it.id = g.item_id
 """
 
-# Get all clothing for donor with filters
+# Get clothing chart data
 clothing_chart_query = """
-select quantity, date_received
-from input_donor d
-inner join input_donation dn
-on d.id = dn.donor_id
-inner join input_item it
-on dn.id = it.donation_id
-inner join input_clothing c
-on it.id = c.item_id
+SELECT quantity, date_received
+FROM input_donor d
+INNER JOIN input_donation dn
+ON d.id = dn.donor_id
+INNER JOIN input_item it
+ON dn.id = it.donation_id
+INNER JOIN input_clothing c
+ON it.id = c.item_id
 """
 
-# Get all food for donor with filters
+# Get food chart data
 food_chart_query = """
-select quantity, date_received
-from input_donor d
-inner join input_donation dn
-on d.id = dn.donor_id
-inner join input_item it
-on dn.id = it.donation_id
-inner join input_food f
-on it.id = f.item_id
+SELECT quantity, date_received
+FROM input_donor d
+INNER JOIN input_donation dn
+ON d.id = dn.donor_id
+INNER JOIN input_item it
+ON dn.id = it.donation_id
+INNER JOIN input_food f
+ON it.id = f.item_id
 """
 
-# Get all miscellaneous for donor with filters
-food_chart_query = """
-select quantity, date_received
-from input_donor d
-inner join input_donation dn
+# Get miscellaneous chart data
+miscellaneous_chart_query = """
+SELECT quantity, date_received
+FROM input_donor d
+INNER JOIN input_donation dn
 on d.id = dn.donor_id
-inner join input_item it
-on dn.id = it.donation_id
-inner join input_miscellaneous m
-on it.id = m.item_id
+INNER JOIN input_item it
+ON dn.id = it.donation_id
+INNER JOIN input_miscellaneous m
+ON it.id = m.item_id
 """
