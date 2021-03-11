@@ -215,3 +215,71 @@ lines_charts_query = """
                         ORDER BY 1
 
 """
+
+'''
+ 
+Below queries retrieve necessary data to display charts
+Append WHERE clause to end of queries to apply filters
+
+'''
+
+# Get all funds for donor with filters
+fund_chart_query = """
+select amount, date_received
+from input_donor d
+inner join input_donation dn
+on d.id = dn.donor_id
+inner join input_item it
+on dn.id = it.donation_id
+inner join input_fund f
+on it.id = f.item_id
+"""
+
+
+# Get all giftcards for donor with filters
+giftcard_chart_query = """
+select amount, date_received
+from input_donor d
+inner join input_donation dn
+on d.id = dn.donor_id
+inner join input_item it
+on dn.id = it.donation_id
+inner join input_giftcard g
+on it.id = g.item_id
+"""
+
+# Get all clothing for donor with filters
+clothing_chart_query = """
+select quantity, date_received
+from input_donor d
+inner join input_donation dn
+on d.id = dn.donor_id
+inner join input_item it
+on dn.id = it.donation_id
+inner join input_clothing c
+on it.id = c.item_id
+"""
+
+# Get all food for donor with filters
+food_chart_query = """
+select quantity, date_received
+from input_donor d
+inner join input_donation dn
+on d.id = dn.donor_id
+inner join input_item it
+on dn.id = it.donation_id
+inner join input_food f
+on it.id = f.item_id
+"""
+
+# Get all miscellaneous for donor with filters
+food_chart_query = """
+select quantity, date_received
+from input_donor d
+inner join input_donation dn
+on d.id = dn.donor_id
+inner join input_item it
+on dn.id = it.donation_id
+inner join input_miscellaneous m
+on it.id = m.item_id
+"""
