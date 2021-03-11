@@ -8,6 +8,15 @@ from django.http import HttpResponse
 
 get_zeros_list = lambda n: [0] * n
 
+# Helper function to convert result set from cursor to dictionaries
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
+
 
 def index(request):
     if request.method == 'GET':
@@ -16,7 +25,39 @@ def index(request):
         context.update(pie_context)
 
         form = RawDataForm()
+
         context.update({"form": form})
+
+
+
+        cursor = connection.cursor()
+
+        # Get all donation data for each chart
+        cursor.execute(fund_chart_query)
+        fund = dictfetchall(cursor)
+        fund_data = {"fund_data": fund}
+
+        cursor.execute(giftcard_chart_query)
+        gift = dictfetchall(cursor)
+        giftcard_data = {"giftcard_data": gift}
+
+        cursor.execute(clothing_chart_query)
+        cloth = dictfetchall(cursor)
+        clothing_data = {"clothing_data": cloth}
+
+        cursor.execute(food_chart_query)
+        food = dictfetchall(cursor)
+        food_data = {"food_data": food}
+
+        cursor.execute(miscellaneous_chart_query)
+        misc = dictfetchall(cursor)
+        miscellaneous_data = {"miscellaneous_data": misc}
+
+        context.update(fund_data)
+        context.update(giftcard_data)
+        context.update(clothing_data)
+        context.update(food_data)
+        context.update(miscellaneous_data)
 
         return render(request, 'analytics/analytics.html', context)
 
@@ -167,3 +208,5 @@ def get_raw_page_tables_data(query, params={}):
         row_type = r[0]
         results[row_type].append(dict(zip(table_headers[row_type], r[1:])))
     return results
+
+

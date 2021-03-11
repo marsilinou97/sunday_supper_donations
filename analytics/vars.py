@@ -217,13 +217,10 @@ lines_charts_query = """
 """
 
 '''
- 
-Below queries retrieve necessary data to display charts
-Append WHERE clause to end of queries to apply filters
-
+Queries retrieve necessary data to display all chart data unfiltered
 '''
 
-# Get fund chart data
+# Get all fund chart data
 fund_chart_query = """
 SELECT amount, date_received
 FROM input_donor d
@@ -232,11 +229,11 @@ ON d.id = dn.donor_id
 INNER JOIN input_item it
 ON dn.id = it.donation_id
 INNER JOIN input_fund f
-ON it.id = f.item_id
+ON it.id = f.item_id;
 """
 
 
-# Get giftcard chart
+# Get all giftcard chart data
 giftcard_chart_query = """
 SELECT amount, date_received
 FROM input_donor d
@@ -245,10 +242,10 @@ ON d.id = dn.donor_id
 INNER JOIN input_item it
 ON dn.id = it.donation_id
 INNER JOIN input_giftcard g
-ON it.id = g.item_id
+ON it.id = g.item_id;
 """
 
-# Get clothing chart data
+# Get all clothing chart data
 clothing_chart_query = """
 SELECT quantity, date_received
 FROM input_donor d
@@ -257,10 +254,10 @@ ON d.id = dn.donor_id
 INNER JOIN input_item it
 ON dn.id = it.donation_id
 INNER JOIN input_clothing c
-ON it.id = c.item_id
+ON it.id = c.item_id;
 """
 
-# Get food chart data
+# Get all food chart data
 food_chart_query = """
 SELECT quantity, date_received
 FROM input_donor d
@@ -269,10 +266,10 @@ ON d.id = dn.donor_id
 INNER JOIN input_item it
 ON dn.id = it.donation_id
 INNER JOIN input_food f
-ON it.id = f.item_id
+ON it.id = f.item_id;
 """
 
-# Get miscellaneous chart data
+# Get all miscellaneous chart data
 miscellaneous_chart_query = """
 SELECT quantity, date_received
 FROM input_donor d
@@ -281,5 +278,5 @@ on d.id = dn.donor_id
 INNER JOIN input_item it
 ON dn.id = it.donation_id
 INNER JOIN input_miscellaneous m
-ON it.id = m.item_id
+ON it.id = m.item_id;
 """

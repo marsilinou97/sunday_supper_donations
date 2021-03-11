@@ -79,10 +79,10 @@
           type: 'line',
           data: {
             <!-- X-Axis Donation Received Dates -->
-            labels: ['2021-03-01','2021-03-02','2021-03-03','2021-03-04','2021-03-05','2021-03-06'],
+            labels: [{% for fund in fund_data %} '{{fund.date_received}}', {% endfor %} ],
             datasets: [{
                 <!-- Y-Axis Amount -->
-                data: [50,75,50,100,40,60],
+                data: [ {% for fund in fund_data %} {{fund.amount}} , {% endfor %} ],
                 label: "Funds",
                 borderColor: "#3e95cd",
                 fill: false
@@ -123,10 +123,10 @@
           type: 'line',
           data: {
             <!-- X-Axis Donation Received Dates -->
-            labels: ['2021-03-01','2021-03-02','2021-03-03','2021-03-04','2021-03-05','2021-03-06'],
+            labels: [ {% for giftcard in giftcard_data %} '{{giftcard.date_received}}', {% endfor %} ],
             datasets: [{
                  <!-- Y-Axis Amount -->
-                data: [50,65,70,68,75,80],
+                data: [{% for giftcard in giftcard_data %} {{giftcard.amount}} , {% endfor %}],
                 label: "Gift Cards",
                 borderColor: "#8e5ea2",
                 fill: false
@@ -167,10 +167,10 @@
           type: 'line',
           data: {
             <!-- X-Axis Donation Received Dates -->
-            labels: ['2021-03-01','2021-03-02','2021-03-03','2021-03-04','2021-03-05','2021-03-06'],
+            labels: [{% for clothing in clothing_data %} '{{clothing.date_received}}', {% endfor %}],
             datasets: [{
                  <!-- Y-Axis Type -->
-                data: [2,4,5,3,6,5],
+                data: [{% for clothing in clothing_data %} {{clothing.quantity}} , {% endfor %}],
                 label: "Clothing",
                 borderColor: "#3cba9f",
                 fill: false
@@ -212,10 +212,10 @@
           type: 'line',
           data: {
             <!-- X-Axis Donation Received Dates -->
-            labels: ['2021-03-01','2021-03-02','2021-03-03','2021-03-04','2021-03-05','2021-03-06'],
+            labels: [{% for food in food_data %} '{{food.date_received}}', {% endfor %}],
             datasets: [{
                  <!-- Y-Axis Quantity -->
-                data: [20,35,40,50,60,80],
+                data: [{% for food in food_data %} {{food.quantity}} , {% endfor %}],
                 label: "Food",
                 borderColor: "#e8c3b9",
                 fill: false
@@ -256,10 +256,10 @@
           type: 'line',
           data: {
             <!-- X-Axis Donation Received Dates -->
-            labels: ['2021-03-01','2021-03-02','2021-03-03','2021-03-04','2021-03-05','2021-03-06'],
+            labels: [{% for misc in miscellaneous_data %} '{{misc.date_received}}', {% endfor %}],
             datasets: [{
                  <!-- Y-Axis Quantity -->
-                data: [35,75,45,60,80,65],
+                data: [{% for misc in miscellaneous_data %} '{{misc.quantity}}', {% endfor %}],
                 label: "Miscellaneous",
                 borderColor: "#c45850",
                 fill: false
