@@ -108,8 +108,15 @@
                         </li>
                     {% else %}
                     {% endif %}
+                    <!-- Mostly for debugging, but might be nice to keep anyway! -->
                     <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'login' %}">Log out</a>
+                        <a class="navbar-text"> [ Logged in as {{ user.username }} ] </a>
+                    </li>
+
+                    <!-- /debugging stuff -->
+
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'logout' %}">Log out</a>
                     </li>
                 {% else %}
                     <li class="nav-item active">
@@ -120,9 +127,11 @@
                     </li>
                 {% endif %}
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'maketoken' %}">Make token</a>
-            </li>
+            {%if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'maketoken' %}">Make token</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
