@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
+import debug_toolbar
+from django.conf import settings
+from django.urls import include, path
 
 from input import views as input_views
 from news import views as news_views
@@ -34,4 +37,5 @@ urlpatterns = [
     # adjusted analytics url routing
     path('analytics/', include('analytics.urls')),
     path('maketoken/', users_views.registration_token, name='maketoken'),
+    path('__debug__/', include(debug_toolbar.urls)),
 ]

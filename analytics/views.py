@@ -47,6 +47,8 @@ def raw_data(request):
     form = RawDataForm()
 
     if request.method == 'GET':
+        print(get_raw_data())
+
         tables_data = get_raw_page_tables_data(raw_data_query)
         context = {
             "form": form,

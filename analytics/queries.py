@@ -2,6 +2,7 @@ from django.db import models
 from input.models import *
 import sys  # debugging
 from django.db import connection
+from django.db.models import F
 
 """
 Not sure if this is a good place to put this code, if you need to move it feel free. -Brad
@@ -296,6 +297,9 @@ Return type is a dictionary.
 #             print(error)
 #     return counts
 
+
+def get_raw_data():
+    return Fund.objects.select_related('item__donation__donor').annotate(test=F('item__quantity')).values('test').all()
 
 def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
     if fetch_all or fetch_one:

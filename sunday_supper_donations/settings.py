@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'users',
     'input',
     'news',
-    'analytics'
+    'analytics',
+    'debug_toolbar'
 
 ]
 
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'sunday_supper_donations.urls'
@@ -131,3 +133,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'), ]
 
 LOGIN_REDIRECT_URL = 'news'
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
