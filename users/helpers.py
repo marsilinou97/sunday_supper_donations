@@ -7,7 +7,7 @@ def validate_token(token):
     if not token:
         error_msg = "Token can't be empty."
     else:
-        token_obj = RegistrationToken.objects.filter(token=token)
+        token_obj = RegistrationToken.objects.get(token=token)
 
         if not token_obj:
             error_msg = "Token does not exist."
@@ -18,7 +18,7 @@ def validate_token(token):
         date_created = token_obj.date_created
         token_expiration_period = token_obj.expiration_period
 
-        if datetime.datetime.today() > date_created + datetime.timedelta(days=token_expiration_period):
+        if datetime.date.today() > date_created + datetime.timedelta(days=token_expiration_period):
             error_msg = "Token expired."
 
     return error_msg

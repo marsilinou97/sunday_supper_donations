@@ -59,7 +59,7 @@ class Donation(models.Model):
 
     date_received = models.DateField()
     thanks_sent = models.BooleanField(blank=True, null=True)
-    comments = models.CharField(blank=True, null=True)
+    comments = models.CharField(blank=True, null=True, max_length=100)
 
     def update(
                 self,
