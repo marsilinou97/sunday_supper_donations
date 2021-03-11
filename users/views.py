@@ -27,7 +27,25 @@ def handle_post_req(request):
             print("Please make sure registration token is valid")
 
         else:
-            form.save()
+            """
+            Handle case where email address already exists.
+            TODO: This try/except block has a similar purpose with the else statement
+            later on, but it's needed to prevent the page from crashing when the
+            user tries to register with an email address that already exists in the db.
+            """
+            try:
+                form.save()
+            except IntegrityError as e:
+                print(e)
+
+                # TODO: implement more consistent error messages
+                if 'email' in str(e):
+                    messages.error(request,f"An account with the email address {request.POST['email']} already exists.")
+                else:
+                    messages.error(request, f"Please make sure all fields are correct {form.errors}")
+                return redirect('register')
+
+            # If an IntegrityError wasn't thrown, account creation was a huge success
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
             print(f'Account created for {username}!')
