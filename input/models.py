@@ -283,6 +283,7 @@ def InsertDonor(
         print(them,"created")
     else:
         print("Donor",first_name,last_name,"already exists")
+        them = Donor.objects.get(first_name=first_name, last_name=last_name)
     return them
 
 """

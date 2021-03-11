@@ -22,6 +22,7 @@ def validate_token(token):
             error_msg = "Token expired."
 
     return error_msg
+
 # might not be necessary anymore; my bad. Just gonna hang on to it in case. -Brad
 #
 # def validate_email(email):

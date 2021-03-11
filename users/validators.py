@@ -48,6 +48,7 @@ class SpecialCharacterValidator:
 
         raise ValidationError(
             gettext("Password must contain at least 1 special case letter from ~!@#$%^&*_-+=`:;"),
+
             code='no_special_case_letters',
             params={})
 
