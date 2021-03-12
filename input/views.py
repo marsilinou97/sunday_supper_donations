@@ -168,10 +168,6 @@ def handle_post_req(request):
     # print('state: ' + data['state'] + " |||| ")
     # print('zipcode: ' + data['zip'] + " |||| " + user_input['zip'])
 
-
-
-
-
     messages.success(request, 'Donation Saved.')
     return redirect('input_page')
 
