@@ -4,10 +4,6 @@ import sys  # debugging
 from django.db import connection
 
 """
-Not sure if this is a good place to put this code, if you need to move it feel free. -Brad
-"""
-
-"""
 Filters results. Just a quick implementation, there may be more efficient ways to do this,
 but using this method means the db doesn't need to be queried every time the filter is changed.
 
@@ -298,6 +294,7 @@ Return type is a dictionary.
 
 
 def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
+    res = None # If this isn't here an UnboundLocalError is thrown: "local variable 'res' referenced before assignment"
     if fetch_all or fetch_one:
         with connection.cursor() as cursor:
             cursor.execute(query, params)
@@ -306,3 +303,17 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
             if fetch_one:
                 res = cursor.fetchone()
     return res
+
+"""
+Run some kind of UPDATE or DELETE query. Returns True/False based on whether the query was successful.
+Check analytics/vars.py for the queries to see what their params should be. It varies by query!
+"""
+def execute_nonfetch_raw_query(query, params={}):
+    success = False
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(query, params)
+            success = True
+        except:
+            pass
+    return success
