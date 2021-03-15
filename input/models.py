@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import sys
+from django.db import connection
 
 # Django models documentation: https://docs.djangoproject.com/en/3.1/topics/db/models/
 
@@ -245,27 +246,42 @@ def InsertDonor(
                 first_name, # Required
                 last_name,
                 date_of_birth = None, # Optional
-                email_address = None,
-                phone_number = None,
-                address_line1 = None,
-                address_line2 = None,
-                city = None,
-                state = None,
-                zipcode = None
+                email_address = "",
+                phone_number = "",
+                address_line1 = "",
+                address_line2 = "",
+                city = "",
+                state = "",
+                zipcode = ""
                 ):
-    them = None
     """
-    Query Donor table for any matches; if the resulting queryset is empty,
-    we can create the next one.
+    Query Donor table for any matches; if the result is None, we can create a donor.
 
     If we need to add more uniqueness constraints that's fine, add them after the
     last_name argument.
     """
-    donors = Donor.objects.filter(
-                                first_name=first_name,
-                                last_name=last_name
-                                )
-    if len(donors) == 0:
+    them = None
+    try:
+        them = Donor.objects.get(
+            first_name = first_name,
+            last_name = last_name,
+            email_address = email_address,
+            phone_number = phone_number,
+            address_line1 = address_line1,
+            address_line2 = address_line2,
+            city = city,
+            state = state,
+            zipcode = zipcode
+        )
+    except: # For ModelDoesNotExist or something.
+        print("Could not find Donor",first_name,last_name)
+        for error in sys.exc_info():
+            print(error)
+        them = None
+
+    if them == None:
+        print("Could not find Donor",first_name,last_name)
+        print("Inserting Donor",first_name,last_name)
         # Build and save the Donor
         them = Donor()
         them.update(
@@ -283,7 +299,6 @@ def InsertDonor(
         print(them,"created")
     else:
         print("Donor",first_name,last_name,"already exists")
-        them = Donor.objects.get(first_name=first_name, last_name=last_name)
     return them
 
 """

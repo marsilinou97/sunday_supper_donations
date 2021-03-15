@@ -4,6 +4,7 @@ from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Dono
 from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import connection
 
 from .models import *
 import sys
@@ -38,6 +39,8 @@ def handle_post_req(request):
     # user_input_items = {}  # items dictionary
     items_list = []  # list of dictionary for item types
     data = request.POST.dict()  # Get request.POST as a regular dictionary
+    if "state" not in data:
+        data["state"] = ""
     print(data)
 
     # Get information about Funds, if any were donated
@@ -106,28 +109,27 @@ def handle_post_req(request):
         i += 1
         next_key = 'id_form-' + str(i) + '-type'
 
-    # Check if the donation was anonymous.
-    donor = None
-    if "anonymous" in user_input:
-        if user_input['anonymous'] == 'on':
-            # If it was, select the anonymous donor from the db
-            donor = Donor.objects.get(first_name="ANONYMOUS", last_name="ANONYMOUS", email="")
-
-    # If it wasn't anonymous, or if the anonymous donor wasn't in the db,
     # Try to insert the donor.
+    donor = None
     if donor == None:
         # Get donor information from the POST request
         user_keys = ["first_name", "last_name", "email_address", "phone_number", "state",
                      "city", "zip", "address1", "address2"]
         for key in user_keys:
-            # If the data exists, great. Use it
-            if key in data:
-                user_input[key] = data[key]
-            # If the data doesn't exist, it stays blank.
+            if 'anonymous' in data and data['anonymous'] == 'on':
+                    user_input[key] = "ANONYMOUS"
             else:
-                user_input[key] = ""
+                # If the data exists, great. Use it
+                if key in data:
+                    user_input[key] = data[key]
+                # If the data doesn't exist, it stays blank.
+                else:
+                    user_input[key] = ""
 
-        # Now that we've doxxed the donor, try to insert them into the db
+        # Try to insert them into the db
+        # If the donation was truly anonymous, then all attributes will be ANONYMOUS and the anonymous donor will be returned
+        # If the donation was not anonymous, then the database will be queried for the given attributes and that donor will be returned
+        # If the donor doesn't exist in the database, then the donor will be created and inserted
         try:
             donor = InsertDonor(user_input['first_name'], user_input['last_name'],
                                 '', user_input['email_address'],
@@ -136,8 +138,9 @@ def handle_post_req(request):
                                 user_input['city'], user_input['state'],
                                 user_input['zip'])
         except:
+            print("Exception while inserting donor:",end=" ")
             for error in sys.exc_info():
-                print(error)
+                print(error,end=", ")
 
     # Now try to insert the donation. This should fail if donor == None
     # Should technically work even if items_list == []
@@ -145,8 +148,9 @@ def handle_post_req(request):
         # InsertDonation(new_donor, items_list, user_input['date_received'], user_input['thanks_sent'], cur_user, "None")
         InsertDonation(donor, items_list, data['date_received'], send_thanks, cur_user, data['comment'])
     except:
+        print("Exception while inserting donation:",end=" ")
         for error in sys.exc_info():
-            print(error)
+            print(error,end=", ")
 
     """
     ===================================================================================================
