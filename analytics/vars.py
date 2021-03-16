@@ -1,5 +1,3 @@
-MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November',
-          'December']
 INDEXED_MONTHS = {'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5, 'July': 6, 'August': 7,
                   'September': 8, 'October': 9, 'November': 10, 'December': 11}
 
@@ -46,7 +44,12 @@ raw_data_query = """
                   INNER JOIN input_donor id2 ON d.donor_id = id2.id
          LIMIT 25);
         """
-
+raw_data_query2 = """SELECT 'funds',ii.id, first_name, last_name, date_received, type_id AS id, amount, quantity
+         FROM input_item ii
+                  INNER JOIN input_fund i ON ii.id = i.item_id
+                  INNER JOIN input_donation d ON ii.donation_id = d.id
+                  INNER JOIN input_donor id2 ON d.donor_id = id2.id
+         LIMIT 25"""
 filter_query = """
             SELECT *
             FROM (

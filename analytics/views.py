@@ -1,12 +1,18 @@
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.shortcuts import render
+
 from .forms import RawDataForm
 from .queries import *
-from input.models import *
 from .vars import *
-from django.shortcuts import redirect
-from django.http import HttpResponse
 
 get_zeros_list = lambda n: [0] * n
+
+
+def get_funds(request):
+    r = get_raw_page_tables_data2()
+    # page_number = request.GET["page"]
+    return JsonResponse(r, safe=False)
 
 
 def index(request):
@@ -25,7 +31,7 @@ def index(request):
 
         if form.is_valid():
             filters, pie_chart_filter_query = get_filters_and_query(form, pie_chart_query)
-            filters, lines_chart_filter_query = get_filters_and_query(form,lines_charts_query)
+            filters, lines_chart_filter_query = get_filters_and_query(form, lines_charts_query)
 
             if not filters:
                 # If no filters supplied redirect to the raw data page
@@ -34,14 +40,14 @@ def index(request):
             pie_context = get_pie_chart_context(pie_chart_filter_query)
             context = get_line_chart_context(lines_chart_filter_query)
             context.update(pie_context)
-        
+
             form = RawDataForm()
-            context.update({"form":form()})
+            context.update({"form": form()})
             return render(request, 'analytics/analytics.html', context)
-        
+
         else:
             HttpResponse("Error...")
-            
+
 
 def raw_data(request):
     form = RawDataForm()
@@ -112,9 +118,9 @@ def get_line_chart_context(requested_query):
 
 
 def get_pie_chart_context(requested_query):
-    print(requested_query)
+    # print(requested_query)
     context = execute_fetch_raw_query(query=requested_query, fetch_all=True)
-    print(context)
+    # print(context)
     context = {k: v for k, v in context}
     context["all"] = sum(context.values())
     return context
@@ -167,3 +173,34 @@ def get_raw_page_tables_data(query, params={}):
         row_type = r[0]
         results[row_type].append(dict(zip(table_headers[row_type], r[1:])))
     return results
+
+
+# c = []
+
+def get_raw_page_tables_data2():
+    # global c
+    # if c: return c
+    r = execute_fetch_raw_query(raw_data_query2, fetch_all=True)
+    r_json = []
+    # print(r)
+    headers = list(table_headers['funds'])
+    headers.insert(0, "id")
+    for e in r:
+        r_json.append(dict(zip(headers, e[1:])))
+    # c = r_json
+    # print(c)
+    return r_json*5
+
+
+def delete_fund(request):
+    fund_id = request.POST["fund_id"]
+    print(fund_id)
+    res = bool(Fund.objects.filter(item_id=fund_id).delete()[0])
+    # res = 0
+    if not res:
+        res = {"error": "Couldn't delete the funds entry, please try again."}
+    return JsonResponse(res, safe=False)
+
+
+def edit_donations(request):
+    return render(request, 'analytics/edit_donations.html')

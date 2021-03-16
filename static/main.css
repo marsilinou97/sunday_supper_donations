@@ -187,4 +187,14 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
     color: #337ab7;
 }
 
+tr td:last-child {
+    text-align: center;
+}
 
+/* todo: handle mobile */
+
+.table-container{
+    height: 30vh;
+    display: block;
+    overflow: auto;
+}
