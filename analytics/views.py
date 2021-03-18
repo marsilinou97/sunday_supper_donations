@@ -189,7 +189,7 @@ def get_raw_page_tables_data2():
         r_json.append(dict(zip(headers, e[1:])))
     # c = r_json
     # print(c)
-    return r_json*5
+    return r_json * 5
 
 
 def delete_fund(request):
