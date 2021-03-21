@@ -5,7 +5,7 @@ from django.db import connection
 from django.db.models import F
 from analytics.vars import *
 
-def get_model_raw_data_query(model: models.Model, item_specific_fields: dict):
+def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, limit: int):
 
     select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
     select_fields.update(item_specific_fields)
@@ -17,21 +17,9 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict):
         **select_fields
     ).values(
         *fields_keys
-    )
+    )[:limit]
     
     return query
-
-def union_queries(list_of_queries: list):
-    return  list_of_queries[0].union(*list_of_queries[1:], all=True)
-
-def get_raw_data_query():
-    queries = []
-    for query in RAW_DATA_QUERIES:
-        queries.append(get_model_raw_data_query(
-            query["MODEL"],
-            query["FIELDS"]
-        ))
-    return union_queries(queries) 
 
 
 def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
@@ -43,3 +31,9 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
             if fetch_one:
                 res = cursor.fetchone()
     return res
+
+def delete_table_entry(model: models.Model, id: str):
+    model.objects.filter(id=id).delete()
+
+def update_table_entry(model: models.Model, feilds: dict):
+    model.objects.filter(id=id).update(**feilds)

@@ -336,25 +336,25 @@ MISC_RAW_DATA_FIELDS = {
        "namee": F("name")
 }
 
-RAW_DATA_QUERIES = [
-       {
+RAW_DATA_QUERIES = {
+       "funds_table" : {
               "FIELDS": FUNDS_RAW_DATA_FIELDS,
               "MODEL": Fund
        },
-       {
+       "giftcards_table" : {
               "FIELDS": GIFTCARD_RAW_DATA_FIELDS,
               "MODEL": GiftCard
        },
-       {
+       "cloithing_table" : {
               "FIELDS": CLOTHING_RAW_DATA_FIELDS,
               "MODEL": Clothing
        },
-       {
+       "foods_table" : {
               "FIELDS": FOODS_RAW_DATA_FIELDS,
               "MODEL": Food
        },
-       {
+       "misc_table" : {
               "FIELDS": MISC_RAW_DATA_FIELDS,
               "MODEL": Miscellaneous
        }
-]
+}

@@ -95,7 +95,7 @@ def raw_data(request):
 
     if request.method == 'GET':
         #raw_query = get_raw_data_query().all()
-        get_raw_data_query()
+        print(get_raw_data_query())
 
         tables_data = get_raw_page_tables_data(raw_data_query)
         context = {
@@ -248,3 +248,23 @@ def delete_fund(request):
 
 def edit_donations(request):
     return render(request, 'analytics/edit_donations.html')
+
+def get_table(request):
+    # Get request parse
+    if (request.method == "GET"):
+        
+        try:
+            model = request.GET["page_type"]
+            pages = request.GET["page"]
+            limit = request.GET["rows_limit"]
+            if(model not in RAW_DATA_QUERIES.keys()):
+                raise ValueError
+            if(limit < 0):
+                raise ValueError
+            
+            query_info = RAW_DATA_QUERIES[model]
+            query_set = get_model_raw_data_query(query_info["MODEL"],query_info["FEILDS"], limit)
+            
+
+        except:
+            HttpResponse("ERROR...")
