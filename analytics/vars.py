@@ -1,3 +1,12 @@
+from django.db.models import F
+from django.db.models import Value
+from django.db.models import NullBooleanField
+from django.db.models import IntegerField
+from django.db.models import CharField
+from input.models import *
+
+MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November',
+          'December']
 INDEXED_MONTHS = {'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5, 'July': 6, 'August': 7,
                   'September': 8, 'October': 9, 'November': 10, 'December': 11}
 
@@ -283,3 +292,69 @@ ON dn.id = it.donation_id
 INNER JOIN input_miscellaneous m
 ON it.id = m.item_id;
 """
+
+RAW_DATA_BASE_FIELDS_KEYS = {
+        "first_name": F('item__donation__donor__first_name'),
+        "last_name": F('item__donation__donor__last_name'),
+        "date_received": F('item__donation__date_received'),
+        "quantity": F('item__quantity')
+}
+
+RAW_DATA_BASE_FIELDS = [
+       'first_name',
+       'last_name',
+       'date_received',
+]
+
+FUNDS_RAW_DATA_FIELDS = {
+       "item_type": Value('Fund', output_field=CharField()),
+       "id": F('type_id'),
+       "amt": F('amount')
+}
+
+GIFTCARD_RAW_DATA_FIELDS = {
+       "item_type": Value('Giftcard', output_field=CharField()),
+       "id": F('business_name_id'),
+       "amt": F('amount')
+}
+
+CLOTHING_RAW_DATA_FIELDS = {
+       "item_type": Value('Clothing', output_field=CharField()),
+       "id": Value(None, output_field=IntegerField()),
+       "typ_id": F('type_id'),
+}
+
+FOODS_RAW_DATA_FIELDS = {
+       "item_type": Value('Food', output_field=CharField()),
+       "id": Value(None, output_field=IntegerField()),
+       "namee": F("name")
+}
+
+MISC_RAW_DATA_FIELDS = {
+       "item_type": Value('Misc', output_field=CharField()),
+       "id": Value(None, output_field=IntegerField()),
+       "namee": F("name")
+}
+
+RAW_DATA_QUERIES = [
+       {
+              "FIELDS": FUNDS_RAW_DATA_FIELDS,
+              "MODEL": Fund
+       },
+       {
+              "FIELDS": GIFTCARD_RAW_DATA_FIELDS,
+              "MODEL": GiftCard
+       },
+       {
+              "FIELDS": CLOTHING_RAW_DATA_FIELDS,
+              "MODEL": Clothing
+       },
+       {
+              "FIELDS": FOODS_RAW_DATA_FIELDS,
+              "MODEL": Food
+       },
+       {
+              "FIELDS": MISC_RAW_DATA_FIELDS,
+              "MODEL": Miscellaneous
+       }
+]
