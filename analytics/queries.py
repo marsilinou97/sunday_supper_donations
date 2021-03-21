@@ -296,7 +296,6 @@ Return type is a dictionary.
 #             print(error)
 #     return counts
 
-
 def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
     if fetch_all or fetch_one:
         with connection.cursor() as cursor:
@@ -306,3 +305,150 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
             if fetch_one:
                 res = cursor.fetchone()
     return res
+
+# @Ruben
+TABLES_PKS = {
+    "input_item":"id",
+    "input_clothing":"item_id",
+    "input_food":"item_id",
+    "input_fund":"item_id",
+    "input_giftcard":"item_id",
+    "input_miscellaneous":"item_id",
+    "input_donor":"id",
+    "input_donation":"id"
+}
+
+"""
+Executes at most 1 delete query per id in the ids argument.
+
+args:
+    table: name of the table to delete from
+      ids: ids of entries to be deleted
+
+Example call: execute_delete_query("input_item",["1","2","3"])
+    This should generate the following query:
+    DELETE FROM input_item WHERE id = %(id)s;
+
+    And the following queries should be run:
+    DELETE FROM input_item WHERE id = 1;
+    DELETE FROM input_item WHERE id = 2;
+    DELETE FROM input_item WHERE id = 3;
+
+id might not have to be strings but i cast id as a string to be safe
+"""
+def execute_delete_query(table:str, ids:iterable):
+    # Get the name of the pk column for that table
+    try:
+        column = TABLES_PKS[table]
+    except KeyError as e:
+        # If the table isn't in that dictionary then complain and exit
+        print(e)
+        return 0
+
+    # This tuple represents the parts of the query that are shared between all parts of this query
+    body = (
+        "DELETE FROM ",
+        " WHERE ",
+        " = %(",
+        ")s;"
+    )
+    count = 0
+
+    # Start building the queries
+    for id in ids:
+        id = str(id)
+
+        # Concatenate the body and the table and its pk
+        query = body[0] + table + body[1] + column + body[2] + column + body[3]
+
+        # Set up the one param for the query
+        # I'm pretty sure the key needs to match the column name but I could be wrong.
+        params = {column:id}
+
+        # Try/catch is mostly just to be safe
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query,params)
+                count += 1
+        except:
+            print("Couldn't delete")
+    # probably not needed but might be useful
+    print("Successfully deleted",count,"rows from",table)
+    return count
+
+"""
+Executes at most m delete queries per element in tables.
+args:
+    tables: n x 1 matrix, consists of tables to be deleted from
+       ids: n x m matrix, consists of lists of ids to be deleted
+"""
+def batch_delete(tables:iterable,ids:iterable):
+    count = 0
+    for i in range(len(tables)):
+        count += execute_delete_query(tables[i],ids[i])
+    print("Deleted",count,"rows from",len(tables),"tables")
+
+"""
+Executes at most 1 update query
+args:
+         table: name of the table
+       columns: list of column names to be updated. MUST match the name of the column in the db
+            id: used in the WHERE clause
+    new_values: used in the SET clause. MUST be same length as columns, otherwise the query won't work
+"""
+def execute_update_query(table:str, id:str, columns:iterable, new_values:iterable):
+    body = (
+        "UPDATE ",
+        " SET ",
+        " WHERE ",
+        " = %(",
+        ")s;"
+    )
+
+    # Get the name of the pk column for this table
+    pk = TABLES_PKS[table]
+    i = 0 # iterator for values
+    # Set up params dict
+    params = {}
+    params[pk] = id
+
+    # Build UPDATE clause
+    query = body[0] + table + body[1]
+
+    # Build SET clause
+    for column in columns:
+        # Configure params
+        params[column] = new_values[i]
+        i += 1
+
+        query = query + column + " = %(" + column + ")s"
+        if column != columns[-1]:
+            query = query + ", "
+
+    # Build WHERE clause
+    query = query + body[2] + pk + body[3] + pk + body[4]
+
+    try:
+        with connnection.cursor() as cursor:
+            cursor.execute(query,params)
+        return 1
+    except:
+        print("Couldn't update")
+        return 0
+
+"""
+Executes at most 1 update query per element in tables.
+args:
+        tables: n x 1 matrix, consists of tables to update
+           ids: n x 1 matrix, consists of ids to update
+       columns: n x m matrix, consists of column names for all n queries
+    new_values: n x m matrix, consists of values for all n queries
+
+BE CAREFUL WITH THESE ARGS: they all must be the same length (n) in the first dimension,
+and each columns[i] must be the same length (m) as each new_values[i] :) fun stuff
+"""
+def batch_update(tables:iterable, ids:iterable, columns:iterable, new_values:iterable):
+    count = 0
+    for i in range(len(tables)):
+        count += execute_update_query(tables[i],ids[i],columns[i],new_values[i])
+    print("Updated",count,"rows")
