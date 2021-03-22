@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -264,7 +265,14 @@ def get_table(request):
             
             query_info = RAW_DATA_QUERIES[model]
             query_set = get_model_raw_data_query(query_info["MODEL"],query_info["FEILDS"], limit)
+
+            json_response = json.loads(
+                {
+                    "rows":query_set, 
+                    "row_count": query_set.count()
+                })
             
+            JsonResponse(json_response)
 
         except:
             HttpResponse("ERROR...")
