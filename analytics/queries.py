@@ -5,7 +5,7 @@ from django.db import connection
 from django.db.models import F
 from analytics.vars import *
 
-def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, limit: int):
+def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int):
 
     select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
     select_fields.update(item_specific_fields)
@@ -17,7 +17,7 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, li
         **select_fields
     ).values(
         *fields_keys
-    )[:limit]
+    )[offset:limit]
     
     return query
 

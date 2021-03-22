@@ -257,19 +257,22 @@ def get_table(request):
         try:
             model = request.GET["page_type"]
             pages = request.GET["page"]
-            limit = request.GET["rows_limit"]
+            offset = request.GET["offset"]
+            limit = request.GET["limit"]
             if(model not in RAW_DATA_QUERIES.keys()):
                 raise ValueError
             if(limit < 0):
                 raise ValueError
             
             query_info = RAW_DATA_QUERIES[model]
-            query_set = get_model_raw_data_query(query_info["MODEL"],query_info["FEILDS"], limit)
+            query_set = get_model_raw_data_query(query_info["MODEL"],query_info["FEILDS"], offset, limit)
+
+            print(query_set.query)
 
             json_response = json.loads(
                 {
                     "rows":query_set, 
-                    "row_count": query_set.count()
+                    "total": query_set.count()
                 })
             
             JsonResponse(json_response)
