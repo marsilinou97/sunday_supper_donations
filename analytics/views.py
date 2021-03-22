@@ -1,4 +1,5 @@
-import json
+from math import ceil
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -8,6 +9,7 @@ from .queries import *
 from .vars import *
 
 get_zeros_list = lambda n: [0] * n
+
 
 # Helper function to convert result set from cursor to dictionaries
 def dictfetchall(cursor):
@@ -20,7 +22,10 @@ def dictfetchall(cursor):
 
 
 def get_funds(request):
-    r = get_raw_page_tables_data2()
+    r = {}
+    r["rows"] = get_raw_page_tables_data2()
+    r["total"] = 100  # rows count
+    print(r)
     # page_number = request.GET["page"]
     return JsonResponse(r, safe=False)
 
@@ -34,8 +39,6 @@ def index(request):
         form = RawDataForm()
 
         context.update({"form": form})
-
-
 
         cursor = connection.cursor()
 
@@ -95,7 +98,7 @@ def raw_data(request):
     form = RawDataForm()
 
     if request.method == 'GET':
-        #raw_query = get_raw_data_query().all()
+        # raw_query = get_raw_data_query().all()
         print(get_raw_data_query())
 
         tables_data = get_raw_page_tables_data(raw_data_query)
@@ -107,7 +110,7 @@ def raw_data(request):
             "giftcards": tables_data['giftcards'],
             "miscellaneous": tables_data['miscellaneous']
         }
-        return render(request, 'analytics/rawdata.html',context)
+        return render(request, 'analytics/rawdata.html', context)
 
     elif request.method == 'POST':
         # Handles POST request
@@ -149,7 +152,8 @@ def pie_chart(request):
 def get_line_chart_context(requested_query):
     res = execute_fetch_raw_query(query=requested_query, fetch_all=True)
 
-    results = {'funds': [get_zeros_list(12), get_zeros_list(12)], 'food': [get_zeros_list(12), get_zeros_list(12)],
+    results = {'funds': [get_zeros_list(12), get_zeros_list(12)],
+               'food': [get_zeros_list(12), get_zeros_list(12)],
                'miscellaneous': [get_zeros_list(12), get_zeros_list(12)],
                'clothing': [get_zeros_list(12), get_zeros_list(12)],
                'gifcards': [get_zeros_list(12), get_zeros_list(12)]}
@@ -250,32 +254,32 @@ def delete_fund(request):
 def edit_donations(request):
     return render(request, 'analytics/edit_donations.html')
 
+
 def get_table(request):
     # Get request parse
-    if (request.method == "GET"):
-        
+    if request.method == "GET":
         try:
-            model = request.GET["page_type"]
-            pages = request.GET["page"]
-            offset = request.GET["offset"]
-            limit = request.GET["limit"]
-            if(model not in RAW_DATA_QUERIES.keys()):
-                raise ValueError
-            if(limit < 0):
-                raise ValueError
-            
+            model = request.GET["table_type"]
+            offset = int(request.GET["offset"])
+            limit = int(request.GET["limit"])
+
             query_info = RAW_DATA_QUERIES[model]
-            query_set = get_model_raw_data_query(query_info["MODEL"],query_info["FEILDS"], offset, limit)
+            rows_count = query_info["MODEL"].objects.count()
 
-            print(query_set.query)
+            if model not in RAW_DATA_QUERIES.keys():
+                raise ValueError
+            if limit < 0 or offset < 0:
+                raise ValueError
+            if offset > ceil(rows_count / limit):
+                raise ValueError
 
-            json_response = json.loads(
-                {
-                    "rows":query_set, 
-                    "total": query_set.count()
-                })
-            
-            JsonResponse(json_response)
+            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["FIELDS"], offset, limit)
+            json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
 
-        except:
-            HttpResponse("ERROR...")
+            return JsonResponse(json_response, safe=False)
+
+        except Exception as e:
+            print(f"The error is {e}")
+            return HttpResponse("ERROR...")
+    else:
+        return HttpResponse("ERROR...")

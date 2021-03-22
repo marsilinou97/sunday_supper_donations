@@ -6,7 +6,7 @@
         <table id="funds_table" data-height="460" class="table table-striped table-bordered"
                data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
                data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
-               data-page-list="[10, 25, 50]" data-side-pagination="server">
+               data-page-list="[5,10, 25, 50]" data-side-pagination="server">
             <thead>
             <tr>
                 <th data-sortable="true" data-field="id" data-filter-control="input" data-visible="true">id</th>
@@ -22,6 +22,7 @@
             <tbody></tbody>
         </table>
     </div>
+
     <script>
         function getCookie(name) {
             let cookieValue = null;
@@ -39,28 +40,10 @@
             return cookieValue;
         }
 
-        function getFunds(params) {
-            $.ajax({
-                url: 'get_funds/',
-                datatype: 'json',
-                data: $.param(params.data) + "&table_type=" + $(this)[0].$el.attr("id"),
-                type: 'GET',
-                success: function (data) {
-                    console.log(data)
-                    params.success({
-                        "rows": data, "total": 100
-                    })
-                },
-                error: function (er) {
-                    params.error(er);
-                }
-
-            });
-        }
 
         function getTableData(params) {
             $.ajax({
-                url: 'get_funds/',
+                url: 'get_table/',
                 datatype: 'json',
                 data: $.param(params.data) + "&table_type=" + $(this)[0].$el.attr("id"),
                 type: 'GET',
@@ -73,6 +56,7 @@
                 },
                 error: function (er) {
                     params.error(er);
+                    console.log("Error while pulling data with the following parameters:  " + er)
                 }
 
             });

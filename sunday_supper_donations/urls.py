@@ -24,6 +24,9 @@ from input import views as input_views
 from news import views as news_views
 from users import views as users_views
 from users.forms import UserLoginForm
+import debug_toolbar
+from django.conf import settings
+from django.urls import include, path
 
 urlpatterns = [
     path('', users_views.register, name="register"),

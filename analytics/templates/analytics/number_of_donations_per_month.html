@@ -8,36 +8,38 @@
         console.log({{ line_chart_context.miscellaneous}})
         let barChartData = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [{
-                label: 'Food',
-                backgroundColor: window.chartColors.red,
-                stack: 'Stack 0',
-                data: {{ line_chart_context.food.0 }}
+            datasets: [
+                {
+                    label: 'Food',
+                    backgroundColor: window.chartColors.red,
+                    stack: 'Stack 0',
+                    data: {{ line_chart_context.food.0 }}
 
-            }, {
-                label: 'Funds',
-                backgroundColor: window.chartColors.blue,
-                stack: 'Stack 1',
-                data:{{ line_chart_context.funds.0 }}
-            }, {
-                label: 'Clothing',
-                backgroundColor: window.chartColors.green,
-                stack: 'Stack 2',
-                data: {{ line_chart_context.clothing.0 }}
+                }, {
+                    label: 'Funds',
+                    backgroundColor: window.chartColors.blue,
+                    stack: 'Stack 1',
+                    data:{{ line_chart_context.funds.0 }}
+                }, {
+                    label: 'Clothing',
+                    backgroundColor: window.chartColors.green,
+                    stack: 'Stack 2',
+                    data: {{ line_chart_context.clothing.0 }}
 
-            }, {
-                label: 'Miscellaneous',
-                backgroundColor: window.chartColors.orange,
-                stack: 'Stack 3',
-                data: {{ line_chart_context.miscellaneous.0 }}
+                }, {
+                    label: 'Miscellaneous',
+                    backgroundColor: window.chartColors.orange,
+                    stack: 'Stack 3',
+                    data: {{ line_chart_context.miscellaneous.0 }}
 
-            }, {
-                label: 'Gift cards',
-                backgroundColor: window.chartColors.purple,
-                stack: 'Stack 4',
-                data: {{ line_chart_context.gifcards.0 }}
+                }, {
+                    label: 'Gift cards',
+                    backgroundColor: window.chartColors.purple,
+                    stack: 'Stack 4',
+                    data: {{ line_chart_context.gifcards.0 }}
 
-            }]
+                }
+            ]
         };
 
 
