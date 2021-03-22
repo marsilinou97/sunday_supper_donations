@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import RawDataForm
+from .forms import RawDataForm, ChartsForm
 from .queries import *
 from input.models import *
 from .vars import *
@@ -24,7 +24,7 @@ def index(request):
         context = get_line_chart_context(lines_charts_query)
         context.update(pie_context)
 
-        form = RawDataForm()
+        form = ChartsForm()
 
         context.update({"form": form})
 

@@ -32,3 +32,25 @@ class RawDataForm(forms.Form):
         cleaned_data = super(RawDataForm, self).clean()
         cleaned_data = remove_html_tags(cleaned_data)
         return cleaned_data
+
+
+class ChartsForm(forms.Form):
+    first_name = forms.CharField(max_length=50, required=False)
+    last_name = forms.CharField(max_length=50, required=False)
+    donation_year = forms.CharField(max_length=4, required=False)
+
+    class Meta:
+        fields = ['first_name', 'last_name', 'donation_year']
+
+    def __init__(self, *args, **kwargs):
+        super(ChartsForm, self).__init__(*args, **kwargs)
+
+        self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
+        self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
+        self.fields["donation_year"].widget.attrs.update({"placeholder": "YYYY"})
+
+
+    def clean(self):
+        cleaned_data = super(ChartsForm, self).clean()
+        cleaned_data = remove_html_tags(cleaned_data)
+        return cleaned_data
