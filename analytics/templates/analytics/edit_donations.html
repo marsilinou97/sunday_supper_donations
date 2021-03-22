@@ -1,0 +1,195 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+    <h1 class="text-center">Edit Donations</h1>
+    <div class="table-contaidner">
+        <table id="table" data-height="460" class="table table-striped table-bordered"
+               data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+               data-show-columns="true" data-show-export="true" data-ajax="getFunds" data-show-refresh="true"
+               data-page-list="[10, 25, 50]">
+            <thead>
+            <tr>
+                <th data-sortable="true" data-field="id" data-filter-control="input" data-visible="true">id</th>
+                <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
+                <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
+                <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                <th data-sortable="true" data-field="type" data-filter-control="select">Type</th>
+                <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
+                <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                <th data-field="action" data-formatter="actionFormatter">Action</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function getFunds(params) {
+            $.ajax({
+                url: 'get_funds/',
+                datatype: 'json',
+                {#data: {"page": 0},#} // pagination
+                type: 'GET',
+                success: function (data) {
+                    console.log(data)
+                    params.success({
+                        "rows": data
+                    })
+                },
+                error: function (er) {
+                    params.error(er);
+                }
+
+            });
+        }
+
+        $(window).on('load', function () {
+            $('#table').bootstrapTable({
+                onSort: function () {
+                    bindEditButton()
+                },
+                onPageChange: function () {
+                    bindEditButton()
+                    bindRemoveButton()
+                },
+                onLoadSuccess: function () {
+                    bindEditButton()
+                    bindRemoveButton()
+                },
+
+            });
+        });
+
+        let d1 = $.Deferred();
+        let editing = false;
+
+        function actionFormatter(i, row) {
+            let html = []
+            $.each(row, function (k, v) {
+                if (k === 'first_name') {
+                    html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
+                    html.push('<button type="button" class="deletebtn-funds btn btn-primary btn-danger ms-2" >Delete</button>')
+                }
+            })
+            d1.resolve();
+            return html.join("")
+        }
+
+        function bindEditButton() {
+            {#alert("Called")#}
+            if (editing) return
+            editing = true;
+            $.when(d1).done(setTimeout(function () {
+                $('.editbtn').click(function () {
+                    var $this = $(this);
+                    var tds = $this.closest('tr').find('td').filter(function () {
+                        return $(this).find('.editbtn').length === 0;
+                    });
+                    if ($this.html() === 'Edit') {
+                        $this.html('Save');
+                        tds.prop('contenteditable', true)
+                        tds.closest("tr").css({
+                            'border-top': '3px #6d8786 dashed',
+                            'border-bottom': '3px #6d8786 dashed',
+                            'color': '#000'
+                        });
+                        $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
+                        $this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);
+                    } else {
+                        $this.html('Edit');
+                        tds.prop('contenteditable', false)
+                        tds.closest("tr").css({
+                            'border': "none",
+                            'color': '#000'
+                        });
+                        $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+                        $this.parentsUntil("table").find('button').attr("disabled", false);
+                    }
+                });
+                editing = false;
+                d1 = $.Deferred();
+            }, 1000));
+        }
+
+        $(document).ready(function () {
+            $.when(d1).done(function () {
+                bindEditButton();
+            });
+        });
+
+        function bindRemoveButton() {
+            $.when(d1).done(setTimeout(function () {
+                $('.deletebtn-funds').click(function () {
+                    let r = confirm("You sure you want to delete this donation? This is irreversible...");
+                    if (r !== true) return
+                    let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
+                    let row = $(this).parentsUntil("tr").parent()
+                    console.log(row_id)
+                    if (row_id == null) return;
+
+                    $.ajax
+                    ({
+                        url: 'delete_fund/',
+                        data: {"fund_id": row_id},
+                        type: 'post',
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+                        mode: "same-origin",
+                        success: function (result) {
+                            if ("error" in result) {
+                                alert(result["error"])
+                                $("#table").bootstrapTable('refresh')
+                                return
+                            }
+                            row.remove()
+                            alert("Deleted!")
+                        },
+                        error: function (textStatus, errorThrown) {
+                            alert("Error deleting: " + textStatus);
+                            {#TODO remove logs, only for debugging#}
+                            console.log("Error deleting: " + textStatus)
+                            console.log(errorThrown)
+                        }
+                    });
+                })
+            }))
+        };
+
+
+        {#    Export #}
+        let $table = $('#table')
+
+        $(function () {
+            $('#toolbar').find('select').change(function () {
+                $table.bootstrapTable('destroy').bootstrapTable({
+                    exportDataType: $(this).val(),
+                    exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'pdf'],
+                    columns: [
+                        {
+                            //Rename columns
+                            field: 'id',
+                            title: 'ID'
+                        }
+                    ]
+                })
+            }).trigger('change')
+        })
+    </script>
+
+{% endblock %}

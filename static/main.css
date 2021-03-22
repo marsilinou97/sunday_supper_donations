@@ -175,7 +175,26 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
     transition: all 1s;
 }
 
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 80vh;
+    width: 80vw;
+}
+
 .signup-form a, .login-form a {
     color: #337ab7;
 }
 
+tr td:last-child {
+    text-align: center;
+}
+
+/* todo: handle mobile */
+
+.table-container{
+    height: 30vh;
+    display: block;
+    overflow: auto;
+}

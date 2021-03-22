@@ -1,7 +1,5 @@
 {% extends 'users/base.html' %}
 
-
-
 {% block content %}
 
 
@@ -33,28 +31,32 @@
 
                 <div class="col">
                     <label for="fund">Funds:</label>
-                    <input class="donation_select m-3" type="checkbox" id="fund" name="fund" value="Funds" checked="true">
+                    <input class="donation_select m-3" type="checkbox" id="fund" name="fund" value="Funds"
+                           checked="true">
                 </div>
 
                 <div class="col">
                     <label for="gift">Gift Cards:</label>
-                    <input class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift" checked="true">
+                    <input class="donation_select m-3" type="checkbox" id="gift" name="gift" value="Gift"
+                           checked="true">
                 </div>
 
                 <div class="col">
                     <label for="clothing">Clothing:</label>
                     <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
-                        checked="true">
+                           checked="true">
                 </div>
 
                 <div class="col">
                     <label for="food">Food:</label>
-                    <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked="true">
+                    <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food"
+                           checked="true">
                 </div>
 
                 <div class="col">
                     <label for="misc">Miscellaneous:</label>
-                    <input class="donation_select m-3" type="checkbox" id="misc" name="misc" value="Misc" checked="true">
+                    <input class="donation_select m-3" type="checkbox" id="misc" name="misc" value="Misc"
+                           checked="true">
                 </div>
             </div>
 
@@ -223,7 +225,6 @@
         </tbody>
     </table>
 
-
     <script type="text/javascript">
 
 
@@ -318,7 +319,8 @@
 
 
             {#Handles export feature#}
-            $('#export').click(function () {
+            $('#export').click(function (e) {
+                e.preventDefault()
                 const wb = XLSX.utils.book_new();
                 wb.Props = {
                     Title: 'Test',
@@ -326,11 +328,21 @@
                     CreateDate: new Date()
                 }
 
+                var wscols = [
+                    {wch:20},
+                    {wch:20},
+                    {wch:20},
+                    {wch:20},
+                    {wch:20}
+                ];
+
                 const sheetNames = ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Misc.']
                 for (var i = 0; i < sheetNames.length; i++) {
                     wb.SheetNames.push(sheetNames[i])
                     wb.Sheets[sheetNames[i]] = XLSX.utils.aoa_to_sheet(tablesData[i])
+                    wb.Sheets[sheetNames[i]]['!cols'] = wscols
                 }
+
 
                 const excelFileName = (new Date()).toString()
 
@@ -359,7 +371,10 @@
             }).get();
 
             let AoA = header.concat(tableheader.concat(tableData));
-            return AoA
+
+            return AoA.filter(function (a){
+                return a.length > 0
+            })
         }
 
 
