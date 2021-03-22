@@ -270,7 +270,7 @@ def get_table(request):
                 raise ValueError
             if limit < 0 or offset < 0:
                 raise ValueError
-            if offset > ceil(rows_count / limit):
+            if offset > rows_count:
                 raise ValueError
 
             query_set = get_model_raw_data_query(query_info["MODEL"], query_info["FIELDS"], offset, limit)
