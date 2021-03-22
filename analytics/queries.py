@@ -336,7 +336,7 @@ Example call: execute_delete_query("input_item",["1","2","3"])
 
 id might not have to be strings but i cast id as a string to be safe
 """
-def execute_delete_query(table:str, ids:iterable):
+def execute_delete_query(table:str, ids:list):
     # Get the name of the pk column for that table
     try:
         column = TABLES_PKS[table]
@@ -382,7 +382,7 @@ args:
     tables: n x 1 matrix, consists of tables to be deleted from
        ids: n x m matrix, consists of lists of ids to be deleted
 """
-def batch_delete(tables:iterable,ids:iterable):
+def batch_delete(tables:list,ids:list):
     count = 0
     for i in range(len(tables)):
         count += execute_delete_query(tables[i],ids[i])
@@ -396,7 +396,7 @@ args:
             id: used in the WHERE clause
     new_values: used in the SET clause. MUST be same length as columns, otherwise the query won't work
 """
-def execute_update_query(table:str, id:str, columns:iterable, new_values:iterable):
+def execute_update_query(table:str, id:str, columns:list, new_values:list):
     body = (
         "UPDATE ",
         " SET ",
@@ -447,7 +447,7 @@ args:
 BE CAREFUL WITH THESE ARGS: they all must be the same length (n) in the first dimension,
 and each columns[i] must be the same length (m) as each new_values[i] :) fun stuff
 """
-def batch_update(tables:iterable, ids:iterable, columns:iterable, new_values:iterable):
+def batch_update(tables:list, ids:list, columns:list, new_values:list):
     count = 0
     for i in range(len(tables)):
         count += execute_update_query(tables[i],ids[i],columns[i],new_values[i])
