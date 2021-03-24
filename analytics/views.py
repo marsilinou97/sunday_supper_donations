@@ -21,15 +21,6 @@ def dictfetchall(cursor):
     ]
 
 
-def get_funds(request):
-    r = {}
-    r["rows"] = get_raw_page_tables_data2()
-    r["total"] = 100  # rows count
-    print(r)
-    # page_number = request.GET["page"]
-    return JsonResponse(r, safe=False)
-
-
 def index(request):
     if request.method == 'GET':
         pie_context = get_pie_chart_context(pie_chart_query)
@@ -98,8 +89,6 @@ def raw_data(request):
     form = RawDataForm()
 
     if request.method == 'GET':
-        # raw_query = get_raw_data_query().all()
-        print(get_raw_data_query())
 
         tables_data = get_raw_page_tables_data(raw_data_query)
         context = {
