@@ -31,10 +31,6 @@ def handle_get_req(request):
 def handle_post_req(request):
     # Save the data that the user entered
     user_input = {}  # user input dictionary
-    cur_user = User.objects.last()  # who is the current user
-    # TODO: get the actual current user
-    # if request.user.is_authenticated:  # authenticates the current user and can't be none
-    #     cur_user = request.User.username
     # user_input_items = {}  # items dictionary
     items_list = []  # list of dictionary for item types
     data = request.POST.dict()  # Get request.POST as a regular dictionary
@@ -139,6 +135,10 @@ def handle_post_req(request):
             for error in sys.exc_info():
                 print(error)
 
+    cur_user = User.objects.last()  # who is the current user
+    # TODO: get the actual current user
+    # if request.user.is_authenticated:  # authenticates the current user and can't be none
+    #     cur_user = request.User.username
     # Now try to insert the donation. This should fail if donor == None
     # Should technically work even if items_list == []
     try:
