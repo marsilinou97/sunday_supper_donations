@@ -32,10 +32,6 @@ def handle_get_req(request):
 def handle_post_req(request):
     # Save the data that the user entered
     user_input = {}  # user input dictionary
-    cur_user = User.objects.last()  # who is the current user
-    # TODO: get the actual current user
-    # if request.user.is_authenticated:  # authenticates the current user and can't be none
-    #     cur_user = request.User.username
     # user_input_items = {}  # items dictionary
     items_list = []  # list of dictionary for item types
     data = request.POST.dict()  # Get request.POST as a regular dictionary
@@ -46,14 +42,11 @@ def handle_post_req(request):
     # Get information about Funds, if any were donated
     type = None
     amount = None
-    send_thanks = False
+
     if "type" in data:
         type = data["type"]
     if "amount" in data:
         amount = data["amount"]
-    if "thanks_sent" in data:
-        if data["thanks_sent"] == "on":
-            send_thanks = True
 
     # If there was a Fund donated, add it to the list
     if type != None and type != "" and amount != None:
@@ -74,7 +67,8 @@ def handle_post_req(request):
         item_dict["subclass"] = data['id_form-' + str(i) + '-type']
         if item_dict['subclass'] == 'giftcard':
             item_dict['subclass'] = GiftCard
-            item_dict['amount'] = data['id_form-' + str(i) + '-amount']  # TODO: fix once the form has an amount for Giftcards
+            item_dict['amount'] = data[
+                'id_form-' + str(i) + '-amount']  # TODO: fix once the form has an amount for Giftcards
             # get the Giftcard enumerated value
             if 'id_form-' + str(i) + '-sub_type_business' in data:
                 item_dict['businessName'] = data['id_form-' + str(i) + '-sub_type_business']
@@ -84,8 +78,8 @@ def handle_post_req(request):
         elif item_dict['subclass'] == 'clothing':
             item_dict["subclass"] = Clothing
             # get the Clothing enumerated value
-            if 'id_form-' + str(i-1) + '-sub_type_clothing' in data:
-                item_dict['clothingTypeName'] = data['id_form-' + str(i-1) + '-sub_type_clothing']
+            if 'id_form-' + str(i - 1) + '-sub_type_clothing' in data:
+                item_dict['clothingTypeName'] = data['id_form-' + str(i - 1) + '-sub_type_clothing']
             # else:
             #    item_dict['clothingTypeName'] = "men"
 
@@ -109,71 +103,13 @@ def handle_post_req(request):
         i += 1
         next_key = 'id_form-' + str(i) + '-type'
 
-    # Try to insert the donor.
-    donor = None
-    if donor == None:
-        # Get donor information from the POST request
-        user_keys = ["first_name", "last_name", "email_address", "phone_number", "state",
-                     "city", "zip", "address1", "address2"]
-        for key in user_keys:
-            if 'anonymous' in data and data['anonymous'] == 'on':
-                    user_input[key] = "ANONYMOUS"
-            else:
-                # If the data exists, great. Use it
-                if key in data:
-                    user_input[key] = data[key]
-                # If the data doesn't exist, it stays blank.
-                else:
-                    user_input[key] = ""
+    if save_donation(items_list, user_input, data) is False:
+        print("Donation not saved")
+    else:
+        messages.success(request, 'Donation Saved.')
 
-        # Try to insert them into the db
-        # If the donation was truly anonymous, then all attributes will be ANONYMOUS and the anonymous donor will be returned
-        # If the donation was not anonymous, then the database will be queried for the given attributes and that donor will be returned
-        # If the donor doesn't exist in the database, then the donor will be created and inserted
-        try:
-            donor = InsertDonor(user_input['first_name'], user_input['last_name'],
-                                '', user_input['email_address'],
-                                user_input['phone_number'],
-                                user_input['address1'], user_input['address2'],
-                                user_input['city'], user_input['state'],
-                                user_input['zip'])
-        except:
-            print("Exception while inserting donor:",end=" ")
-            for error in sys.exc_info():
-                print(error,end=", ")
-
-    # Now try to insert the donation. This should fail if donor == None
-    # Should technically work even if items_list == []
-    try:
-        # InsertDonation(new_donor, items_list, user_input['date_received'], user_input['thanks_sent'], cur_user, "None")
-        InsertDonation(donor, items_list, data['date_received'], send_thanks, cur_user, data['comment'])
-    except:
-        print("Exception while inserting donation:",end=" ")
-        for error in sys.exc_info():
-            print(error,end=", ")
-
-    """
-    ===================================================================================================
-        TEST CODE : Making sure that every value is in the right key.
-    ===================================================================================================
-    """
-    print('date_received: ' + data['date_received'] + " |||| " )
-    print('thanks_sent: ' + str(send_thanks) + " |||| ")
-    print('comments: ' + data['comment'] + " |||| ")  # its comments on models.py
-    print('type: ' + data['type'] + " ||||||| " + type)
-    print('amount: ' + data['amount'] + " |||||||| " + amount)
-    print('first_name: ' + data['first_name'] + " |||| " + user_input['first_name'])
-    print('last_name: ' + data['last_name'] + " |||| " + user_input['last_name'])
-    print('email: ' + data['email'] + " |||| " + user_input['email_address'])
-    print('phone_number: ' + data['phone_number'] + " |||| " + user_input['phone_number'])
-    print('address_line1: ' + data['address1'] + " |||| " + user_input['address1'])
-    print('address_line2: ' + data['address2'] + " |||| " + user_input['address2'])
-    print('city: ' + data['city'] + " |||| " + user_input['city'])
-    # print('state: ' + data['state'] + " |||| ")
-    # print('zipcode: ' + data['zip'] + " |||| " + user_input['zip'])
-
-    messages.success(request, 'Donation Saved.')
     return redirect('input_page')
+
 
 # @login_required
 def index(request):
@@ -197,3 +133,63 @@ def index(request):
     else:
         messages.error(request, "Error")
         pass
+
+
+def save_donation(items_list, user_input, data):
+    donation_saved = False
+
+    # Try to insert the donor.
+    donor = None
+    cur_user = User.objects.last()  # who is the current user
+    # TODO: get the actual current user
+    # if request.user.is_authenticated:  # authenticates the current user and can't be none
+    #     cur_user = request.User.username
+
+    send_thanks = False
+    if "thanks_sent" in data:
+        if data["thanks_sent"] == "on":
+            send_thanks = True
+
+    if donor == None:
+        # Get donor information from the POST request
+        user_keys = ["first_name", "last_name", "email_address", "phone_number", "state",
+                     "city", "zip", "address1", "address2"]
+        for key in user_keys:
+            if 'anonymous' in data and data['anonymous'] == 'on':
+                user_input[key] = "ANONYMOUS"
+            else:
+                # If the data exists, great. Use it
+                if key in data:
+                    user_input[key] = data[key]
+                # If the data doesn't exist, it stays blank.
+                else:
+                    user_input[key] = ""
+
+        # Try to insert them into the db
+        # If the donation was truly anonymous, then all attributes will be ANONYMOUS and the anonymous donor will be returned
+        # If the donation was not anonymous, then the database will be queried for the given attributes and that donor will be returned
+        # If the donor doesn't exist in the database, then the donor will be created and inserted
+        try:
+            donor = InsertDonor(user_input['first_name'], user_input['last_name'],
+                                '', user_input['email_address'],
+                                user_input['phone_number'],
+                                user_input['address1'], user_input['address2'],
+                                user_input['city'], user_input['state'],
+                                user_input['zip'])
+        except:
+            print("Exception while inserting donor:", end=" ")
+            for error in sys.exc_info():
+                print(error, end=", ")
+
+    # Now try to insert the donation. This should fail if donor == None
+    # Should technically work even if items_list == []
+    try:
+        InsertDonation(donor, items_list, data['date_received'], send_thanks, cur_user, data['comment'])
+        donation_saved = True
+    except:
+        print("Exception while inserting donation:", end=" ")
+        for error in sys.exc_info():
+            print(error, end=", ")
+        donation_saved = False
+
+    return donation_saved
