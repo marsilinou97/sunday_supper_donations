@@ -24,7 +24,13 @@ SECRET_KEY = os.getenv("sunday_supper_donation_secret_key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+if DEBUG:
+    import mimetypes
 
+    # Fix for the Django Debug Toolbar: following issue
+    # Failed to load module script: The server responded with a non-JavaScript MIME type of "text/plain".
+    # Strict MIME type checking is enforced for module scripts per HTML spec
+    mimetypes.add_type("application/javascript", ".js", True)
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -40,11 +46,14 @@ INSTALLED_APPS = [
     'users',
     'input',
     'news',
-    'analytics'
+    'analytics',
 
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,7 +95,7 @@ DATABASES = {
         'PASSWORD': os.getenv("sunday_supper_donation_db_pwd"),
         'HOST': 'ec2-3-214-3-162.compute-1.amazonaws.com',
         'PORT': '5432',
-        'THREADED': True
+        "CONN_MAX_AGE": 6000,
     }
 }
 
@@ -99,8 +108,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS':{
-            'min_length':8, # I know this is the django default, just being explicit.
+        'OPTIONS': {
+            'min_length': 8,  # I know this is the django default, just being explicit.
         }
     },
     {
@@ -139,3 +148,18 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = 'news'
 LOGOUT_REDIRECT_URL = 'login'
 
+INTERNAL_IPS = ('127.0.0.1', '0.0.0.0', 'localhost', "*")
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]

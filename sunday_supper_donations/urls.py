@@ -16,15 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
+import debug_toolbar
+from django.conf import settings
+from django.urls import include, path
 
 from input import views as input_views
 from news import views as news_views
 from users import views as users_views
 from users.forms import UserLoginForm
+import debug_toolbar
+from django.conf import settings
+from django.urls import include, path
 
 urlpatterns = [
     path('', users_views.register, name="register"),
-    path('input/', input_views.index, name="input_page"),
+    path('input/', include('input.urls')),
     path('admin/', admin.site.urls, name="admin"),
     path('register/', users_views.register, name="register"),
     path('login/', auth_views.LoginView.as_view(template_name="users/login.html", authentication_form=UserLoginForm),
@@ -34,4 +40,5 @@ urlpatterns = [
     # adjusted analytics url routing
     path('analytics/', include('analytics.urls')),
     path('maketoken/', users_views.registration_token, name='maketoken'),
+    path('__debug__/', include(debug_toolbar.urls)),
 ]

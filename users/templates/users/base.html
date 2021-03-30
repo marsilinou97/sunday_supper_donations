@@ -54,9 +54,6 @@
 
     {#    TODO: replace with a CDN #}
     <link rel="stylesheet" type="text/css" href="https://getbootstrap.com/docs/5.0/assets/css/docs.css">
-    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
-    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
-    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
           integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
@@ -100,8 +97,6 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
                     <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_piechart' %}">Pie Chart</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_linechart' %}">Line Chart</a></li>
                     <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
 
                 </ul>
