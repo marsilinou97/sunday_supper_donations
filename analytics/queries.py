@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.aggregates import Count, Sum
+from django.db.models.functions.datetime import Extract
 from input.models import *
 import sys  # debugging
 from django.db import connection
@@ -24,6 +26,46 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
         print(e)
     return query
 
+def get_quantity_group_by_date(model: models.Model, date_type: str):
+    date = {
+        date_type: Extract("item__donation__date_received", date_type)
+    }
+
+    query_set = model.objects \
+            .annotate(**date) \
+            .values(date_type) \
+            .annotate(qty = Sum("item__quantity")) \
+            .order_by()
+
+    return query_set
+
+def get_donation_count_by_date(model: models.Model, date_type: str):
+    date = {
+        date_type: Extract("item__donation__date_received", date_type)
+    }
+
+    query_set = model.objects \
+            .annotate(**date) \
+            .values(date_type) \
+            .annotate(count = Count("*")) \
+            .order_by()
+
+    return query_set
+
+def get_total_donation_count_qty(model: models.Model):
+    
+    query_set = model.objects \
+        .aggregate(qty=Sum("item__quantity"))
+
+    return query_set
+
+def get_funds_count_qty(fund_type: FundType):
+
+    query_set = Fund.objects \
+        .filter(type=fund_type) \
+        .aggregate(qty=Sum("item__quantity"))
+
+    return query_set
 
 def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
     if fetch_all or fetch_one:
@@ -35,10 +77,8 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
                 res = cursor.fetchone()
     return res
 
-
 def delete_table_entry(model: models.Model, id: str):
     model.objects.filter(id=id).delete()
-
 
 def update_table_entry(model: models.Model, feilds: dict):
     model.objects.filter(id=id).update(**feilds)
