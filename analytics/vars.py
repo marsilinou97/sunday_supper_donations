@@ -31,6 +31,7 @@ RAW_DATA_BASE_FIELDS = [
        'first_name',
        'last_name',
        'date_received',
+       'quantity'
 ]
 
 FUNDS_RAW_DATA_FIELDS = {
