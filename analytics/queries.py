@@ -81,11 +81,12 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
     return res
 
 def delete_item_entry(model: models.Model, id: int):
-    model.objects.filter(id=id).delete()
-    Item.objects.filter(id=id).delete()
+    sucess = (model.objects.filter(id=id).delete()[0] and
+    Item.objects.filter(id=id).delete()[0])
+    return sucess
 
 def update_table_entry(model: models.Model, id: int, feilds: dict):
-    model.objects.filter(id=id).update(**feilds)
+    return model.objects.filter(id=id).update(**feilds)[0]
 
 def update_item_entry(ids: list, data: dict, model_name: str):
     update_data = {}
@@ -101,7 +102,7 @@ def update_item_entry(ids: list, data: dict, model_name: str):
     sub_item_feilds.update({QUERY_DATA[model_name]["SUBTYPE_FIELD"]: data['sub_type']})
     
 
-    update_table_entry(Donor, ids[0], update_data[ids[0]])
-    update_table_entry(Donation, ids[1], update_data[ids[1]])
-    update_table_entry(Item, ids[2], update_data[ids[2]])
-    update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[3], sub_item_feilds)
+    return update_table_entry(Donor, ids[0], update_data[ids[0]]) and \
+        update_table_entry(Donation, ids[1], update_data[ids[1]]) and \
+        update_table_entry(Item, ids[2], update_data[ids[2]]) and \
+        update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[3], sub_item_feilds)

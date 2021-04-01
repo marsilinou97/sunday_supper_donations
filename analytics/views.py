@@ -147,17 +147,41 @@ def get_donation_fund_count(request):
 def update_item(request):
 
     if (request.method == "POST"):
-        ids = []
-        ids.append(request.POST["update_data"]["donor_id"])
-        ids.append(request.POST["update_data"]["donation_id"])
-        ids.append(request.POST["update_data"]["item_id"])
-        ids.append(request.POST["update_data"]["item_id"])
+        try:
+            ids = []
+            ids.append(request.POST["update_data"]["donor_id"])
+            ids.append(request.POST["update_data"]["donation_id"])
+            ids.append(request.POST["update_data"]["item_id"])
+            ids.append(request.POST["update_data"]["item_id"])
 
-        update_item_entry(ids, request.POST["update_data"], request.POST["table_type"])
+            res = update_item_entry(ids, request.POST["update_data"], request.POST["table_type"])
+            
+            if not res:
+                res = {"error": "Couldn't update the"+ request.POST["table_type"] +"entry, please try again."}
+
+            JsonResponse(res, safe= True)
+
+        except Exception as e:
+            print(f"The error is {e}")
+            return HttpResponse("ERROR...")
+    
+    return HttpResponse("ERROR...")
 
 def delete_item(request):
     
     if (request.method == "POST"):
-        id = request.POST["delete_data"]["item_id"]
-        model = QUERY_DATA[request.POST["table_type"]]["MODEL"]
-        delete_item_entry(model, id)
+        try: 
+            id = request.POST["delete_data"]["item_id"]
+            model = QUERY_DATA[request.POST["table_type"]]["MODEL"]
+            res = delete_item_entry(model, id)
+
+            if not res:
+                res = {"error": "Couldn't update the"+ request.POST["table_type"] +"entry, please try again."}
+
+            JsonResponse(res, safe= True)
+            
+        except Exception as e:
+            print(f"The error is {e}")
+            return HttpResponse("ERROR...")
+
+    return HttpResponse("ERROR...")
