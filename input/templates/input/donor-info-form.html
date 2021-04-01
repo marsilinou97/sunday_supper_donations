@@ -83,24 +83,6 @@
             </div>
         {% endfor %}
     {% endif %}
-
-
-
-
-    <label class="control-label col-sm-2">Phone Number:</label>
-    <div class="col-sm-10">
-        <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" value="">
-    </div>
-
-    <script>
-        $(function () {
-            $("#phoneNumber").mask("(999) 999-9999?");
-        });
-    </script>
-
-
-
-    
     <div class="donor-info-form">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
@@ -154,7 +136,9 @@
                         <div class="wrapperX">
                             <span>
                                 <b>{{ donor_form.first_name.label }}</b>
-                                {{ donor_form.first_name }}
+                                <div id='donor_form_first_name'>
+                                    {{ donor_form.first_name }}
+                                </div>
                             </span>
                             <span>
                                 <b>{{ donor_form.last_name.label }}</b>
@@ -258,7 +242,109 @@
 
         </form>
     </div>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        #donor-label {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 1em;
+        }
+        #donor-description {
+          margin: 0;
+          padding: 0;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
+        // $(function () {
+        //     function log(message) {
+        //         console.log(message)
+        //     }
+        //
+        //     $("#id_first_name").autocomplete({
+        //         source: "get_donor_list/",
+        //         minLength: 2,
+        //         select: function (event, ui) {
+        //
+        //             console.log(JSON.stringify(ui));
+        //
+        //             $("#id_first_name").val(ui.item.first_name);
+        //             $("#id_last_name").val(ui.item.last_name);
+        //             $("#id_email").val(ui.item.email);
+        //             $("#id_phone_number").val(ui.item.phone_number);
+        //             $("#id_address1").val(ui.item.address1);
+        //             $("#id_address2").val(ui.item.address2);
+        //             $("#id_city").val(ui.item.city);
+        //             $("#id_state").val(ui.item.state); // might not be that easy but let's find out :)
+        //             $("#id_zipcode").val(ui.item.zipcode);
+        //
+        //             log("Selected: " + ui);
+        //         }
+        //     });
+        // });
+        $(function(){
+            // autocomplete 'em
+            $('#id_first_name').autocomplete({
+                minLength:0,
+                source:"get_donor_list/",
+                focus: function(event,ui){
+                    $("#id_first_name").val(ui.item.first_name);
+                    return false;
+                },
+                select: function(event,ui){
+                    $("#id_first_name").val(ui.item.first_name);
+                    $("#id_last_name").val(ui.item.last_name);
+                    $("#id_email").val(ui.item.email_address);
+                    $("#id_phone_number").val(ui.item.phone_number);
+                    $("#id_address1").val(ui.item.address_line1);
+                    $("#id_address2").val(ui.item.address_line2);
+                    $("#id_city").val(ui.item.city);
+                    $("#id_state").val(ui.item.state); // might not be that easy but let's find out :)
+                    $("#id_zip").val(ui.item.zipcode);
+                    // // debug
+                    // console.log(ui.item.first_name + " " + ui.item.email + " " + ui.item.phone_number + " " + ui.item.address1 + " " + ui.item.address2 + " " + ui.item.city + " " + ui.item.state + " " + ui.item.zipcode);
+                    return false;
+                }
+            })
+            .autocomplete("instance")._renderItem = function(ul,item){
+                // build the li option for the ul element
+                // the donor always has at least a first name
+                // the user won't be able to see " " + "" so we don't have to worry about the last name being blank
+                var option = "<div><strong>" + item.first_name + " " + item.last_name + "</strong>";
+
+                // add the email, phone, address lines (if they exist)
+                if (!(item.email_address === "")){
+                    option = option + "<br>" + item.email_address;
+                }
+                if (!(item.phone_number === "")){
+                    option = option + "<br>" + item.phone_number;
+                }
+                if (!(item.address_line1 === "")){
+                    option = option + "<br>" + item.address_line1;
+                }
+                if (!(item.address_line2 === "")){
+                    option = option + "<br>" + item.address_line2;
+                }
+
+                // if the city, state, or zipcode exist, add them in "city, state, zipcode" format
+                // any blank attributes here get filled with ?'s
+                if (!(item.city === "" && item.state === "" && item.zipcode === "")){
+                    option = option + "<br>";
+                    if (item.city === ""){ option = option + "?, "; }
+                    else{ option = option + item.city + ", "; }
+                    if (item.state === ""){ option = option + "?, "; }
+                    else{ option = option + item.state + ", "; }
+                    if (item.zipcode === ""){ option = option + "?"; }
+                    else{ option = option + item.zipcode; }
+                }
+                option = option + "</div>";
+
+                return $("<li>").append(option).appendTo(ul);
+            };
+        });
+
         function anonymousToggle() {
             $("#donor_form").slideToggle(300);
             {#const donor_form = document.getElementById("donor_form")#}
@@ -408,7 +494,7 @@
                 let amountField = $($(row.children()[4]).children()[0])
                 //let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
 
-                let subTypeId = "id_form-"+ row[0].rowIndex  + "-"
+                let subTypeId = "id_form-"+ (row[0].rowIndex - 1) + "-"
 
 
                 if (selected === "giftcard") {
