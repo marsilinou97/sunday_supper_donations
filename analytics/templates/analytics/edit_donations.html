@@ -93,7 +93,7 @@
 
                 });
             })
-        });
+        })
 
         let d1 = $.Deferred();
         let editing = false;
@@ -152,8 +152,8 @@
         function bindRemoveButton() {
             $.when(d1).done(setTimeout(function () {
                 $('.deletebtn-funds').click(function () {
-                    let r = confirm("You sure you want to delete this donation? This is irreversible...");
-                    if (r !== true) return
+                    {#let r = confirm("You sure you want to delete this donation? This is irreversible...");#}
+                    {#if (r !== true) return#}
                     let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
                     let row = $(this).parentsUntil("tr").parent()
                     let table_type = $(this).parents(".table").attr('id')

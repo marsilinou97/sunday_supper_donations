@@ -81,7 +81,7 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
     return res
 
 def delete_item_entry(model: models.Model, id: int):
-    sucess = (model.objects.filter(id=id).delete()[0] and
+    sucess = (model.objects.filter(item_id=id).delete()[0] and
     Item.objects.filter(id=id).delete()[0])
     return sucess
 

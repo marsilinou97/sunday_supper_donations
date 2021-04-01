@@ -159,7 +159,7 @@ def update_item(request):
             if not res:
                 res = {"error": "Couldn't update the"+ request.POST["table_type"] +"entry, please try again."}
 
-            JsonResponse(res, safe= True)
+            JsonResponse(res, safe=False)
 
         except Exception as e:
             print(f"The error is {e}")
@@ -174,11 +174,12 @@ def delete_item(request):
             id = request.POST["item_id"]
             model = QUERY_DATA[request.POST["table_type"]]["MODEL"]
             res = delete_item_entry(model, id)
+            print(f"{id=}")
 
             if not res:
                 res = {"error": "Couldn't update the"+ request.POST["table_type"] +"entry, please try again."}
-
-            JsonResponse(res, safe= True)
+            print(f"{res=}")
+            JsonResponse(res, safe=False)
             
         except Exception as e:
             print(f"The error is {e}")
