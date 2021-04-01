@@ -75,6 +75,16 @@
             border-right: 2px pink solid;
             border-left: 2px pink solid;
         }
+
+        #enterButton {
+            font-weight: bold;
+            background: #19aa8d;
+        }
+
+        #clearButton {
+            font-weight: bold;
+            background: #eb3434;
+        }
     </style>
     {% if messages %}
         {% for message in messages %}
@@ -227,13 +237,13 @@
                     <div class="alert alert-danger" role="alert" id="message" style="opacity: 0;"></div>
                     <div class="wrapperX">
                         <div>
-                            <button class="btn btn-primary btn-lg center-block mt-3 w-22" id="clear_fields">
+                            <button id="clearButton" class="btn btn-primary btn-lg center-block mt-3 w-22" id="clear_fields">
                                 Clear
                             </button>
                             <div id="clear" class=""></div>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-22">Enter</button>
+                            <button id="enterButton"type="submit" class="btn btn-primary btn-lg center-block mt-3 w-22">Enter</button>
                         </div>
                     </div>
                 </div>
