@@ -187,7 +187,7 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
     color: #337ab7;
 }
 
-tr td:last-child {
+.edit_donation tr td:last-child {
     text-align: center;
 }
 
