@@ -74,22 +74,27 @@ MISC_RAW_DATA_FIELDS = {
 QUERY_DATA = {
        "funds_table" : {
               "RAW_DATA_FIELDS": FUNDS_RAW_DATA_FIELDS,
-              "MODEL": Fund
+              "MODEL": Fund,
+              "SUBTYPE_FIELD": 'type'
        },
        "giftcards_table" : {
               "RAW_DATA_FIELDS": GIFTCARD_RAW_DATA_FIELDS,
-              "MODEL": GiftCard
+              "MODEL": GiftCard,
+              "SUBTYPE_FIELD": 'business_name'
        },
        "clothing_table" : {
               "RAW_DATA_FIELDS": CLOTHING_RAW_DATA_FIELDS,
-              "MODEL": Clothing
+              "MODEL": Clothing,
+              "SUBTYPE_FIELD": 'type'
        },
        "foods_table" : {
               "RAW_DATA_FIELDS": FOODS_RAW_DATA_FIELDS,
-              "MODEL": Food
+              "MODEL": Food,
+              "SUBTYPE_FIELD": 'name'
        },
        "misc_table" : {
               "RAW_DATA_FIELDS": MISC_RAW_DATA_FIELDS,
-              "MODEL": Miscellaneous
+              "MODEL": Miscellaneous,
+              "SUBTYPE_FIELD": 'name'
        }
 }

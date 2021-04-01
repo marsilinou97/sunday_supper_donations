@@ -43,15 +43,6 @@ def raw_data(request):
     else:
         return HttpResponse("ERROR...")
 
-def delete_fund(request):
-    fund_id = request.POST["fund_id"]
-    print(fund_id)
-    res = bool(Fund.objects.filter(item_id=fund_id).delete()[0])
-    # res = 0
-    if not res:
-        res = {"error": "Couldn't delete the funds entry, please try again."}
-    return JsonResponse(res, safe=False)
-
 def edit_donations(request):
     return render(request, 'analytics/edit_donations.html')
 
@@ -136,6 +127,7 @@ def get_donation_item_count(request):
         return JsonResponse(json_response, safe= False)
 
 def get_donation_fund_count(request):
+
     if (request.method == "GET"):
         
         fund_types = list(FundType.objects.all())
@@ -151,3 +143,14 @@ def get_donation_fund_count(request):
 
 
         return JsonResponse(results, safe= False)
+
+def update_item(request):
+
+    if (request.method == "POST"):
+        ids = []
+        ids.append(request.POST["update_data"]["donor_id"])
+        ids.append(request.POST["update_data"]["donation_id"])
+        ids.append(request.POST["update_data"]["item_id"])
+        ids.append(request.POST["update_data"]["item_id"])
+
+        update_item_entry(ids, request.POST["update_data"], request.POST["table_type"])

@@ -92,13 +92,16 @@ def update_item_entry(ids: list, data: dict, model_name: str):
 
     update_data.update({ids[0]: {key: data[key] for key in data.keys() & ('first_name', 'last_name')}})
     update_data.update({ids[1]: {key: data[key] for key in data.keys() & ('date_recieved', 'comments')}})
-    item_fields_helper = ['quantity','sub_type']
+    update_data.update({ids[2]: {key: data[key] for key in data.keys() & ('quantity')}})
     
+    sub_item_feilds = {}
     if (model_name == "funds_table" or "giftcards_table"):
-        item_fields_helper.append(model_name)
+        sub_item_feilds.update({'amount': data['amount']})
 
-    update_data.update({ids[2] : {key: data[key] for key in data.keys() & item_fields_helper}})
+    sub_item_feilds.update({QUERY_DATA[model_name]["SUBTYPE_FIELD"]: data['sub_type']})
+    
 
     update_table_entry(Donor, ids[0], update_data[ids[0]])
-    update_table_entry(Item, ids[1], update_data[ids[1]])
-    update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[2], update_data[ids[2]])
+    update_table_entry(Donation, ids[1], update_data[ids[1]])
+    update_table_entry(Item, ids[2], update_data[ids[2]])
+    update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[3], sub_item_feilds)
