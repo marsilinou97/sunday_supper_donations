@@ -10,7 +10,7 @@
         <div class="accordion-body">
             <h1 class="text-center">Donation Categories Pie Chart</h1>
             <div class="chart-container">
-                <canvas id="myChart"></canvas>
+                <canvas id="acc-pie-chart"></canvas>
             </div>
         </div>
     </div>
@@ -18,51 +18,57 @@
 
 
 <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
+    $.ajax({
+        url: 'get_donation_item_count/',
+        datatype: 'json',
+        type: 'GET',
+        success: function (response) {
+            console.log('Total donations by category (pie chart):', response);
 
-            <!-- Donation Categories -->
-            labels: ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Miscellaneous'],
-            datasets: [{
-                label: '# of Votes',
+            var ctx = document.getElementById('acc-pie-chart').getContext('2d');
+            var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
 
-                <!-- Donation Category Counts -->
-                data: [{{funds}}, {{giftcards}}, {{clothing}}, {{food}}, {{misc}}],
+                <!-- Donation Categories -->
+                labels: ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Miscellaneous'],
+                datasets: [{
+                    label: '# of Votes',
 
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+                    <!-- Donation Category Counts -->
+                    data: [response["funds_table"], response["giftcards_table"], response["clothing_table"],response["foods_table"], response["misc_table"]],
 
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
+                    backgroundColor: [
+                        "#3e95cd",
+                        "#8e5ea2",
+                        "#3cba9f",
+                        "#e8c3b9",
+                        "#c45850",
+                    ],
+                    borderColor: [
+                        "#3e95cd",
+                        "#8e5ea2",
+                        "#3cba9f",
+                        "#e8c3b9",
+                        "#c45850",
+                    ],
+                    borderWidth: 1
                 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
             }
+        });
+
         }
     });
-
-
 </script>
