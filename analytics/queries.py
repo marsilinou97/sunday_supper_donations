@@ -80,9 +80,25 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
                 res = cursor.fetchone()
     return res
 
-def delete_item_entry(model: models.Model, id: int):
-    model.objects.filter(id=id).delete()
-    Item.objects.filter(id=id).delete()
+def delete_item_entry(model: models.Model, ids: list):
+    model.objects.filter(id=ids[1]).delete()
+    Item.objects.filter(id=ids[0]).delete()
 
-def update_item_entry(model: models.Model, id: int, feilds: dict):
+def update_table_entry(model: models.Model, id: int, feilds: dict):
     model.objects.filter(id=id).update(**feilds)
+
+def update_item_entry(ids: list, data: dict, model_name: str):
+    update_data = {}
+
+    update_data.update({ids[0]: {key: data[key] for key in data.keys() & ('first_name', 'last_name')}})
+    update_data.update({ids[1]: {key: data[key] for key in data.keys() & ('date_recieved', 'comments')}})
+    item_fields_helper = ['quantity','sub_type']
+    
+    if (model_name == "funds_table" or "giftcards_table"):
+        item_fields_helper.append(model_name)
+
+    update_data.update({ids[2] : {key: data[key] for key in data.keys() & item_fields_helper}})
+
+    update_table_entry(Donor, ids[0], update_data[ids[0]])
+    update_table_entry(Item, ids[1], update_data[ids[1]])
+    update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[2], update_data[ids[2]])
