@@ -2,13 +2,18 @@
 {% load static %}
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'input_page.css' %}">
+
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-success fade in text-center" role="alert">
+            <div class="alert alert-{{ message.tags }} fade in text-center" role="alert">
                 <strong>{{ message }}</strong>
             </div>
         {% endfor %}
     {% endif %}
+
+    <script>
+     $( "div.alert" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
+    </script>
 
     <div class="donor-info-form">
         <form method="post" onsubmit="return submit_form()">
@@ -474,5 +479,8 @@
             $(this).removeAttr('autocomplete');
         });
     </script>
+
+
+
 
 {% endblock %}

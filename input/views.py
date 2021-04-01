@@ -104,6 +104,8 @@ def handle_post_req(request):
 
     if save_donation(items_list, data) is False:
         print("Donation not saved")
+        messages.warning(request, 'Donation Fail to Save')
+
     else:
         messages.success(request, 'Donation Saved.')
 
@@ -176,6 +178,7 @@ def save_donation(items_list, data):
     try:
         InsertDonation(donor, items_list, data['date_received'], send_thanks, cur_user, data['comment'])
         donation_saved = True
+
     except:
         print("Exception while inserting donation:", end=" ")
         for error in sys.exc_info():
