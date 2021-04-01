@@ -150,4 +150,4 @@ def get_donation_fund_count(request):
             })
 
 
-        return JsonResponse(results, safe= False)
+        return JsonResponse(json_response, safe= False)
