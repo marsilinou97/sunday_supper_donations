@@ -154,3 +154,10 @@ def update_item(request):
         ids.append(request.POST["update_data"]["item_id"])
 
         update_item_entry(ids, request.POST["update_data"], request.POST["table_type"])
+
+def delete_item(request):
+    
+    if (request.method == "POST"):
+        id = request.POST["delete_data"]["item_id"]
+        model = QUERY_DATA[request.POST["table_type"]]["MODEL"]
+        delete_item_entry(model, id)

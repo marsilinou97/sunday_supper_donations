@@ -80,9 +80,9 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
                 res = cursor.fetchone()
     return res
 
-def delete_item_entry(model: models.Model, ids: list):
-    model.objects.filter(id=ids[1]).delete()
-    Item.objects.filter(id=ids[0]).delete()
+def delete_item_entry(model: models.Model, id: int):
+    model.objects.filter(id=id).delete()
+    Item.objects.filter(id=id).delete()
 
 def update_table_entry(model: models.Model, id: int, feilds: dict):
     model.objects.filter(id=id).update(**feilds)
