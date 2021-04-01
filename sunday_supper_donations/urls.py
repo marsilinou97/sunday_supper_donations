@@ -30,7 +30,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path('', users_views.register, name="register"),
-    path('input/', input_views.index, name="input_page"),
+    path('input/', include('input.urls')),
     path('admin/', admin.site.urls, name="admin"),
     path('register/', users_views.register, name="register"),
     path('login/', auth_views.LoginView.as_view(template_name="users/login.html", authentication_form=UserLoginForm),

@@ -1,3 +1,6 @@
+from django.http.response import JsonResponse
+from input.queries import get_donor_list_wo_anonymous
+from django.core import serializers
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
@@ -193,3 +196,9 @@ def index(request):
     else:
         messages.error(request, "Error")
         pass
+
+def get_donor_list(request):
+    if request.method == 'GET':
+        list_of_data = list(get_donor_list_wo_anonymous())
+    
+    return JsonResponse(list_of_data, safe=False)

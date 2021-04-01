@@ -5,9 +5,10 @@ from . import views
 urlpatterns = [
     path('', views.index, name='analytics_index'),
     path('rawdata/', views.raw_data, name='analytics_rawdata'),
-    path('piechart/', views.pie_chart, name='analytics_piechart'),
-    path('linechart/', views.line_chart, name='analytics_linechart'),
     path('edit_donations/', views.edit_donations, name='analytics_edit_donations'),
     path('edit_donations/get_table/', views.get_table, name='edit_donations_get_table'),
-    path('edit_donations/delete_fund/', views.delete_fund, name='edit_donations_delete_fund'),
+    path('get_donation_count_date_qty/', views.get_donation_count_date_qty, name='get_donation_count_date_qty'),
+    path('get_donation_count_month/', views.get_donation_count_month, name='get_donation_count_month'),
+    path('get_donation_item_count/', views.get_donation_item_count, name='get_donation_item_count'),
+    path('get_donation_fund_count/', views.get_donation_fund_count, name='get_donation_fund_count')
 ]
