@@ -1,3 +1,5 @@
+from django.http.response import JsonResponse
+from input.queries import get_donor_list_wo_anonymous
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
