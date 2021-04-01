@@ -156,13 +156,15 @@
                     if (r !== true) return
                     let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
                     let row = $(this).parentsUntil("tr").parent()
+                    let table_type = $(this).parents(".table").attr('id')
                     console.log(row_id)
+                    console.log(table_type)
                     if (row_id == null) return;
 
                     $.ajax
                     ({
-                        url: 'delete_fund/',
-                        data: {"fund_id": row_id},
+                        url: 'delete_item/',
+                        data: {"item_id": row_id, "table_type": table_type},
                         type: 'post',
                         headers: {
                             "X-CSRFToken": getCookie("csrftoken")
