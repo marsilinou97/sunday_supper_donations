@@ -2,13 +2,22 @@
 
 {% block content %}
 
+<style>
+
+    #formButton {
+        font-weight: bold;
+        background: #19aa8d;
+    }
+
+</style>
+
 
     <form method="post" class="text-center">
         {% csrf_token %}
 
         {{ form }}
 
-        <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
+        <button id="formButton" type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
     </form>
 
     <h1 class="text-center">Analytics Main Page</h1>
@@ -328,7 +337,7 @@
             elements: {
                 center: {
                     <!-- Adjust this to display actual total //-->
-                    text: 'Total Fund Donations: 0',
+                    text: 'Total Fund Donations: 50',
                     color: '#FF6384', // Default is #000000
                     fontStyle: 'Arial', // Default is Arial
                     sidePadding: 20, // Default is 20 (as a percentage)

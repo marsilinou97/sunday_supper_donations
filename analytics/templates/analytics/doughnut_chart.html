@@ -1,6 +1,12 @@
+<style>
+    #1{
+        background: #19aa8d;
+    }
+</style>
+
 <div class="accordion-item">
     <h2 class="accordion-header" id="headingTwo">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+        <button id="1"class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
             Fund Categories Doughnut Chart
         </button>
@@ -8,7 +14,6 @@
     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo"
          data-bs-parent="#accordionExample" style="">
         <div class="accordion-body">
-            <h1 class="text-center">Donation Categories Doughnut Chart</h1>
             <div class="chart-container">
                 <canvas id="fund-donut-chart"></canvas>
             </div>
@@ -119,17 +124,11 @@
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
             }]
@@ -141,8 +140,8 @@
 
             elements: {
                 center: {
-                    text: 'Sunday Supper Donation Donut',
-                    color: '#000000', // Default is #000000
+                    text: 'Total Fund Donations: 50',
+                    color: '#FF6384', // Default is #000000
                     fontStyle: 'Arial', // Default is Arial
                     sidePadding: 20, // Default is 20 (as a percentage)
                     minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
