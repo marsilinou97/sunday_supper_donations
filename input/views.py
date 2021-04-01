@@ -1,12 +1,10 @@
-from django.http.response import JsonResponse
-from input.queries import get_donor_list_wo_anonymous
-from django.core import serializers
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
 from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import connection
 
 from .models import *
 import sys
@@ -33,27 +31,27 @@ def handle_get_req(request):
 
 def handle_post_req(request):
     # Save the data that the user entered
-    user_input = {}  # user input dictionary
-    # user_input_items = {}  # items dictionary
     items_list = []  # list of dictionary for item types
     data = request.POST.dict()  # Get request.POST as a regular dictionary
-    print(data)
+
+    # Handle the case where the state is unknown
+    if "state" not in data:
+        data["state"] = ""
+
+    print(data) # debug
 
     # Get information about Funds, if any were donated
     type = None
     amount = None
-    send_thanks = False
     if "type" in data:
         type = data["type"]
     if "amount" in data:
         amount = data["amount"]
-    if "thanks_sent" in data:
-        if data["thanks_sent"] == "on":
-            send_thanks = True
 
     # If there was a Fund donated, add it to the list
     if type != None and type != "" and amount != None:
         items_list.append({"subclass": Fund, "quantity": 1, "fundTypeName": type, "amount": amount})
+
     # Iterate over all item-related keys from request.POST
     i = 0
     next_key = 'id_form-' + str(i) + '-type'  # a.k.a.: 'id_form-' + str(i) + '-type'
@@ -80,10 +78,8 @@ def handle_post_req(request):
         elif item_dict['subclass'] == 'clothing':
             item_dict["subclass"] = Clothing
             # get the Clothing enumerated value
-            if 'id_form-' + str(i-1) + '-sub_type_clothing' in data:
-                item_dict['clothingTypeName'] = data['id_form-' + str(i-1) + '-sub_type_clothing']
-            # else:
-            #    item_dict['clothingTypeName'] = "men"
+            if 'id_form-' + str(i) + '-sub_type_clothing' in data:
+                item_dict['clothingTypeName'] = data['id_form-' + str(i) + '-sub_type_clothing']
 
         elif item_dict['subclass'] == 'food':
             item_dict["subclass"] = Food
@@ -105,29 +101,63 @@ def handle_post_req(request):
         i += 1
         next_key = 'id_form-' + str(i) + '-type'
 
-    # Check if the donation was anonymous.
+    if save_donation(items_list, data) is False:
+        print("Donation not saved")
+    else:
+        messages.success(request, 'Donation Saved.')
+
+    return redirect('input_index')
+
+def save_donation(items_list, data):
+    donation_saved = False
+    user_input = {}  # user input dictionary
+
+    cur_user = User.objects.last()  # who is the current user
+    # TODO: get the actual current user
+    # if request.user.is_authenticated:  # authenticates the current user and can't be none
+    #     cur_user = request.User.username
+
+    send_thanks = False
+    if "thanks_sent" in data:
+        if data["thanks_sent"] == "on":
+            send_thanks = True
+
+    # Try to insert the donor into the db
     donor = None
-    if "anonymous" in user_input:
-        if user_input['anonymous'] == 'on':
-            # If it was, select the anonymous donor from the db
-            donor = Donor.objects.get(first_name="ANONYMOUS", last_name="ANONYMOUS", email="")
 
-    # If it wasn't anonymous, or if the anonymous donor wasn't in the db,
-    # Try to insert the donor.
-    if donor == None:
-        # Get donor information from the POST request
-        user_keys = ["first_name", "last_name", "email_address", "phone_number", "state",
-                     "city", "zip", "address1", "address2"]
-        for key in user_keys:
-            # If the data exists, great. Use it
-            if key in data:
-                user_input[key] = data[key]
-            # If the data doesn't exist, it stays blank.
-            else:
-                user_input[key] = ""
+    # Get donor's name from the POST request
+    user_input["first_name"] = data["first_name"]
+    user_input["last_name"] = data["last_name"]
 
-        # Now that we've doxxed the donor, try to insert them into the db
+    # If the donation was truly anonymous, then the anonymous donor will be returned
+    # If the user accidentally left the first and last name blank, then the anonymous donor will be returned
+    if ("anonymous" in data and data["anonymous"] == "on") or \
+       (user_input["first_name"].strip() == "" and user_input["last_name"].strip() == ""):
         try:
+            donor = InsertDonor("ANONYMOUS","ANONYMOUS","","","","","","","","")
+        except:
+            print("Exception while inserting donor:", end=" ")
+            for error in sys.exc_info():
+                print(error, end=", ")
+
+    # If the donation was not anonymous, then the database will be queried for the given attributes and that donor will be returned
+    else:
+        # Set up the rest of the attributes
+        user_keys = ["email_address", "phone_number", "state", "city", "zip", "address1", "address2"]
+        for key in user_keys:
+            if 'anonymous' in data and data['anonymous'] == 'on':
+                user_input[key] = "ANONYMOUS"
+            else:
+                # If the data exists, great. Use it
+                if key in data:
+                    user_input[key] = data[key].strip()
+                # If the data doesn't exist, it stays blank.
+                else:
+                    user_input[key] = ""
+
+        try:
+            # If the donor doesn't exist in the database, then the donor will be created and inserted
+            # If they do exist, they will be returned
             donor = InsertDonor(user_input['first_name'], user_input['last_name'],
                                 '', user_input['email_address'],
                                 user_input['phone_number'],
@@ -135,44 +165,28 @@ def handle_post_req(request):
                                 user_input['city'], user_input['state'],
                                 user_input['zip'])
         except:
+            print("Exception while inserting donor:", end=" ")
             for error in sys.exc_info():
-                print(error)
+                print(error, end=", ")
 
-    cur_user = User.objects.last()  # who is the current user
-    # TODO: get the actual current user
-    # if request.user.is_authenticated:  # authenticates the current user and can't be none
-    #     cur_user = request.User.username
     # Now try to insert the donation. This should fail if donor == None
     # Should technically work even if items_list == []
     try:
-        # InsertDonation(new_donor, items_list, user_input['date_received'], user_input['thanks_sent'], cur_user, "None")
         InsertDonation(donor, items_list, data['date_received'], send_thanks, cur_user, data['comment'])
+        donation_saved = True
     except:
+        print("Exception while inserting donation:", end=" ")
         for error in sys.exc_info():
-            print(error)
+            print(error, end=", ")
+        donation_saved = False
 
-    """
-    ===================================================================================================
-        TEST CODE : Making sure that every value is in the right key.
-    ===================================================================================================
-    """
-    print('date_received: ' + data['date_received'] + " |||| " )
-    print('thanks_sent: ' + str(send_thanks) + " |||| ")
-    print('comments: ' + data['comment'] + " |||| ")  # its comments on models.py
-    print('type: ' + data['type'] + " ||||||| " + type)
-    print('amount: ' + data['amount'] + " |||||||| " + amount)
-    print('first_name: ' + data['first_name'] + " |||| " + user_input['first_name'])
-    print('last_name: ' + data['last_name'] + " |||| " + user_input['last_name'])
-    print('email: ' + data['email'] + " |||| " + user_input['email_address'])
-    print('phone_number: ' + data['phone_number'] + " |||| " + user_input['phone_number'])
-    print('address_line1: ' + data['address1'] + " |||| " + user_input['address1'])
-    print('address_line2: ' + data['address2'] + " |||| " + user_input['address2'])
-    print('city: ' + data['city'] + " |||| " + user_input['city'])
-    # print('state: ' + data['state'] + " |||| ")
-    # print('zipcode: ' + data['zip'] + " |||| " + user_input['zip'])
+    return donation_saved
 
-    messages.success(request, 'Donation Saved.')
-    return redirect('input_page')
+def get_donor_list(request):
+    if request.method == 'GET':
+        list_of_data = list(get_donor_list_wo_anonymous())
+
+    return JsonResponse(list_of_data, safe=False)
 
 # @login_required
 def index(request):
@@ -196,9 +210,3 @@ def index(request):
     else:
         messages.error(request, "Error")
         pass
-
-def get_donor_list(request):
-    if request.method == 'GET':
-        list_of_data = list(get_donor_list_wo_anonymous())
-    
-    return JsonResponse(list_of_data, safe=False)
