@@ -183,6 +183,86 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
     width: 80vw;
 }
 
+/*
+*********** INPUT PAGE START *********
+*/
+
+
+.wrapperX {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1em;
+}
+
+.wrapperX > div {
+    background: #eee;
+    padding: 1em;
+}
+
+.wrapperX > div:nth-child(odd) {
+    background: #ddd;
+}
+
+.wrapperY {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 1em;
+}
+
+.wrapperY > div {
+    background: #eee;
+    padding: 1em;
+}
+
+.wrapperY > div:nth-child(odd) {
+    background: #ddd;
+}
+
+.donationSubWrapper > div {
+    background: #eee;
+}
+
+.itemAttribSubWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.anonymous {
+    padding: 10px;
+}
+
+#message {
+    font-size: 15pt;
+    padding: 15px;
+    text-align: center;
+}
+
+table {
+    height: 35vh;
+    width: 100%;
+    display: block;
+    overflow-y: scroll;
+}
+
+thead, tbody {
+    display: inline-table;
+    width: 100%;
+}
+
+.selected {
+    border-right: 2px red solid;
+    border-left: 2px red solid;
+}
+
+tbody#items_body tr:hover {
+    border-right: 2px pink solid;
+    border-left: 2px pink solid;
+}
+
+
+/*
+*********** INPUT PAGE END *********
+*/
 .signup-form a, .login-form a {
     color: #337ab7;
 }
