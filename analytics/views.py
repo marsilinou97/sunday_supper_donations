@@ -171,7 +171,7 @@ def delete_item(request):
     
     if (request.method == "POST"):
         try: 
-            id = request.POST["delete_data"]["item_id"]
+            id = request.POST["item_id"]
             model = QUERY_DATA[request.POST["table_type"]]["MODEL"]
             res = delete_item_entry(model, id)
 
