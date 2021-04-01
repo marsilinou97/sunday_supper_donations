@@ -11,7 +11,10 @@ from analytics.vars import *
 def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int):
     try:
         select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
-        select_fields.update(item_specific_fields)
+        for key in item_specific_fields.keys():
+            value = item_specific_fields[key]
+            if value != 1:
+                select_fields.update({key: value})
 
         fields_keys = list(RAW_DATA_BASE_FIELDS_KEYS.keys())
         fields_keys.extend(item_specific_fields.keys())
@@ -77,8 +80,9 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
                 res = cursor.fetchone()
     return res
 
-def delete_table_entry(model: models.Model, id: str):
+def delete_item_entry(model: models.Model, id: int):
     model.objects.filter(id=id).delete()
+    Item.objects.filter(id=id).delete()
 
-def update_table_entry(model: models.Model, feilds: dict):
+def update_item_entry(model: models.Model, id: int, feilds: dict):
     model.objects.filter(id=id).update(**feilds)

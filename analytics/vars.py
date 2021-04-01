@@ -19,44 +19,56 @@ table_headers = {
 
 
 RAW_DATA_BASE_FIELDS_KEYS = {
-       "id": F("item__donation__id"),
+       "donation_id": F("item__donation__id"),
        "first_name": F('item__donation__donor__first_name'),
        "last_name": F('item__donation__donor__last_name'),
        "date_received": F('item__donation__date_received'),
-       "quantity": F('item__quantity')
+       "quantity": F('item__quantity'),
+       "comments": F('item__donation__comments'),
+       'donor_id': F('item__donation__donor__id')
 }
 
 RAW_DATA_BASE_FIELDS = [
-       'id',
+       'donation_id',
        'first_name',
        'last_name',
        'date_received',
-       'quantity'
+       'quantity',
+       'comments',
+       'item_id',
+       'donor_id'
 ]
 
 FUNDS_RAW_DATA_FIELDS = {
        "item_type": Value('Fund', output_field=CharField()),
-       "amt": F('amount')
+       "amount": 1,
+       'item_id': 1,
+       "sub_type": F('type')
 }
 
 GIFTCARD_RAW_DATA_FIELDS = {
        "item_type": Value('Giftcard', output_field=CharField()),
-       "amt": F('amount')
+       "amount": 1,
+       "sub_type": F('business_name'),
+       'item_id': 1,
 }
 
 CLOTHING_RAW_DATA_FIELDS = {
        "item_type": Value('Clothing', output_field=CharField()),
-       "typ_id": F('type_id'),
+       "sub_type": F('type'),
+       'item_id': 1,
 }
 
 FOODS_RAW_DATA_FIELDS = {
        "item_type": Value('Food', output_field=CharField()),
-       "namee": F("name")
+       "sub_type" : F('name'),
+       'item_id': 1,
 }
 
 MISC_RAW_DATA_FIELDS = {
        "item_type": Value('Misc', output_field=CharField()),
-       "namee": F("name")
+       "sub_type" : F('name'),
+       'item_id': 1,
 }
 
 QUERY_DATA = {
