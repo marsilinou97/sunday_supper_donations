@@ -85,17 +85,18 @@
 
         $(window).on('load', function () {
             $('.data-table').each(function () {
+                let table_type = $(this).attr("id")
                 $(this).bootstrapTable({
                     onLoadSuccess: function () {
-                        bindEditButton()
-                        bindRemoveButton()
+                        bindEditButton(table_type)
+                        bindRemoveButton(table_type)
                     },
 
                 });
             })
         })
 
-        let d1 = $.Deferred();
+
         let editing = false;
 
         function actionFormatter(i, row) {
@@ -106,89 +107,82 @@
                     html.push('<button type="button" class="deletebtn-funds btn btn-primary btn-danger ms-2" >Delete</button>')
                 }
             })
-            d1.resolve();
             return html.join("")
         }
 
-        function bindEditButton() {
-            {#alert("Called")#}
+        function bindEditButton(table_type) {
             if (editing) return
             editing = true;
-            $.when(d1).done(setTimeout(function () {
-                $('.editbtn').click(function () {
-                    let $this = $(this);
-                    let tds = $this.closest('tr').find('td').filter(function () {
-                        return $(this).find('.editbtn').length === 0;
-                    });
-                    if ($this.html() === 'Edit') {
-                        $this.html('Save');
-                        $(tds[0]).css({"cursor": "not-allowed"})
-                        tds = tds.slice(1)
-                        tds.prop('contenteditable', true)
-                        tds.closest("tr").css({
-                            'border-top': '3px #6d8786 dashed',
-                            'border-bottom': '3px #6d8786 dashed',
-                            'color': '#000'
-                        });
-                        $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
-                        $this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);
-                    } else {
-                        $this.html('Edit');
-                        $(tds[0]).css({"cursor": "text"})
-                        tds.prop('contenteditable', false)
-                        tds.closest("tr").css({
-                            'border': "none",
-                            'color': '#000'
-                        });
-                        $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
-                        $this.parentsUntil("table").find('button').attr("disabled", false);
-                    }
+            $("#" + table_type + " .editbtn").click(function () {
+                let $this = $(this);
+                let tds = $this.closest('tr').find('td').filter(function () {
+                    return $(this).find('.editbtn').length === 0;
                 });
-                editing = false;
-                d1 = $.Deferred();
-            }, 500));
+                if ($this.html() === 'Edit') {
+                    $this.html('Save');
+                    $(tds[0]).css({"cursor": "not-allowed"})
+                    tds = tds.slice(1)
+                    tds.prop('contenteditable', true)
+                    tds.closest("tr").css({
+                        'border-top': '3px #6d8786 dashed',
+                        'border-bottom': '3px #6d8786 dashed',
+                        'color': '#000'
+                    });
+                    $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
+                    $this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);
+                } else {
+                    $this.html('Edit');
+                    $(tds[0]).css({"cursor": "text"})
+                    tds.prop('contenteditable', false)
+                    tds.closest("tr").css({
+                        'border': "none",
+                        'color': '#000'
+                    });
+                    $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+                    $this.parentsUntil("table").find('button').attr("disabled", false);
+                }
+            });
+            editing = false;
         }
 
-        function bindRemoveButton() {
-            $.when(d1).done(setTimeout(function () {
-                $('.deletebtn-funds').click(function () {
-                    {#let r = confirm("You sure you want to delete this donation? This is irreversible...");#}
-                    {#if (r !== true) return#}
-                    let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
-                    let row = $(this).parentsUntil("tr").parent()
-                    let table_type = $(this).parents(".table").attr('id')
-                    console.log(row_id)
-                    console.log(table_type)
-                    if (row_id == null) return;
-
-                    $.ajax
-                    ({
-                        url: 'delete_item/',
-                        data: {"item_id": row_id, "table_type": table_type},
-                        type: 'post',
-                        headers: {
-                            "X-CSRFToken": getCookie("csrftoken")
-                        },
-                        mode: "same-origin",
-                        success: function (result) {
-                            if ("error" in result) {
-                                alert(result["error"])
-                                $("#funds_table").bootstrapTable('refresh')
-                                return
-                            }
-                            row.remove()
-                            alert("Deleted!")
-                        },
-                        error: function (textStatus, errorThrown) {
-                            alert("Error deleting: " + textStatus);
-                            {#TODO remove logs, only for debugging#}
-                            console.log("Error deleting: " + textStatus)
-                            console.log(errorThrown)
+        function bindRemoveButton(table_type) {
+            $("#" + table_type + " .deletebtn-funds").click(function () {
+                let r = confirm("You sure you want to delete this donation? This is irreversible...");
+                if (r !== true) return
+                let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
+                let row = $(this).parentsUntil("tr").parent()
+                let table_type = $(this).parents(".table").attr('id')
+                console.log(row_id)
+                console.log(table_type)
+                if (row_id == null) return;
+                {#return;#}
+                $.ajax
+                ({
+                    url: 'delete_item/',
+                    data: {"item_id": row_id, "table_type": table_type},
+                    type: 'post',
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    mode: "same-origin",
+                    success: function (result) {
+                        if ("error" in result) {
+                            alert(result["error"])
+                            $("#funds_table").bootstrapTable('refresh')
+                            return
                         }
-                    });
-                })
-            }))
-        };
+                        row.remove()
+                        alert("Deleted!")
+                    },
+                    error: function (textStatus, errorThrown) {
+                        alert("Error deleting: " + textStatus);
+                        {#TODO remove logs, only for debugging#}
+                        console.log("Error deleting: " + textStatus)
+                        console.log(errorThrown)
+                    }
+                });
+            })
+        }
 
 
         {#    Export #}
