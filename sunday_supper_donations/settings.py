@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'users',
     'input',
     'news',
-    'analytics'
-
+    'analytics',
+    'settings'
 ]
 
 MIDDLEWARE = [
