@@ -106,12 +106,9 @@
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                        </li>
-                    {% else %}
-                    {% endif %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'settings_index' %}">Settings</a>
+                    </li>
                     <!-- Mostly for debugging, but might be nice to keep anyway! -->
                     <li class="nav-item active">
                         <a class="navbar-text"> [ Logged in as {{ user.username }} ] </a>
