@@ -1,0 +1,34 @@
+{% extends 'users/base.html' %}
+{% block content %}
+    <h1>Settings</h1>
+    {% if user.is_authenticated %}
+        <p>Welcome to settings.</p>
+        <p>Logged in as {{ user.username }}.</p>
+        <!-- TODO: display roles here -->
+        <p>Your role: $role</p>
+        <ul>
+            {% if user.is_staff %}
+                <li>Admin settings<ul>
+                    <li>Registration links<ul>
+                        <li><a href="{% url 'maketoken' %}">Create a new registration link</a></li>
+
+                        <!-- TODO: build our own version of this page? -->
+                        <li><a href="/admin/users/registrationtoken">Manage existing registration links</a></li>
+                    </ul></li>
+
+                    <!-- TODO: build this page -->
+                    <li><a href="#">Manage user roles</a></li>
+
+                    <!-- TODO: decide whether or not to keep this one. -->
+                    <li><a href="{% url 'admin:index' %}">Django admin page</a></li>
+                </ul></li>
+            {% endif %}
+            <!-- TODO: decide whether or not to make these -->
+            <li><a href="#">Change password/email address</a></li>
+            <li><a href="#">Site directory</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
+    {% else %}
+        <p><a href="/login/">Log in</a> to visit this page.</p>
+    {% endif %}
+{% endblock %}

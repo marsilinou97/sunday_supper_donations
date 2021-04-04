@@ -1,0 +1,16 @@
+{% extends 'users/base.html' %}
+{% block content %}
+    <h1>Settings: Registration links</h1>
+    {% if user.is_authenticated %}
+        <p>Welcome to settings.</p>
+        <ul>
+            {% if user.is_staff %}
+                <li><a href="{% url 'maketoken' %}">Registration links/tokens</a></li>
+                <li><a href="#">User roles</a></li>
+                <li><a href="{% url 'admin:index' %}">Django admin page</a></li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <p><a href="/login/">Log in</a> to visit this page.</p>
+    {% endif %}
+{% endblock %}
