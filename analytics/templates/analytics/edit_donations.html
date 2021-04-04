@@ -14,9 +14,10 @@
                 <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                 <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                 <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
-                <th data-sortable="true" data-field="type" data-filter-control="select">Type</th>
+                <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                 <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                 <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                <th data-sortable="true" data-field="comments" data-filter-control="input">Comments</th>
                 <th data-field="action" data-formatter="actionFormatter">Action</th>
             </tr>
             </thead>
@@ -35,9 +36,10 @@
                 <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                 <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                 <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
-                <th data-sortable="true" data-field="type" data-filter-control="select">Type</th>
+                <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                 <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                 <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                <th data-sortable="true" data-field="comments" data-filter-control="input">Comments</th>
                 <th data-field="action" data-formatter="actionFormatter">Action</th>
             </tr>
             </thead>
@@ -61,15 +63,19 @@
             return cookieValue;
         }
 
+        let tables_data = {};
 
         function getTableData(params) {
+            let table_type = $(this)[0].$el.attr("id")
             $.ajax({
                 url: 'get_table/',
                 datatype: 'json',
-                data: $.param(params.data) + "&table_type=" + $(this)[0].$el.attr("id"),
+                data: $.param(params.data) + "&table_type=" + table_type,
                 type: 'GET',
                 success: function (data) {
+                    console.log(table_type)
                     console.log(data)
+                    tables_data[table_type] = data["rows"]
                     params.success({
                         "rows": data["rows"],
                         "total": data["total"]
@@ -110,11 +116,18 @@
             return html.join("")
         }
 
+        function bindCancelButton(table_type) {
+            (".cancel").click(function () {
+                $grid.cancel($(this).attr('key'));
+            });
+        }
+
         function bindEditButton(table_type) {
             if (editing) return
             editing = true;
             $("#" + table_type + " .editbtn").click(function () {
                 let $this = $(this);
+                let $row = $this.parents("tr")
                 let tds = $this.closest('tr').find('td').filter(function () {
                     return $(this).find('.editbtn').length === 0;
                 });
@@ -140,15 +153,50 @@
                     });
                     $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
                     $this.parentsUntil("table").find('button').attr("disabled", false);
+
+                    let table_type = $(this).parents(".table").attr('id')
+                    let row_index = $row.attr("data-index")
+                    {#console.log(old_data)#}
+                    edit_donation(row_index, table_type, $row)
                 }
             });
             editing = false;
         }
 
+        function edit_donation(row_index, table_type, $row) {
+            let old_data = tables_data[table_type][row_index]
+            let keys = ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"]
+            let columns = $row.find("td").slice(1, -1)
+            let new_data = old_data
+            columns.each(function (i) {
+                new_data[keys[i]] = $(this).html()
+            })
+
+            $.ajax({
+                url: 'update_item/',
+                datatype: 'json',
+                data: {"table_type": table_type, "update_data": JSON.stringify(new_data)},
+                type: 'POST',
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                success: function () {
+                    console.log("SAVED")
+                    tables_data[table_type][row_index] = new_data;
+                },
+                error: function (er) {
+                    params.error(er);
+                    console.log("Error while saving:  " + er)
+                }
+            });
+
+
+        }
+
+
         function bindRemoveButton(table_type) {
             $("#" + table_type + " .deletebtn-funds").click(function () {
-                let r = confirm("You sure you want to delete this donation? This is irreversible...");
-                if (r !== true) return
+                if (!confirm("You sure you want to delete this donation? This is irreversible...")) return
                 let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
                 let row = $(this).parentsUntil("tr").parent()
                 let table_type = $(this).parents(".table").attr('id')

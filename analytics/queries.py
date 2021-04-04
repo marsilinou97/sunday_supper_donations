@@ -86,7 +86,8 @@ def delete_item_entry(model: models.Model, id: int):
     return sucess
 
 def update_table_entry(model: models.Model, id: int, feilds: dict):
-    return model.objects.filter(id=id).update(**feilds)[0]
+    # return model.objects.filter(id=id).update(**feilds)[0]
+    return model.objects.filter(id=id).update(**feilds)
 
 def update_item_entry(ids: list, data: dict, model_name: str):
     update_data = {}

@@ -19,7 +19,6 @@
             <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
             <label for="anonymous" class="anonymous">Anonymous Donor</label>
             <hr>
-
             <div class="wrapperX">
 
                 <div class="wrapperY">
@@ -60,6 +59,11 @@
                     </div>
                     <div id="donor_form">
                         <h3 class="d-flex justify-content-center">Donor Information</h3>
+                        <label for="toggleAutocomplete">
+                            Toggle autocomplete
+                            <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
+                        </label>
+
                         <div class="wrapperX">
                             <span>
                                 <b>{{ donor_form.first_name.label }}</b>
