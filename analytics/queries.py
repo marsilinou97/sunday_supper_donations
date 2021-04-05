@@ -56,7 +56,7 @@ def get_donation_count_by_date(model: models.Model, date_type: str):
     return query_set
 
 def get_total_donation_count_qty(model: models.Model):
-    
+
     query_set = model.objects \
         .aggregate(qty=Sum("item__quantity"))
 
@@ -95,15 +95,18 @@ def update_item_entry(ids: list, data: dict, model_name: str):
     update_data.update({ids[0]: {key: data[key] for key in data.keys() & ('first_name', 'last_name')}})
     update_data.update({ids[1]: {key: data[key] for key in data.keys() & ('date_recieved', 'comments')}})
     update_data.update({ids[2]: {key: data[key] for key in data.keys() & ('quantity')}})
-    
+
     sub_item_feilds = {}
     if (model_name == "funds_table" or "giftcards_table"):
         sub_item_feilds.update({'amount': data['amount']})
 
     sub_item_feilds.update({QUERY_DATA[model_name]["SUBTYPE_FIELD"]: data['sub_type']})
-    
 
-    return update_table_entry(Donor, ids[0], update_data[ids[0]]) and \
-        update_table_entry(Donation, ids[1], update_data[ids[1]]) and \
-        update_table_entry(Item, ids[2], update_data[ids[2]]) and \
-        update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[3], sub_item_feilds)
+    r0 = update_table_entry(Donor, ids[0], update_data[ids[0]])
+    r1 = update_table_entry(Donation, ids[1], update_data[ids[1]])
+    r2 = update_table_entry(Item, ids[2], update_data[ids[2]])
+    # Error is thrown when updating (update_table_entry). Error msg is:
+    # Cannot resolve keyword 'id' into field. Choices are: amount, item, item_id, type, type_id
+    r3 = update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[3], sub_item_feilds)
+    print(r0, r1, r2, r3)
+    return r0 and r1 and r2 and r3

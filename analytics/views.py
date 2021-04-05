@@ -8,7 +8,9 @@ from django.shortcuts import render
 from django.db.models import Sum
 from django.db.models.functions import Extract
 import datetime
-
+import json
+import traceback
+from helpers import FailedJsonResponse
 from .forms import RawDataForm, ChartsForm
 
 from .queries import *
@@ -146,13 +148,10 @@ def get_donation_fund_count(request):
         return JsonResponse(results, safe=False)
 
 
-import json
-import traceback
-from django.contrib.auth.decorators import login_required
 
 # @login_required
 def update_item(request):
-    if (request.method == "POST"):
+    if request.method == "POST":
         try:
             ids = []
             update_data = json.loads(request.POST["update_data"])
@@ -161,10 +160,11 @@ def update_item(request):
             ids.append(update_data["item_id"])
             ids.append(update_data["item_id"])
             res = update_item_entry(ids, update_data, request.POST["table_type"])
-
+            print(res)
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
-            print(f"---------------------------------RES: {res}")
+                return FailedJsonResponse(res)
+
             return JsonResponse(res, safe=False)
 
         except Exception as e:

@@ -1,6 +1,10 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
+    <div class="alert alert-success fade in text-center hide" role="alert">
+        <strong class="msg"> </strong>
+    </div>
+
     <h1 class="text-center">Edit Donations</h1>
     <div id="content" class="content edit_donation">
         <table id="funds_table" data-height="460" class="table table-striped table-bordered data-table"
@@ -180,13 +184,28 @@
                 headers: {
                     "X-CSRFToken": getCookie("csrftoken")
                 },
-                success: function () {
+                success: function (resp) {
+                    console.log(resp)
                     console.log("SAVED")
                     tables_data[table_type][row_index] = new_data;
+                    $(".alert").addClass("alert-success").hide().removeClass("hide").slideDown(300)
+                    $(".alert .msg").html("Record was updated successfully.")
+                    setTimeout(
+                        function () {
+                            $(".alert").slideUp(300)
+                        }, 3000);
+
                 },
                 error: function (er) {
-                    params.error(er);
-                    console.log("Error while saving:  " + er)
+                    console.log(JSON.stringify(er))
+                    console.log("Error while saving:  " + er.responseJSON.error)
+                    $(".alert").addClass("alert-danger").hide().removeClass("hide").slideDown(300)
+                    $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
+                    setTimeout(
+                        function () {
+                            $(".alert").slideUp(300)
+                        }, 6000);
+
                 }
             });
 
