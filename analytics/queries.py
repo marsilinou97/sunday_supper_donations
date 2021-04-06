@@ -85,9 +85,9 @@ def delete_item_entry(model: models.Model, id: int):
     Item.objects.filter(id=id).delete()[0])
     return sucess
 
-def update_table_entry(model: models.Model, id: int, feilds: dict):
+def update_table_entry(model: models.Model, filters: dict, feilds: dict):
     # return model.objects.filter(id=id).update(**feilds)[0]
-    return model.objects.filter(id=id).update(**feilds)
+    return model.objects.filter(**filters).update(**feilds)
 
 def update_item_entry(ids: list, data: dict, model_name: str):
     update_data = {}
@@ -102,11 +102,11 @@ def update_item_entry(ids: list, data: dict, model_name: str):
 
     sub_item_feilds.update({QUERY_DATA[model_name]["SUBTYPE_FIELD"]: data['sub_type']})
 
-    r0 = update_table_entry(Donor, ids[0], update_data[ids[0]])
-    r1 = update_table_entry(Donation, ids[1], update_data[ids[1]])
-    r2 = update_table_entry(Item, ids[2], update_data[ids[2]])
+    r0 = update_table_entry(Donor, {"id": ids[0]}, update_data[ids[0]])
+    r1 = update_table_entry(Donation, {"id": ids[1]}, update_data[ids[1]])
+    r2 = update_table_entry(Item, {"id": ids[2]}, update_data[ids[2]])
     # Error is thrown when updating (update_table_entry). Error msg is:
     # Cannot resolve keyword 'id' into field. Choices are: amount, item, item_id, type, type_id
-    r3 = update_table_entry(QUERY_DATA[model_name]["MODEL"], ids[3], sub_item_feilds)
+    r3 = update_table_entry(QUERY_DATA[model_name]["MODEL"], {"item_id": ids[3]}, sub_item_feilds)
     print(r0, r1, r2, r3)
     return r0 and r1 and r2 and r3
