@@ -106,12 +106,22 @@
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'settings_index' %}">Settings</a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownSettings" role="button" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
+                        <li><a class="dropdown-item" href="{% url 'change_password' %}">Change password or email address</a></li>
+                        {% if user.is_staff %}
+                            <li><a class="dropdown-item" href="{% url 'maketoken' %}">Create registration link</a></li>
+                            <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage registration links</a></li>
+                            <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage user roles</a></li>
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django admin page (advanced)</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
+                    </ul>
+                </li>
                     <!-- Mostly for debugging, but might be nice to keep anyway! -->
-                    <li class="nav-item active">
-                        <a class="navbar-text"> [ Logged in as {{ user.username }} ] </a>
+                    <li class="nav-item disabled">
+                        <a class="navbar-text"> ( Logged in as {{ user.username }} ) </a>
                     </li>
 
                     <!-- /debugging stuff -->
@@ -128,11 +138,6 @@
                     </li>
                 {% endif %}
             </li>
-            {% if user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'maketoken' %}">Make token</a>
-                </li>
-            {% endif %}
         </ul>
     </div>
 </nav>
