@@ -23,6 +23,11 @@ def manage_registration_links(request):
         return render(request,"settings/manage_registration_links.html")
 
 @login_required
+def manage_registration_links_get_table(request):
+    if request.user.is_authenticated:
+        return render(request,"settings/manage_registration_links.html")
+
+@login_required
 def help(request):
     if request.user.is_authenticated:
         return render(request,"settings/help.html")
