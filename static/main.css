@@ -193,8 +193,12 @@ tr td:last-child {
 
 /* todo: handle mobile */
 
-.table-container{
+.table-container {
     height: 30vh;
     display: block;
     overflow: auto;
+}
+
+.alert ul {
+    text-align: left;
 }
