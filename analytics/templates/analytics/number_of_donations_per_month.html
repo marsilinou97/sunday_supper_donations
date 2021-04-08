@@ -1,74 +1,57 @@
+
 <div class="chart-container">
-    <canvas id="line-chart0"></canvas>
+    <canvas id="acc-bar-chart-2"></canvas>
 </div>
 
 
 <script>
-    $(window).on('load', function () {
-        console.log({{ line_chart_context.miscellaneous}})
-        let barChartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [
-                {
-                    label: 'Food',
-                    backgroundColor: window.chartColors.red,
-                    stack: 'Stack 0',
-                    data: {{ line_chart_context.food.0 }}
+    $.ajax({
+        url: 'get_donation_count_month/',
+        datatype: 'json',
+        type: 'GET',
+        success: function (response) {
 
-                }, {
-                    label: 'Funds',
-                    backgroundColor: window.chartColors.blue,
-                    stack: 'Stack 1',
-                    data:{{ line_chart_context.funds.0 }}
-                }, {
-                    label: 'Clothing',
-                    backgroundColor: window.chartColors.green,
-                    stack: 'Stack 2',
-                    data: {{ line_chart_context.clothing.0 }}
-
-                }, {
-                    label: 'Miscellaneous',
-                    backgroundColor: window.chartColors.orange,
-                    stack: 'Stack 3',
-                    data: {{ line_chart_context.miscellaneous.0 }}
-
-                }, {
-                    label: 'Gift cards',
-                    backgroundColor: window.chartColors.purple,
-                    stack: 'Stack 4',
-                    data: {{ line_chart_context.gifcards.0 }}
-
-                }
-            ]
-        };
+            console.log('Donations W/O quantity: (bar chart 2)', response);
 
 
-        new Chart(document.getElementById("line-chart0"), {
-            type: 'bar',
-            data: barChartData,
+            var ctx = document.getElementById('acc-bar-chart-2').getContext('2d');
+            var chart = new Chart(ctx, {
 
-            {# TODO: move to a var #}
-            options: {
-                // Mobile view
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Number of donations per month'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false
-                },
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                    }],
-                    yAxes: [{
-                        stacked: true
+                type: 'bar',
+
+                // The data for our dataset
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Funds',
+                        backgroundColor: "#3e95cd",
+                        borderColor: "#3e95cd",
+                        data: response["funds_table"]
+                    },{
+                        label: 'Gift Cards',
+                        backgroundColor: "#8e5ea2",
+                        borderColor: "#8e5ea2",
+                        data: response["giftcards_table"]
+                    },{
+                        label: 'Clothing',
+                        backgroundColor: "#3cba9f",
+                        borderColor: "#3cba9f",
+                        data: response["clothing_table"]
+                    },{
+                        label: 'Food',
+                        backgroundColor: "#e8c3b9",
+                        borderColor: "#e8c3b9",
+                        data: response["foods_table"]
+                    },{
+                        label: 'Miscellaneous',
+                        backgroundColor: "#c45850",
+                        borderColor: "#c45850",
+                        data: response["misc_table"]
                     }]
-                }
-            }
-        });
+                },
+                options: {}
+            });
+        }
     });
 </script>
+

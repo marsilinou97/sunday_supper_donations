@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'input_page.css' %}">
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-success fade in text-center" role="alert">
@@ -158,13 +159,16 @@
 
                     <div class="wrapperX">
                         <div>
-                            <button class="btn btn-primary btn-lg center-block mt-3 w-22" id="clear_fields">
+                            <button id="clearButton" class="btn btn-primary btn-lg center-block mt-3 w-22"
+                                    id="clear_fields">
                                 Clear
                             </button>
                             <div id="clear" class=""></div>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 w-22">Enter</button>
+                            <button id="enterButton" type="submit"
+                                    class="btn btn-primary btn-lg center-block mt-3 w-22">Enter
+                            </button>
                         </div>
                     </div>
                 </div>

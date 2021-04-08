@@ -1,63 +1,54 @@
+
 <div class="chart-container">
-    <canvas id="line-chart2"></canvas>
+    <canvas id="acc-bar-chart-1"></canvas>
 </div>
 <script>
-    let barChartData2 = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [{
-            label: 'Food',
-            backgroundColor: window.chartColors.red,
-            stack: 'Stack 0',
-            data: {{ line_chart_context.food.1 }}
+   $.ajax({
+        url: 'get_donation_count_date_qty/',
+        datatype: 'json',
+        type: 'GET',
+        success: function (response) {
+            console.log('Donations W/ quantity (bar chart 1):', response);
 
-        }, {
-            label: 'Funds',
-            backgroundColor: window.chartColors.blue,
-            stack: 'Stack 1',
-            data:{{ line_chart_context.funds.1 }}
-        }, {
-            label: 'Clothing',
-            backgroundColor: window.chartColors.green,
-            stack: 'Stack 2',
-            data: {{ line_chart_context.clothing.1 }}
+            var ctx = document.getElementById('acc-bar-chart-1').getContext('2d');
+            var chart = new Chart(ctx, {
 
-        }, {
-            label: 'Miscellaneous',
-            backgroundColor: window.chartColors.orange,
-            stack: 'Stack 3',
-            data: {{ line_chart_context.miscellaneous.1 }}
+                type: 'bar',
 
-        }, {
-            label: 'Gift cards',
-            backgroundColor: window.chartColors.purple,
-            stack: 'Stack 4',
-            data: {{ line_chart_context.gifcards.1 }}
+                // The data for our dataset
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Funds',
+                        backgroundColor: "#3e95cd",
+                        borderColor: "#3e95cd",
+                        data: response["funds_table"]
+                    },{
+                        label: 'Gift Cards',
+                        backgroundColor: "#8e5ea2",
+                        borderColor: "#8e5ea2",
+                        data: response["giftcards_table"]
+                    },{
+                        label: 'Clothing',
+                        backgroundColor: "#3cba9f",
+                        borderColor: "#3cba9f",
+                        data: response["clothing_table"]
+                    },{
+                        label: 'Food',
+                        backgroundColor: "#e8c3b9",
+                        borderColor: "#e8c3b9",
+                        data: response["foods_table"]
+                    },{
+                        label: 'Miscellaneous',
+                        backgroundColor: "#c45850",
+                        borderColor: "#c45850",
+                        data: response["misc_table"]
+                    }]
+                },
+                options: {}
+            });
 
-        }]
-    };
-
-    new Chart(document.getElementById("line-chart2"), {
-        type: 'bar',
-        data: barChartData2,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            title: {
-                display: true,
-                text: 'Total quantity of each donation type'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            },
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
-            }
         }
     });
 </script>
+

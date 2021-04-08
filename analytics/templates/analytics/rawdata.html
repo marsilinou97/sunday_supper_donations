@@ -2,16 +2,43 @@
 
 {% block content %}
 
+    <style>
+        #fundtable,th{
+            background-color: #3e95cd;
+        }
+
+        #giftcardtable,th{
+            background-color: #8e5ea2;
+        }
+
+        #clothingtable,th{
+            background-color: #3cba9f;
+        }
+
+        #foodtable,th{
+            background-color: #e8c3b9;
+        }
+
+        #misctable,th{
+            background-color: #c45850;
+        }
+
+        .rawButton{
+            font-weight: bold;
+            background: #19aa8d;
+        }
+    </style>
+
 
     <form method="post" class="text-center">
         {% csrf_token %}
         {{ form }}
         <div class="row">
             <div class="col">
-                <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
+                <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 rawButton">Filter</button>
             </div>
             <div class="col">
-                <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Export</button>
+                <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 rawButton">Export</button>
             </div>
         </div>
     </form>
