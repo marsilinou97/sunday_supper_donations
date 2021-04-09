@@ -58,6 +58,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
           integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
           crossorigin="anonymous"/>
+
 </head>
 
 <script>
@@ -72,6 +73,7 @@
         }));
     }
 </script>
+
 
 
 <body>
@@ -89,51 +91,51 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link text-white" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                    aria-expanded="false">Analytics</a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
+                    <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Charts</a></li>
+                    <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Tables</a></li>
+                    <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donations</a></li>
 
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'news' %}">News</a>
+                <a class="nav-link text-white" href="{% url 'news' %}">News</a>
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
                         <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                            <a class="nav-link text-white href="{% url 'admin:index' %}">Admin</a>
                         </li>
                     {% else %}
                     {% endif %}
                     <!-- Mostly for debugging, but might be nice to keep anyway! -->
                     <li class="nav-item active">
-                        <a class="navbar-text"> [ Logged in as {{ user.username }} ] </a>
+                        <a class="navbar-text text-white"> [ Logged in as {{ user.username }} ] </a>
                     </li>
 
                     <!-- /debugging stuff -->
 
                     <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+                        <a class="nav-link text-white" href="{% url 'logout' %}">Log out</a>
                     </li>
                 {% else %}
                     <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                        <a class="nav-link text-white" href="{% url 'login' %}">Log in</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
                     </li>
                 {% endif %}
             </li>
             {% if user.is_staff %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'maketoken' %}">Make token</a>
+                    <a class="nav-link text-white" href="{% url 'maketoken' %}">Make token</a>
                 </li>
             {% endif %}
         </ul>
@@ -148,10 +150,10 @@
 </main>
 
 
-<footer class="footer mt-auto py-3 bg-light">
+<footer class="footer mt-auto py-3 bg-dark">
     <div class="container">
         {#      TODO: Add appropriate footer content #}
-        <span class="text-muted">© 2020 Copyright: Sunday Supper footer.</span>
+        <span class="text-white">© 2021 Copyright: Sunday Supper</span>
     </div>
 </footer>
 
