@@ -21,7 +21,6 @@ from django.conf import settings
 from django.urls import include, path
 
 from input import views as input_views
-from news import views as news_views
 from users import views as users_views
 from users.forms import UserLoginForm
 import debug_toolbar
@@ -36,7 +35,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name="users/login.html", authentication_form=UserLoginForm),
          name="login"),
     path('logout/', auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
-    path('news/', news_views.index, name="news"),
     # adjusted analytics url routing
     path('analytics/', include('analytics.urls')),
     path('maketoken/', users_views.registration_token, name='maketoken'),

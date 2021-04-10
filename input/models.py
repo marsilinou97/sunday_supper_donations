@@ -57,10 +57,10 @@ Donations
 
 class Donation(models.Model):
     # Donors FK
-    donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
+    donor = models.ForeignKey(Donor, on_delete=models.DO_NOTHING)
 
     # Users FK
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     date_received = models.DateField()
     thanks_sent = models.BooleanField(blank=True, null=True)
@@ -92,7 +92,7 @@ Items
 
 class Item(models.Model):
     # Auto generated pk
-    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)
+    donation = models.ForeignKey(Donation, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
 
     def update(
@@ -151,8 +151,8 @@ Item subclasses
 
 
 class Clothing(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
-    type = models.ForeignKey(ClothingType, on_delete=models.CASCADE)
+    item = models.OneToOneField(Item, primary_key=True, on_delete=models.DO_NOTHING)
+    type = models.ForeignKey(ClothingType, on_delete=models.DO_NOTHING)
 
     def update(
             self,
@@ -167,7 +167,7 @@ class Clothing(models.Model):
 
 
 class Food(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, primary_key=True, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=50)
 
     def update(
@@ -183,8 +183,8 @@ class Food(models.Model):
 
 
 class Fund(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
-    type = models.ForeignKey(FundType, on_delete=models.CASCADE)
+    item = models.OneToOneField(Item, primary_key=True, on_delete=models.DO_NOTHING)
+    type = models.ForeignKey(FundType, on_delete=models.DO_NOTHING)
     amount = models.CharField(max_length=10)
 
     class Meta:
@@ -205,8 +205,8 @@ class Fund(models.Model):
 
 
 class GiftCard(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
-    business_name = models.ForeignKey(Business, on_delete=models.CASCADE)
+    item = models.OneToOneField(Item, primary_key=True, on_delete=models.DO_NOTHING)
+    business_name = models.ForeignKey(Business, on_delete=models.DO_NOTHING)
     amount = models.CharField(max_length=10)
 
     def update(
@@ -224,7 +224,7 @@ class GiftCard(models.Model):
 
 
 class Miscellaneous(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
+    item = models.OneToOneField(Item, primary_key=True, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=50)
 
     def update(
