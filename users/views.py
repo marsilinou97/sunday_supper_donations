@@ -68,7 +68,7 @@ def handle_get_req(request):
 def register(request):
     if request.user.is_authenticated:
         # Logged in user can't register
-        return redirect("news")
+        return redirect("register")
     if request.method == 'POST':
         return handle_post_req(request)
     elif request.method == 'GET':

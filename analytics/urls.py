@@ -10,5 +10,9 @@ urlpatterns = [
     path('get_donation_count_date_qty/', views.get_donation_count_date_qty, name='get_donation_count_date_qty'),
     path('get_donation_count_month/', views.get_donation_count_month, name='get_donation_count_month'),
     path('get_donation_item_count/', views.get_donation_item_count, name='get_donation_item_count'),
-    path('get_donation_fund_count/', views.get_donation_fund_count, name='get_donation_fund_count')
+    path('get_donation_fund_count/', views.get_donation_fund_count, name='get_donation_fund_count'),
+    path('edit_donations/update_item/', views.update_item, name='update_item'),
+    path('edit_donations/delete_item/', views.delete_item, name='delete_item'),
+    path('rawdata/get_table/', views.get_table, name='rawdata_get_table'),
+
 ]

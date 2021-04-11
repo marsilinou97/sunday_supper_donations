@@ -11,7 +11,10 @@ from analytics.vars import *
 def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int):
     try:
         select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
-        select_fields.update(item_specific_fields)
+        for key in item_specific_fields.keys():
+            value = item_specific_fields[key]
+            if value != 1:
+                select_fields.update({key: value})
 
         fields_keys = list(RAW_DATA_BASE_FIELDS_KEYS.keys())
         fields_keys.extend(item_specific_fields.keys())
@@ -53,7 +56,7 @@ def get_donation_count_by_date(model: models.Model, date_type: str):
     return query_set
 
 def get_total_donation_count_qty(model: models.Model):
-    
+
     query_set = model.objects \
         .aggregate(qty=Sum("item__quantity"))
 
@@ -77,8 +80,33 @@ def execute_fetch_raw_query(query, fetch_all=False, fetch_one=False, params={}):
                 res = cursor.fetchone()
     return res
 
-def delete_table_entry(model: models.Model, id: str):
-    model.objects.filter(id=id).delete()
+def delete_item_entry(model: models.Model, id: int):
+    sucess = (model.objects.filter(item_id=id).delete()[0] and
+    Item.objects.filter(id=id).delete()[0])
+    return sucess
 
-def update_table_entry(model: models.Model, feilds: dict):
-    model.objects.filter(id=id).update(**feilds)
+def update_table_entry(model: models.Model, filters: dict, feilds: dict):
+    # return model.objects.filter(id=id).update(**feilds)[0]
+    return model.objects.filter(**filters).update(**feilds)
+
+def update_item_entry(ids: list, data: dict, model_name: str):
+    update_data = {}
+
+    update_data.update({ids[0]: {key: data[key] for key in data.keys() & ('first_name', 'last_name')}})
+    update_data.update({ids[1]: {key: data[key] for key in data.keys() & ('date_recieved', 'comments')}})
+    update_data.update({ids[2]: {key: data[key] for key in data.keys() & ('quantity')}})
+
+    sub_item_feilds = {}
+    if (model_name == "funds_table" or "giftcards_table"):
+        sub_item_feilds.update({'amount': data['amount']})
+
+    sub_item_feilds.update({QUERY_DATA[model_name]["SUBTYPE_FIELD"]: data['sub_type']})
+
+    r0 = update_table_entry(Donor, {"id": ids[0]}, update_data[ids[0]])
+    r1 = update_table_entry(Donation, {"id": ids[1]}, update_data[ids[1]])
+    r2 = update_table_entry(Item, {"id": ids[2]}, update_data[ids[2]])
+    # Error is thrown when updating (update_table_entry). Error msg is:
+    # Cannot resolve keyword 'id' into field. Choices are: amount, item, item_id, type, type_id
+    r3 = update_table_entry(QUERY_DATA[model_name]["MODEL"], {"item_id": ids[3]}, sub_item_feilds)
+    print(r0, r1, r2, r3)
+    return r0 and r1 and r2 and r3

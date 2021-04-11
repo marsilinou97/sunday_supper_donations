@@ -1,4 +1,5 @@
 import bleach
+from django.http import JsonResponse
 
 
 def __remove_html_tags(data, strip=True, tags=[], attributes={}, protocols=[]):
@@ -28,3 +29,9 @@ def remove_html_tags(data, strip=True, tags=[], attributes={}, protocols=[]):
         raise TypeError(f"Expected dict or str type, got {type(data)} instead")
 
     return data
+
+
+class FailedJsonResponse(JsonResponse):
+    def __init__(self, data):
+        super().__init__(data)
+        self.status_code = 400

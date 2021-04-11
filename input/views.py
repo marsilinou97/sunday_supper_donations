@@ -1,13 +1,13 @@
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, Donor
-from django.forms import formset_factory
+import bleach
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db import connection
+from django.forms import formset_factory
+from django.http import JsonResponse
+from django.http.response import HttpResponse
+from django.shortcuts import render, redirect
 
+from input.queries import get_donor_list_wo_anonymous, get_donors_w_first_nm, get_donors_w_last_nm
+from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
 from .models import *
-import sys
 
 us_states = {
     'Alabama': 'al', 'Alaska': 'ak', 'American Samoa': 'as', 'Arizona': 'az', 'Arkansas': 'ar', 'California': 'ca',
@@ -38,7 +38,7 @@ def handle_post_req(request):
     if "state" not in data:
         data["state"] = ""
 
-    print(data) # debug
+    print(data)  # debug
 
     # Get information about Funds, if any were donated
     type = None
@@ -68,7 +68,8 @@ def handle_post_req(request):
         item_dict["subclass"] = data['id_form-' + str(i) + '-type']
         if item_dict['subclass'] == 'giftcard':
             item_dict['subclass'] = GiftCard
-            item_dict['amount'] = data['id_form-' + str(i) + '-amount']  # TODO: fix once the form has an amount for Giftcards
+            item_dict['amount'] = data[
+                'id_form-' + str(i) + '-amount']  # TODO: fix once the form has an amount for Giftcards
             # get the Giftcard enumerated value
             if 'id_form-' + str(i) + '-sub_type_business' in data:
                 item_dict['businessName'] = data['id_form-' + str(i) + '-sub_type_business']
@@ -108,6 +109,7 @@ def handle_post_req(request):
 
     return redirect('input_index')
 
+
 def save_donation(items_list, data):
     donation_saved = False
     user_input = {}  # user input dictionary
@@ -132,9 +134,9 @@ def save_donation(items_list, data):
     # If the donation was truly anonymous, then the anonymous donor will be returned
     # If the user accidentally left the first and last name blank, then the anonymous donor will be returned
     if ("anonymous" in data and data["anonymous"] == "on") or \
-       (user_input["first_name"].strip() == "" and user_input["last_name"].strip() == ""):
+            (user_input["first_name"].strip() == "" and user_input["last_name"].strip() == ""):
         try:
-            donor = InsertDonor("ANONYMOUS","ANONYMOUS","","","","","","","","")
+            donor = InsertDonor("ANONYMOUS", "ANONYMOUS", "", "", "", "", "", "", "", "")
         except:
             print("Exception while inserting donor:", end=" ")
             for error in sys.exc_info():
@@ -182,11 +184,31 @@ def save_donation(items_list, data):
 
     return donation_saved
 
+
 def get_donor_list(request):
     if request.method == 'GET':
         list_of_data = list(get_donor_list_wo_anonymous())
+        return JsonResponse(list_of_data, safe=False)
+    else:
+        return HttpResponse("Error")
 
-    return JsonResponse(list_of_data, safe=False)
+
+def view_get_donors(request):
+    if request.method == 'GET':
+
+        name_type = bleach.clean(request.GET["name_type"], tags=[], attributes={}, styles=[], protocols=[])
+        term = bleach.clean(request.GET["term"], tags=[], attributes={}, styles=[], protocols=[])
+
+        if name_type == "first":
+            list_of_data = list(get_donors_w_first_nm(term))
+        elif name_type == "last":
+            list_of_data = list(get_donors_w_last_nm(term))
+        else:
+            list_of_data = []
+        return JsonResponse(list_of_data, safe=False)
+    else:
+        return HttpResponse("Error")
+
 
 # @login_required
 def index(request):

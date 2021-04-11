@@ -187,7 +187,7 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
     color: #337ab7;
 }
 
-tr td:last-child {
+.edit_donation tr td:last-child {
     text-align: center;
 }
 
@@ -201,4 +201,7 @@ tr td:last-child {
 
 .alert ul {
     text-align: left;
+}
+.ui-autocomplete-loading {
+    background: white url("ui-anim_basic_16x16.gif") right center no-repeat;
 }

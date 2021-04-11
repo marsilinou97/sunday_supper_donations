@@ -1,49 +1,179 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
-    <h1 class="text-center">Edit Donations</h1>
-    <div id="content" class="content">
-        <table id="funds_table" data-height="460" class="table table-striped table-bordered data-table"
-               data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
-               data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
-               data-page-list="[5,10, 25, 50]" data-page-size="5" data-side-pagination="server"
-               data-search-on-enter-key="true">
-            <thead>
-            <tr>
-                <th data-sortable="true" data-field="id" data-filter-control="input">id</th>
-                <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
-                <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
-                <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
-                <th data-sortable="true" data-field="type" data-filter-control="select">Type</th>
-                <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
-                <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                <th data-field="action" data-formatter="actionFormatter">Action</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-
-        <table id="giftcards_table" data-height="460" class="table table-striped table-bordered data-table"
-               data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
-               data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
-               data-page-list="[5,10, 25, 50]" data-page-size="5" data-side-pagination="server"
-               data-search-on-enter-key="true">
-            <thead>
-            <tr>
-                <th data-sortable="true" data-field="id" data-filter-control="input" data-visible="true">id</th>
-                <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
-                <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
-                <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
-                <th data-sortable="true" data-field="type" data-filter-control="select">Type</th>
-                <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
-                <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                <th data-field="action" data-formatter="actionFormatter">Action</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+    <div class="alert alert-success fade in text-center hide" role="alert">
+        <strong class="msg"> </strong>
     </div>
+
+    <h1 class="text-center">Edit Donations</h1>
+    <div id="content" class="content edit_donation">
+        <div id="content" class="content raw_data">
+            <div class="donation_table">
+                <h2 class="text-center">Funds</h2>
+                <table id="funds_table" data-height="460" class="table table-striped table-bordered data-table"
+                       data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                       data-show-columns="true" data-show-export="true" data-ajax="getTableData"
+                       data-show-refresh="true"
+                       data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                       data-search-on-enter-key="true">
+                    <thead>
+                    <tr>
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
+                        <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
+                        <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
+                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        </th>
+                        <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
+                        <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
+                        <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                        <th data-sortable="true" data-field="comments" data-filter-control="input"
+                            class="text-capitalize">Comments
+                        </th>
+                        <th data-field="action" data-formatter="actionFormatter">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="donation_table">
+                <h2 class="text-center">Gift Card</h2>
+                <table id="giftcards_table" data-height="460" class="table table-striped table-bordered data-table"
+                       data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                       data-show-columns="true" data-show-export="true" data-ajax="getTableData"
+                       data-show-refresh="true"
+                       data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                       data-search-on-enter-key="true">
+                    <thead>
+                    <tr>
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">
+                            id
+                        </th>
+                        <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
+                        <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
+                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        </th>
+                        <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
+                        <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
+                        <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                        <th data-sortable="true" data-field="comments" data-filter-control="input"
+                            class="text-capitalize">Comments
+                        </th>
+                        <th data-field="action" data-formatter="actionFormatter">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="donation_table">
+
+                <h2 class="text-center">Food</h2>
+                <table id="foods_table" data-height="460" class="table table-striped table-bordered data-table"
+                       data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                       data-show-columns="true" data-show-export="true" data-ajax="getTableData"
+                       data-show-refresh="true"
+                       data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                       data-search-on-enter-key="true">
+                    <thead>
+                    <tr>
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">
+                            ID
+                        </th>
+                        <th data-sortable="true" data-field="first_name" data-filter-control="input"
+                            class="text-capitalize">First Name
+                        </th>
+                        <th data-sortable="true" data-field="last_name" data-filter-control="input"
+                            class="text-capitalize">Last Name
+                        </th>
+                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        </th>
+                        <th data-sortable="true" data-field="sub_type" data-filter-control="select"
+                            class="text-capitalize">Type
+                        </th>
+                        <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                        <th data-sortable="true" data-field="comments" data-filter-control="input"
+                            class="text-capitalize">Comments
+                        </th>
+                        <th data-field="action" data-formatter="actionFormatter">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="donation_table">
+                <h2 class="text-center">Clothing</h2>
+                <table id="clothing_table" data-height="460" class="table table-striped table-bordered data-table"
+                       data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                       data-show-columns="true" data-show-export="true" data-ajax="getTableData"
+                       data-show-refresh="true"
+                       data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                       data-search-on-enter-key="true">
+                    <thead>
+                    <tr>
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">
+                            ID
+                        </th>
+                        <th data-sortable="true" data-field="first_name" data-filter-control="input"
+                            class="text-capitalize">First Name
+                        </th>
+                        <th data-sortable="true" data-field="last_name" data-filter-control="input"
+                            class="text-capitalize">Last Name
+                        </th>
+                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        </th>
+                        <th data-sortable="true" data-field="sub_type" data-filter-control="select"
+                            class="text-capitalize">Type
+                        </th>
+                        <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                        <th data-sortable="true" data-field="comments" data-filter-control="input"
+                            class="text-capitalize">Comments
+                        </th>
+                        <th data-field="action" data-formatter="actionFormatter">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="donation_table">
+
+                <h2 class="text-center">Miscellaneous</h2>
+                <table id="misc_table" data-height="460" class="table table-striped table-bordered data-table"
+                       data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                       data-show-columns="true" data-show-export="true" data-ajax="getTableData"
+                       data-show-refresh="true"
+                       data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                       data-search-on-enter-key="true">
+                    <thead>
+                    <tr>
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID
+                        </th>
+                        <th data-sortable="true" data-field="first_name" data-filter-control="input"
+                            class="text-capitalize">First Name
+                        </th>
+                        <th data-sortable="true" data-field="last_name" data-filter-control="input"
+                            class="text-capitalize">Last Name
+                        </th>
+                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        </th>
+                        <th data-sortable="true" data-field="sub_type" data-filter-control="select"
+                            class="text-capitalize">Type
+                        </th>
+                        <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
+                        <th data-sortable="true" data-field="comments" data-filter-control="input"
+                            class="text-capitalize">Comments
+                        </th>
+                        <th data-field="action" data-formatter="actionFormatter">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
         function getCookie(name) {
             let cookieValue = null;
@@ -61,15 +191,19 @@
             return cookieValue;
         }
 
+        let tables_data = {};
 
         function getTableData(params) {
+            let table_type = $(this)[0].$el.attr("id")
             $.ajax({
                 url: 'get_table/',
                 datatype: 'json',
-                data: $.param(params.data) + "&table_type=" + $(this)[0].$el.attr("id"),
+                data: $.param(params.data) + "&table_type=" + table_type,
                 type: 'GET',
                 success: function (data) {
+                    console.log(table_type)
                     console.log(data)
+                    tables_data[table_type] = data["rows"]
                     params.success({
                         "rows": data["rows"],
                         "total": data["total"]
@@ -85,17 +219,18 @@
 
         $(window).on('load', function () {
             $('.data-table').each(function () {
+                let table_type = $(this).attr("id")
                 $(this).bootstrapTable({
                     onLoadSuccess: function () {
-                        bindEditButton()
-                        bindRemoveButton()
+                        bindEditButton(table_type)
+                        bindRemoveButton(table_type)
                     },
 
                 });
             })
-        });
+        })
 
-        let d1 = $.Deferred();
+
         let editing = false;
 
         function actionFormatter(i, row) {
@@ -106,87 +241,139 @@
                     html.push('<button type="button" class="deletebtn-funds btn btn-primary btn-danger ms-2" >Delete</button>')
                 }
             })
-            d1.resolve();
             return html.join("")
         }
 
-        function bindEditButton() {
-            {#alert("Called")#}
-            if (editing) return
-            editing = true;
-            $.when(d1).done(setTimeout(function () {
-                $('.editbtn').click(function () {
-                    let $this = $(this);
-                    let tds = $this.closest('tr').find('td').filter(function () {
-                        return $(this).find('.editbtn').length === 0;
-                    });
-                    if ($this.html() === 'Edit') {
-                        $this.html('Save');
-                        $(tds[0]).css({"cursor": "not-allowed"})
-                        tds = tds.slice(1)
-                        tds.prop('contenteditable', true)
-                        tds.closest("tr").css({
-                            'border-top': '3px #6d8786 dashed',
-                            'border-bottom': '3px #6d8786 dashed',
-                            'color': '#000'
-                        });
-                        $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
-                        $this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);
-                    } else {
-                        $this.html('Edit');
-                        $(tds[0]).css({"cursor": "text"})
-                        tds.prop('contenteditable', false)
-                        tds.closest("tr").css({
-                            'border': "none",
-                            'color': '#000'
-                        });
-                        $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
-                        $this.parentsUntil("table").find('button').attr("disabled", false);
-                    }
-                });
-                editing = false;
-                d1 = $.Deferred();
-            }, 500));
+        function bindCancelButton(table_type) {
+            (".cancel").click(function () {
+                $grid.cancel($(this).attr('key'));
+            });
         }
 
-        function bindRemoveButton() {
-            $.when(d1).done(setTimeout(function () {
-                $('.deletebtn-funds').click(function () {
-                    let r = confirm("You sure you want to delete this donation? This is irreversible...");
-                    if (r !== true) return
-                    let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
-                    let row = $(this).parentsUntil("tr").parent()
-                    console.log(row_id)
-                    if (row_id == null) return;
-
-                    $.ajax
-                    ({
-                        url: 'delete_fund/',
-                        data: {"fund_id": row_id},
-                        type: 'post',
-                        headers: {
-                            "X-CSRFToken": getCookie("csrftoken")
-                        },
-                        mode: "same-origin",
-                        success: function (result) {
-                            if ("error" in result) {
-                                alert(result["error"])
-                                $("#funds_table").bootstrapTable('refresh')
-                                return
-                            }
-                            row.remove()
-                            alert("Deleted!")
-                        },
-                        error: function (textStatus, errorThrown) {
-                            alert("Error deleting: " + textStatus);
-                            {#TODO remove logs, only for debugging#}
-                            console.log("Error deleting: " + textStatus)
-                            console.log(errorThrown)
-                        }
+        function bindEditButton(table_type) {
+            if (editing) return
+            editing = true;
+            $("#" + table_type + " .editbtn").click(function () {
+                let $this = $(this);
+                let $row = $this.parents("tr")
+                let tds = $this.closest('tr').find('td').filter(function () {
+                    return $(this).find('.editbtn').length === 0;
+                });
+                if ($this.html() === 'Edit') {
+                    $this.html('Save');
+                    $(tds[0]).css({"cursor": "not-allowed"})
+                    tds = tds.slice(1)
+                    tds.prop('contenteditable', true)
+                    tds.closest("tr").css({
+                        'border-top': '3px #6d8786 dashed',
+                        'border-bottom': '3px #6d8786 dashed',
+                        'color': '#000'
                     });
-                })
-            }))
-        };
+                    $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
+                    $this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);
+                } else {
+                    $this.html('Edit');
+                    $(tds[0]).css({"cursor": "text"})
+                    tds.prop('contenteditable', false)
+                    tds.closest("tr").css({
+                        'border': "none",
+                        'color': '#000'
+                    });
+                    $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+                    $this.parentsUntil("table").find('button').attr("disabled", false);
+
+                    let table_type = $(this).parents(".table").attr('id')
+                    let row_index = $row.attr("data-index")
+                    {#console.log(old_data)#}
+                    edit_donation(row_index, table_type, $row)
+                }
+            });
+            editing = false;
+        }
+
+        function edit_donation(row_index, table_type, $row) {
+            let old_data = tables_data[table_type][row_index]
+            let keys = ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"]
+            let columns = $row.find("td").slice(1, -1)
+            let new_data = old_data
+            columns.each(function (i) {
+                new_data[keys[i]] = $(this).html()
+            })
+
+            $.ajax({
+                url: 'update_item/',
+                datatype: 'json',
+                data: {"table_type": table_type, "update_data": JSON.stringify(new_data)},
+                type: 'POST',
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                success: function (resp) {
+                    console.log(resp)
+                    console.log("SAVED")
+                    tables_data[table_type][row_index] = new_data;
+                    $(".alert").addClass("alert-success").hide().removeClass("hide").slideDown(300)
+                    $(".alert .msg").html("Record was updated successfully.")
+                    setTimeout(
+                        function () {
+                            $(".alert").slideUp(300)
+                        }, 3000);
+
+                },
+                error: function (er) {
+                    console.log(JSON.stringify(er))
+                    console.log("Error while saving:  " + er.responseJSON.error)
+                    $(".alert").addClass("alert-danger").hide().removeClass("hide").slideDown(300)
+                    $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
+                    setTimeout(
+                        function () {
+                            $(".alert").slideUp(300)
+                        }, 6000);
+
+                }
+            });
+
+
+        }
+
+
+        function bindRemoveButton(table_type) {
+            $("#" + table_type + " .deletebtn-funds").click(function () {
+                if (!confirm("You sure you want to delete this donation? This is irreversible...")) return
+                let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
+                let row = $(this).parentsUntil("tr").parent()
+                let table_type = $(this).parents(".table").attr('id')
+                console.log(row_id)
+                console.log(table_type)
+                if (row_id == null) return;
+                {#return;#}
+                $.ajax
+                ({
+                    url: 'delete_item/',
+                    data: {"item_id": row_id, "table_type": table_type},
+                    type: 'post',
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    mode: "same-origin",
+                    success: function (result) {
+                        if ("error" in result) {
+                            alert(result["error"])
+                            $("#funds_table").bootstrapTable('refresh')
+                            return
+                        }
+                        row.remove()
+                        alert("Deleted!")
+                    },
+                    error: function (textStatus, errorThrown) {
+                        alert("Error deleting: " + textStatus);
+                        {#TODO remove logs, only for debugging#}
+                        console.log("Error deleting: " + textStatus)
+                        console.log(errorThrown)
+                    }
+                });
+            })
+        }
 
 
         {#    Export #}
