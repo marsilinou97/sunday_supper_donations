@@ -133,12 +133,12 @@ def get_token_data(request):
 @login_required
 def update_token_data(request):
 
-    if request.method != "POST":
-        return HttpResponse("ERROR...")
-    
-    response = {}
-    
     try: 
+        if request.method != "POST":
+            raise Exception("Request not POST")
+        
+        response = {}
+
         update_data = json.loads(request.POST["update_data"])
         with transaction.Atomic():
             success = queries.update_user_role()[0]
