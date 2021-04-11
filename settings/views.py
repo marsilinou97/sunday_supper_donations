@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http.response import JsonResponse
 from django.db import transaction
+from django.utils.translation import activate
 
 from settings.queries import *
 import settings.queries as queries
@@ -64,28 +65,63 @@ def index(request):
         return render(request,"settings/settings.html")
     """
 
-def get_donor_data(request):
+@login_required
+def get_user_data(request):
     return JsonResponse(list(get_users_info()), safe=False)
 
+@login_required
 def get_roles(request):
     results = list(get_all_roles())
     flattend_results = list(map(lambda x: x['role'], results))
     return JsonResponse(flattend_results, safe=False)
 
+@login_required
 def update_user_role(request):
     response = {}
 
     try:
-        username = "brad"
-        role = "test_group1"
-        response.update({"user": username})
+        if request.method != "POST":
+            raise Exception("Request not POST")
+
+        id = request.POST['id']
+        role = request.POST['role']
+        response.update({"user": id})
         response.update({"role": role})
+
         with transaction.atomic():
-            queries.update_user_role(username, role)
-            response.update({"sucess": True})
-            response.update({"message": username + " enrolled in " + role})
+            queries.update_user_role(id, role)
+
+        response.update({"success": True})
+        response.update({"message": str(id) + " enrolled in " + role})
         return JsonResponse(response)
     except Exception as e:
-        response.update({"sucess": False})
+        response.update({"success": False})
+        response.update({"message": str(e)})
+        return JsonResponse(response)
+
+@login_required
+def activate_user(request):
+    response = {}
+
+    try:
+        if request.method != "POST":
+            raise Exception("Request not POST")
+
+        id = request.POST["id"]
+        active = request.POST["active"]
+
+        response.update({"id": id})
+        response.update({"active": active})
+        
+        with transaction.atomic():
+            queries.activate_user(id, active)
+
+        response.update({"success": True})
+        response.update({"message": str(id) + " | activated: " + str(active)})    
+
+        return JsonResponse(response, safe= False) 
+    
+    except Exception as e:
+        response.update({"success": False})
         response.update({"message": str(e)})
         return JsonResponse(response)

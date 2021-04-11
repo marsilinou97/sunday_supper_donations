@@ -8,7 +8,8 @@ urlpatterns = [
     path('manage_registration_links', views.manage_registration_links, name='manage_registration_links'),
     path('manage_registration_links/get_table/', views.manage_registration_links_get_table, name='manage_registration_links_get_table'),
     path('help/', views.help, name='help'),
-    path('get_donor_data/', views.get_donor_data, name='get_donor_data'),
+    path('get_user_data/', views.get_user_data, name='get_user_data'),
     path('get_roles/', views.get_roles, name='get_roles'),
-    path('update_user_role/', views.update_user_role, name='update_user_role')
+    path('update_user_role/', views.update_user_role, name='update_user_role'),
+    path('activate_user/', views.activate_user, name='activate_user')
 ]
