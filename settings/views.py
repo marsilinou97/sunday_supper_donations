@@ -5,12 +5,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http.response import JsonResponse
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.utils.translation import activate
 
 from settings.queries import *
 import settings.queries as queries
 import traceback
+import json
 
 @login_required
 def change_password(request):
@@ -120,3 +121,36 @@ def activate_user(request):
         response.update({"success": False})
         response.update({"message": str(e)})
         return JsonResponse(response)
+
+@login_required
+def get_token_data(request):
+
+    if request.method != "GET":
+        return HttpResponse("ERROR...")
+    
+    return JsonResponse(list(queries.get_token_data()), safe=False)
+
+@login_required
+def update_token_data(request):
+
+    if request.method != "POST":
+        return HttpResponse("ERROR...")
+    
+    response = {}
+    
+    try: 
+        update_data = json.loads(request.POST["update_data"])
+        with transaction.Atomic():
+            success = queries.update_user_role()[0]
+            if not success:
+                raise Exception("Token id: " + str(token_id) + " not updated")
+            
+        response.update({"success": True})
+        response.update({"message": "Token id: " + str(token_id) + " updated"})
+        return JsonResponse(response, safe= False)
+    
+    except Exception as e:
+        response.update({"success": False})
+        response.update({"message": str(e)})
+        return JsonResponse(response, safe=False)
+        

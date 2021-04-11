@@ -11,5 +11,7 @@ urlpatterns = [
     path('get_user_data/', views.get_user_data, name='get_user_data'),
     path('get_roles/', views.get_roles, name='get_roles'),
     path('update_user_role/', views.update_user_role, name='update_user_role'),
-    path('activate_user/', views.activate_user, name='activate_user')
+    path('activate_user/', views.activate_user, name='activate_user'),
+    path('get_token_data/', views.get_token_data, name='get_token_data'),
+    path('update_token_data/', views.update_token_data, name='update_token_data')
 ]
