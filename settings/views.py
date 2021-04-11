@@ -31,30 +31,25 @@ def change_password(request):
 
     return render(request, "settings/change_password.html")
 
-
 @login_required
 def manage_roles(request):
     if request.user.is_authenticated:
         return render(request, "settings/manage_roles.html")
-
 
 @login_required
 def manage_registration_links(request):
     if request.user.is_authenticated:
         return render(request, "settings/manage_registration_links.html")
 
-
 @login_required
 def manage_registration_links_get_table(request):
     if request.user.is_authenticated:
         return render(request, "settings/manage_registration_links.html")
 
-
 @login_required
 def help(request):
     if request.user.is_authenticated:
         return render(request, "settings/help.html")
-
 
 @login_required
 def index(request):
