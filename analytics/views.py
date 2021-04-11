@@ -15,6 +15,8 @@ from .forms import RawDataForm, ChartsForm
 
 from .queries import *
 from .vars import *
+from input.forms import FundsForm, ItemForm
+
 
 get_zeros_list = lambda n: [0] * n
 
@@ -153,26 +155,27 @@ def get_donation_fund_count(request):
 def update_item(request):
     if request.method == "POST":
         try:
+            # _ = 1/0
             ids = []
             update_data = json.loads(request.POST["update_data"])
             ids.append(update_data["donor_id"])
             ids.append(update_data["donation_id"])
             ids.append(update_data["item_id"])
             ids.append(update_data["item_id"])
+            # res = 1
             res = update_item_entry(ids, update_data, request.POST["table_type"])
-            print(res)
+            # print(res)
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
                 return FailedJsonResponse(res)
-
             return JsonResponse(res, safe=False)
 
         except Exception as e:
             print(traceback.format_exc())
             print(f"The error is {e}")
-            return HttpResponse("ERROR...")
+            return FailedJsonResponse({"error": "Unexpected error occurred while updating data"})
 
-    return HttpResponse("ERROR...")
+    return FailedJsonResponse({"error": "Unknown method"})
 
 
 def delete_item(request):

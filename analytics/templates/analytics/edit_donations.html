@@ -21,7 +21,8 @@
                         <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
-                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
+                            data-filter-control="input">Date Received
                         </th>
                         <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                         <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
@@ -51,7 +52,8 @@
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
-                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
+                            data-filter-control="input">Date Received
                         </th>
                         <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                         <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
@@ -85,7 +87,8 @@
                         <th data-sortable="true" data-field="last_name" data-filter-control="input"
                             class="text-capitalize">Last Name
                         </th>
-                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
+                            data-filter-control="input">Date Received
                         </th>
                         <th data-sortable="true" data-field="sub_type" data-filter-control="select"
                             class="text-capitalize">Type
@@ -120,7 +123,8 @@
                         <th data-sortable="true" data-field="last_name" data-filter-control="input"
                             class="text-capitalize">Last Name
                         </th>
-                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
+                            data-filter-control="input">Date Received
                         </th>
                         <th data-sortable="true" data-field="sub_type" data-filter-control="select"
                             class="text-capitalize">Type
@@ -155,7 +159,8 @@
                         <th data-sortable="true" data-field="last_name" data-filter-control="input"
                             class="text-capitalize">Last Name
                         </th>
-                        <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received
+                        <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
+                            data-filter-control="input">Date Received
                         </th>
                         <th data-sortable="true" data-field="sub_type" data-filter-control="select"
                             class="text-capitalize">Type
@@ -261,8 +266,15 @@
                 });
                 if ($this.html() === 'Edit') {
                     $this.html('Save');
-                    $(tds[0]).css({"cursor": "not-allowed"})
-                    tds = tds.slice(1)
+                    {# First 3 columns are uneditable #}
+                    $(tds.slice(0, 3)).css({"cursor": "not-allowed"})
+                    tds = tds.slice(3)
+
+                    {#let x = $("<select name=\"type\" class=\"form-control\" id=\"id_type\"><option value=\"\" selected=\"\">Nada</option><option value=\"Cash\">Cash</option><option value=\"Check\">Check</option><option value=\"Electronic\">Electronic</option></select>")#}
+                    {#console.log(x)#}
+                    {#console.log(tds[1])#}
+                    $(tds[0]).html($("<input type=\"date\" name=\"date_received\" class=\"form-control\" required=\"\" id=\"id_date_received\">").val($(tds[0]).html()))
+                    {#$(tds[1]).html(x)#}
                     tds.prop('contenteditable', true)
                     tds.closest("tr").css({
                         'border-top': '3px #6d8786 dashed',
@@ -281,10 +293,11 @@
                     });
                     $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
                     $this.parentsUntil("table").find('button').attr("disabled", false);
-
                     let table_type = $(this).parents(".table").attr('id')
                     let row_index = $row.attr("data-index")
-                    {#console.log(old_data)#}
+
+                    {# Set the cell to the date was selected and remove the input element #}
+                    $(tds[3]).html(dateFormat($(tds[3]).children().last().val()))
                     edit_donation(row_index, table_type, $row)
                 }
             });
@@ -295,6 +308,7 @@
             let old_data = tables_data[table_type][row_index]
             let keys = ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"]
             let columns = $row.find("td").slice(1, -1)
+
             let new_data = old_data
             columns.each(function (i) {
                 new_data[keys[i]] = $(this).html()
@@ -312,7 +326,7 @@
                     console.log(resp)
                     console.log("SAVED")
                     tables_data[table_type][row_index] = new_data;
-                    $(".alert").addClass("alert-success").hide().removeClass("hide").slideDown(300)
+                    $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
                     $(".alert .msg").html("Record was updated successfully.")
                     setTimeout(
                         function () {
@@ -323,7 +337,7 @@
                 error: function (er) {
                     console.log(JSON.stringify(er))
                     console.log("Error while saving:  " + er.responseJSON.error)
-                    $(".alert").addClass("alert-danger").hide().removeClass("hide").slideDown(300)
+                    $(".alert").addClass("alert-danger").hide().removeClass("alert-success hide").slideDown(300)
                     $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
                     setTimeout(
                         function () {
@@ -373,6 +387,10 @@
                     }
                 });
             })
+        }
+
+        function dateFormat(value, row, index) {
+            return moment(value).format('MM/DD/YYYY');
         }
 
 
