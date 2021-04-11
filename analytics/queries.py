@@ -87,17 +87,19 @@ def delete_item_entry(model: models.Model, id: int):
 
 def update_table_entry(model: models.Model, filters: dict, feilds: dict):
     # return model.objects.filter(id=id).update(**feilds)[0]
+    print(feilds)
     return model.objects.filter(**filters).update(**feilds)
 
 def update_item_entry(ids: list, data: dict, model_name: str):
     update_data = {}
-
+    print(data.keys())
     update_data.update({ids[0]: {key: data[key] for key in data.keys() & ('first_name', 'last_name')}})
     update_data.update({ids[1]: {key: data[key] for key in data.keys() & ('date_recieved', 'comments')}})
     update_data.update({ids[2]: {key: data[key] for key in data.keys() & ('quantity')}})
 
     sub_item_feilds = {}
     if (model_name == "funds_table" or "giftcards_table"):
+        update_data.update({ids[2]: {"quantity": 1}})
         sub_item_feilds.update({'amount': data['amount']})
 
     sub_item_feilds.update({QUERY_DATA[model_name]["SUBTYPE_FIELD"]: data['sub_type']})

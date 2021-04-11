@@ -1,6 +1,7 @@
 from math import ceil
 from typing import Dict
 from django.db.models.query_utils import Q
+from django.db import transaction
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
@@ -159,7 +160,10 @@ def update_item(request):
             ids.append(update_data["donation_id"])
             ids.append(update_data["item_id"])
             ids.append(update_data["item_id"])
-            res = update_item_entry(ids, update_data, request.POST["table_type"])
+            print(update_data)
+            with transaction.atomic():
+                res = update_item_entry(ids, update_data, request.POST["table_type"])
+
             print(res)
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
