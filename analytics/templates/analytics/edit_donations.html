@@ -4,7 +4,6 @@
     <div class="alert alert-success fade in text-center hide" role="alert">
         <strong class="msg"> </strong>
     </div>
-
     <h1 class="text-center">Edit Donations</h1>
     <div id="content" class="content edit_donation">
         <div id="content" class="content raw_data">
@@ -178,8 +177,12 @@
             </div>
         </div>
     </div>
-
+    <div style="display: none" id="funds_types">
+        {{ funds_form_types.type }}
+    </div>
     <script>
+        let FUNDS_TYPES = $("#funds_types").children().last()
+
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -249,11 +252,9 @@
             return html.join("")
         }
 
-        function bindCancelButton(table_type) {
-            (".cancel").click(function () {
-                $grid.cancel($(this).attr('key'));
-            });
-        }
+
+        var oldValuesBeforeEdit = []
+
 
         function bindEditButton(table_type) {
             if (editing) return
@@ -261,9 +262,10 @@
             $("#" + table_type + " .editbtn").click(function () {
                 let $this = $(this);
                 let $row = $this.parents("tr")
-                let tds = $this.closest('tr').find('td').filter(function () {
-                    return $(this).find('.editbtn').length === 0;
-                });
+                let tds = $this.closest('tr').find('td')
+                tds.last().children().last().html("Cancel")
+                tds.splice(-1, 1)
+
                 if ($this.html() === 'Edit') {
                     $this.html('Save');
                     {# First 3 columns are uneditable #}
@@ -273,8 +275,16 @@
                     {#let x = $("<select name=\"type\" class=\"form-control\" id=\"id_type\"><option value=\"\" selected=\"\">Nada</option><option value=\"Cash\">Cash</option><option value=\"Check\">Check</option><option value=\"Electronic\">Electronic</option></select>")#}
                     {#console.log(x)#}
                     {#console.log(tds[1])#}
-                    $(tds[0]).html($("<input type=\"date\" name=\"date_received\" class=\"form-control\" required=\"\" id=\"id_date_received\">").val($(tds[0]).html()))
+                    oldValuesBeforeEdit = [];
+                    tds.map(function (i, e) {
+                        oldValuesBeforeEdit.push($(e).prop('outerHTML'))
+                    })
+
+                    $(tds[0]).html($("<input type=\"date\" style='padding: 0' name=\"date_received\" class=\"form-control\" required id=\"id_date_received\">").val(moment($(tds[0]).html(), 'MM/DD/YYYY').format('yyyy-MM-DD')))
+
+                    $(tds[1]).html(FUNDS_TYPES.val($(tds[1]).html()))
                     {#$(tds[1]).html(x)#}
+                    tds = tds.slice(2)
                     tds.prop('contenteditable', true)
                     tds.closest("tr").css({
                         'border-top': '3px #6d8786 dashed',
@@ -282,29 +292,42 @@
                         'color': '#000'
                     });
                     $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
-                    $this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);
+                    {#$this.parentsUntil("table").find('button').not($($this.closest('button'))).attr("disabled", true);#}
                 } else {
-                    $this.html('Edit');
-                    $(tds[0]).css({"cursor": "text"})
-                    tds.prop('contenteditable', false)
-                    tds.closest("tr").css({
-                        'border': "none",
-                        'color': '#000'
-                    });
-                    $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
-                    $this.parentsUntil("table").find('button').attr("disabled", false);
+
                     let table_type = $(this).parents(".table").attr('id')
                     let row_index = $row.attr("data-index")
-
-                    {# Set the cell to the date was selected and remove the input element #}
-                    $(tds[3]).html(dateFormat($(tds[3]).children().last().val()))
-                    edit_donation(row_index, table_type, $row)
+                    edit_donation(row_index, table_type, $row, $this)
                 }
             });
             editing = false;
         }
 
-        function edit_donation(row_index, table_type, $row) {
+
+        function exitEditRowMode($this) {
+            let tds = $this.closest('tr').find('td')
+            let buttons = tds.last().children()
+            $(buttons[0]).html('Edit');
+            $(buttons[1]).html('Delete');
+
+            tds.splice(-1, 1)
+            $(tds.slice(0, 3)).css({"cursor": "text"})
+
+            tds.prop('contenteditable', false)
+            tds.closest("tr").css({
+                'border': "none",
+                'color': '#000'
+            });
+            $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+            {#$this.parentsUntil("table").find('button').attr("disabled", false);#}
+
+            {# Set the cell to the date was selected and remove the input element #}
+            $(tds[3]).html(dateFormat($(tds[3]).children().last().val(), 'MM/DD/YYYY'))
+            $(tds[4]).html($(tds[4]).children().last().val())
+
+        }
+
+        function edit_donation(row_index, table_type, $row, $this) {
             let old_data = tables_data[table_type][row_index]
             let keys = ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"]
             let columns = $row.find("td").slice(1, -1)
@@ -313,6 +336,10 @@
             columns.each(function (i) {
                 new_data[keys[i]] = $(this).html()
             })
+
+            new_data["date_received"] = moment(new_data["date_received"], 'MM/DD/YYYY').format('MM/DD/YYYY')
+
+            $("body").css("cursor", "wait")
 
             $.ajax({
                 url: 'update_item/',
@@ -328,6 +355,8 @@
                     tables_data[table_type][row_index] = new_data;
                     $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
                     $(".alert .msg").html("Record was updated successfully.")
+                    exitEditRowMode($this)
+                    $("body").css("cursor", "auto")
                     setTimeout(
                         function () {
                             $(".alert").slideUp(300)
@@ -339,6 +368,7 @@
                     console.log("Error while saving:  " + er.responseJSON.error)
                     $(".alert").addClass("alert-danger").hide().removeClass("alert-success hide").slideDown(300)
                     $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
+                    $("body").css("cursor", "auto")
                     setTimeout(
                         function () {
                             $(".alert").slideUp(300)
@@ -350,9 +380,22 @@
 
         }
 
-
         function bindRemoveButton(table_type) {
             $("#" + table_type + " .deletebtn-funds").click(function () {
+                let tds = $(this).closest('tr').find('td')
+                tds = tds.slice(3)
+                tds.splice(-1, 1)
+
+                if ($(this).html() === "Cancel") {
+                    tds.map(function (i, e) {
+                        $(tds[i]).html($(oldValuesBeforeEdit[i]).html())
+                     })
+                    oldValuesBeforeEdit = []
+                    exitEditRowMode($(this))
+                    return;
+                }
+
+
                 if (!confirm("You sure you want to delete this donation? This is irreversible...")) return
                 let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
                 let row = $(this).parentsUntil("tr").parent()

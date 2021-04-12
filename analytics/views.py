@@ -48,7 +48,8 @@ def raw_data(request):
 
 
 def edit_donations(request):
-    return render(request, 'analytics/edit_donations.html')
+
+    return render(request, 'analytics/edit_donations.html', {'funds_form_types': FundsForm()})
 
 
 def get_table(request):
@@ -155,16 +156,14 @@ def get_donation_fund_count(request):
 def update_item(request):
     if request.method == "POST":
         try:
-            # _ = 1/0
             ids = []
             update_data = json.loads(request.POST["update_data"])
+            print(update_data)
             ids.append(update_data["donor_id"])
             ids.append(update_data["donation_id"])
             ids.append(update_data["item_id"])
             ids.append(update_data["item_id"])
-            # res = 1
             res = update_item_entry(ids, update_data, request.POST["table_type"])
-            # print(res)
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
                 return FailedJsonResponse(res)
