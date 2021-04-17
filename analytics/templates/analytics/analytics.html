@@ -1,61 +1,55 @@
 {% extends 'users/base.html' %}
 
+
+
+
 {% block content %}
 
-<style>
+    <div class="shadow p-3 mb-5 border rounded foreground-item">
+        <form method="post" class="text-center">
+            {% csrf_token %}
 
-    #formButton {
-        font-weight: bold;
-        background: #19aa8d;
-    }
+            {{ form }}
 
-</style>
+            <button id ="analyticsButton" type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 shadow p-3 read">Filter</button>
+        </form>
+    </div>
+
+    <div class="mt-5">
+
+        <h1 class="text-center mb-5">Analytics Main Page</h1>
 
 
-    <form method="post" class="text-center">
-        {% csrf_token %}
+        <div class="shadow p-3 mb-5 bg-white rounded mt-5" style="width:100%; height:55%;">
+            <h3 class="text-center">Donation Count Bar Chart With Quantity</h3>
+            <hr>
+            <canvas id="bar-chart-1" width="350" height="100"></canvas>
 
-        {{ form }}
+        </div>
+    </div>
 
-        <button id="formButton" type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Filter</button>
-    </form>
 
-    <h1 class="text-center">Analytics Main Page</h1>
+    <div class="mt-5">
+        <div class="shadow p-3 mb-5 bg-white rounded" style="width:100%; height:25%;">
+            <h3 class="text-center mb-5">Donation Count Bar Chart</h3>
+            <hr>
+            <canvas id="bar-chart-2" width="350" height="100"></canvas>
+        </div>
+    </div>
 
-    <div class="bd-example">
-
-         <!-- Display all charts in dropdown accordion -->
-        <div class="accordion" id="accordionExample">
-            {% include "analytics/linechart.html" %}
-            {% include "analytics/piechart.html" %}
-            {% include "analytics/doughnut_chart.html" %}
+    <div class="mt-5">
+        <div class="shadow p-3 mb-5 bg-white rounded" style="width:100%; height:100%;">
+            <h3 class="text-center">Donation Count Pie Chart</h3>
+            <hr>
+            <canvas id="pie-chart" width="500" height="250"></canvas>
         </div>
 
-    </div>
-
-
-    <!-- Display all charts in single column -->
-    <h3>Number of Donations Per Month</h3>
-    <div style="width:100%; height:55%;">
-        <canvas id="bar-chart-2" width="350" height="100"></canvas>
-    </div>
-
-    <h3>Number of Donations Per Month W/ Quantity</h3>
-    <div class = "m-5"style="width:100%; height:25%;">
-        <canvas id="bar-chart-1" width="350" height="100"></canvas>
-    </div>
-
-
-    <h3>Donation Categories Pie Chart</h3>
-    <div style="width:100%; height:100%;">
-        <canvas id="pie-chart" width="500" height="500"></canvas>
     </div>
 
     <h3>Fund Categories Doughnut Chart</h3>
     <div style="width:100%; height:75%;">
         <canvas id="fund-doughnut-chart" width="300" height="150"></canvas>
     </div>
-
 
 
 

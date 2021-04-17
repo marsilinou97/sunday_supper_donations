@@ -75,6 +75,14 @@ tbody#items_body tr:hover {
     border-left: 2px pink solid;
 }
 
+.input-foreground-item{
+    background-color: #F6FFF8 !important;
+}
+
+#form-wrapper{
+    background-color: #A4C3B2 !important;
+}
+
 
 /*
 *********** INPUT PAGE END *********

@@ -1,6 +1,7 @@
 {% extends 'users/base.html' %}
 {% load static %}
 {% block content %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'input_page.css' %}">
 
     {% if messages %}
@@ -11,172 +12,215 @@
         {% endfor %}
     {% endif %}
 
-    <div class="donor-info-form">
+    <div class="donor-info-form mb-5">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
-            <h2>Input page</h2>
+            <h1 class="text-center">Input Page</h1>
             <hr>
 
             <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
             <label for="anonymous" class="anonymous">Anonymous Donor</label>
             <hr>
-            <div class="wrapperX">
 
-                <div class="wrapperY">
-                    <div class="wrapperX">
+            <!-- Begin Grid -->
+            <div class="container shadow" id="form-wrapper">
+
+                <div class="row p-3">
+
+                    <div class="col-3 m-2 foreground-item">
+
                         <div id="donation_form">
-                            <h3 class="d-flex justify-content-center">Donation Information</h3>
+                            <h3 class="d-flex justify-content-center"> Donation Information</h3>
                             <div>
-                                <div class="wrapperX">
-                                    <span>
+
+                                <span>
                                     <b>{{ donation_info_form.date_received.label }}</b>
-                                        {{ donation_info_form.date_received }}
-                                    </span>
-                                    <span>
-                                        <div><b>{{ donation_info_form.thanks_sent.label }}</b></div>
-                                        <div>{{ donation_info_form.thanks_sent }}</div>
-                                    </span>
-                                </div>
+                                       {{ donation_info_form.date_received }}
+                                </span>
+                                <span>
+                                    <div><b>{{ donation_info_form.thanks_sent.label }}</b></div>
+                                    <div>{{ donation_info_form.thanks_sent }}</div>
+                                </span>
+
                                 <span>
                                     <b>{{ donation_info_form.comment.label }}</b>
-                                    {{ donation_info_form.comment }}
+                                       {{ donation_info_form.comment }}
                                 </span>
                             </div>
                         </div>
+                    </div> <!-- End donation column -->
 
-                        <div id="funds_form">
+                    <div class="col-3 foreground-item m-2">
+                        <div id="funds_form" >
                             <h3 class="d-flex justify-content-center">Funds</h3>
-                            <div class="wrapperY">
+
+                            <span>
+                                <b>{{ funds_form.type.label }}</b>
+                                   {{ funds_form.type }}
+                            </span>
+                            <span>
+                                <b>{{ funds_form.amount.label }}</b>
+                                   {{ funds_form.amount }}
+                            </span>
+
+                        </div>
+                    </div> <!-- End funds column -->
+
+                    <div class="col m-2 foreground-item">
+
+                        <div id="items_form">
+
+                            <h3 class="d-flex justify-content-center">Items</h3>
+
+                            <div class="d-flex justify-content-end">
+
+                                <button id="remove_button" type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+
+                                <button id="add_button" type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+
+                            </div>
+
+                            <br>
+
+                            <table class="table shadow p-3 mb-5 bg-body rounded">
+                                <thead>
+                                    <tr>
+                                        <th class="col-1">#</th>
+                                        <th class="col-3">Type</th>
+                                        <th class="col-2">Qty.</th>
+                                        <th class="col-3">Sub Type</th>
+                                        <th class="col-3">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="items_body">
+                                    {{ item_formset.management_form }}
+                                    {% for item_form in item_formset %}
+                                        <tr class="shadow p-3 mb-5 bg-body rounded">
+                                            <td>{{ item_form.type }}</td>
+                                            <td>{{ item_form.quantity }}</td>
+                                            <td>{{ item_form.sub_type_business }}</td>
+                                        </tr>'
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div> <!-- end items column -->
+
+                </div> <!-- end first row -->
+
+                <div class="row p-3">
+
+                    <div class="col-6 m-2 foreground-item">
+
+                        <div id="donor_form">
+
+                            <h3 class="d-flex justify-content-center">Donor Information</h3>
+                            <label for="toggleAutocomplete">
+                                Toggle autocomplete
+                                <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
+                            </label>
+
+
+                            <div class="wrapperX">
                                 <span>
-                                    <b>{{ funds_form.type.label }}</b>
-                                    {{ funds_form.type }}
+                                    <b>{{ donor_form.first_name.label }}</b>
+                                    <div id='donor_form_first_name'>
+                                        {{ donor_form.first_name }}
+                                    </div>
                                 </span>
+
                                 <span>
-                                    <b>{{ funds_form.amount.label }}</b>
-                                    {{ funds_form.amount }}
+                                    <b>{{ donor_form.last_name.label }}</b>
+                                       {{ donor_form.last_name }}
                                 </span>
                             </div>
-                        </div>
-                    </div>
-                    <div id="donor_form">
-                        <h3 class="d-flex justify-content-center">Donor Information</h3>
-                        <label for="toggleAutocomplete">
-                            Toggle autocomplete
-                            <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
-                        </label>
 
-                        <div class="wrapperX">
-                            <span>
-                                <b>{{ donor_form.first_name.label }}</b>
-                                <div id='donor_form_first_name'>
-                                    {{ donor_form.first_name }}
-                                </div>
-                            </span>
-                            <span>
-                                <b>{{ donor_form.last_name.label }}</b>
-                                {{ donor_form.last_name }}
-                            </span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
-                            <span>
-                                <b>{{ donor_form.email.label }}</b>
-                                {{ donor_form.email }}
-                            </span>
-                            <span>
-                                <b>{{ donor_form.phone_number.label }}</b>
-                                {{ donor_form.phone_number }}
-                            </span>
-                        </div>
-                        <div class="wrapperX">
-                            <span>
-                                <b>{{ donor_form.address1.label }}</b>
-                                {{ donor_form.address1 }}
-                            </span>
-                            <span>
-                                <b>{{ donor_form.address2.label }}</b>
-                                {{ donor_form.address2 }}
-                            </span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
-                            <span>
-                                <b>{{ donor_form.city.label }}</b>
-                                {{ donor_form.city }}
-                            </span>
-                            <span>
-                                <b>{{ donor_form.state.label }}</b>
-                                <select name="state" id="id_state" class="form-control">
+                            <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
+                                <span>
+                                    <b>{{ donor_form.email.label }}</b>
+                                       {{ donor_form.email }}
+                                </span>
+                                <span>
+                                    <b>{{ donor_form.phone_number.label }}</b>
+                                       {{ donor_form.phone_number }}
+                                </span>
+                            </div>
+
+                            <div class="wrapperX">
+                                <span>
+                                    <b>{{ donor_form.address1.label }}</b>
+                                       {{ donor_form.address1 }}
+                                </span>
+                                <span>
+                                    <b>{{ donor_form.address2.label }}</b>
+                                       {{ donor_form.address2 }}
+                                </span>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
+                                <span>
+                                    <b>{{ donor_form.city.label }}</b>
+                                       {{ donor_form.city }}
+                                </span>
+
+                                <span>
+                                    <b>{{ donor_form.state.label }}</b>
+                                    <select name="state" id="id_state" class="form-control">
                                     <option value="" disabled selected>State</option>
-                                    {% for state,abr in states.items %}
-                                        <option value="{{ abr }}">{{ state.title }}</option>
-                                    {% endfor %}
-                                </select>
-{#                                {{ donor_form.state }}#}
-                            </span>
-                            <span>
-                                <b>{{ donor_form.zip.label }}</b>
-                                {{ donor_form.zip }}
-                            </span>
+                                        {% for state,abr in states.items %}
+                                    <option value="{{ abr }}">{{ state.title }}</option>
+                                        {% endfor %}
+                                        </select>
+        {#                                {{ donor_form.state }}#}
+                                </span>
+                                <span>
+                                    <b>{{ donor_form.zip.label }}</b>
+                                       {{ donor_form.zip }}
+                                </span>
+
+                            </div>
+
                         </div>
-                    </div>
-                </div>
+                    </div> <!-- end donor info column -->
 
-                <div style="display: grid; grid-template-rows: 4fr 1fr; grid-gap: 1em;">
-                    <div id="items_form">
+                    <div class="col m-2 foreground-item">
+                        <div class="row">
 
-                        <h3 class="d-flex justify-content-center">Items</h3>
-                        <div class="d-flex justify-content-end">
-                            <button id="remove_button" type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
-                            <button id="add_button" type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                        <br>
+                            <div class="col-6">
+                                <div>
+                                    <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 btn-danger border border-dark shadow" id="clear_fields">
+                                        Clear
+                                    </button>
+                                    <div id="clear" class=""></div>
+                                </div>
+                            </div>
 
-                        <table class="table shadow p-3 mb-5 bg-body rounded">
-                            <thead>
-                            <tr>
-                                <th class="col-1">#</th>
-                                <th class="col-3">Type</th>
-                                <th class="col-2">Qty.</th>
-                                <th class="col-3">Sub Type</th>
-                                <th class="col-3">Amount</th>
-                            </tr>
-                            </thead>
-                            <tbody id="items_body">
-                            {{ item_formset.management_form }}
-                            {% for item_form in item_formset %}
-                                <tr class="shadow p-3 mb-5 bg-body rounded">
-                                    <td>{{ item_form.type }}</td>
-                                    <td>{{ item_form.quantity }}</td>
-                                    <td>{{ item_form.sub_type_business }}</td>
-                                </tr>'
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                            <div class="col">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 shadow read">Enter</button>
+                                </div>
+                            </div>
 
-                    <div class="wrapperX">
-                        <div>
-                            <button id="clearButton" class="btn btn-primary btn-lg center-block mt-3 w-22"
-                                    id="clear_fields">
-                                Clear
-                            </button>
-                            <div id="clear" class=""></div>
-                        </div>
-                        <div>
-                            <button id="enterButton" type="submit"
-                                    class="btn btn-primary btn-lg center-block mt-3 w-22">Enter
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                        </div> <!-- end nested row -->
+                    </div> <!-- end buttons column -->
 
-            </div>
+                </div> <!-- end second row -->
 
+            </div> <!-- end grid -->
         </form>
     </div>
+
+
+
+<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
