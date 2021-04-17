@@ -17,7 +17,9 @@
                        data-search-on-enter-key="true">
                     <thead>
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
+                            id
+                        </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                         <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
@@ -46,7 +48,7 @@
                        data-search-on-enter-key="true">
                     <thead>
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             id
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
@@ -77,7 +79,7 @@
                        data-search-on-enter-key="true">
                     <thead>
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
@@ -113,7 +115,7 @@
                        data-search-on-enter-key="true">
                     <thead>
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
@@ -150,7 +152,8 @@
                        data-search-on-enter-key="true">
                     <thead>
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
+                            ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
                             class="text-capitalize">First Name
@@ -176,6 +179,9 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div>
+    {{ item_form }}
     </div>
     <div style="display: none" id="funds_types">
         {{ funds_form_types.type }}
@@ -253,7 +259,7 @@
         }
 
 
-        var oldValuesBeforeEdit = []
+        let oldValuesBeforeEdit = []
 
 
         function bindEditButton(table_type) {
@@ -269,23 +275,23 @@
                 if ($this.html() === 'Edit') {
                     $this.html('Save');
                     {# First 3 columns are uneditable #}
-                    $(tds.slice(0, 3)).css({"cursor": "not-allowed"})
-                    tds = tds.slice(3)
+                    $(tds.slice(0, 2)).css({"cursor": "not-allowed"})
+                    tds = tds.slice(2)
 
-                    {#let x = $("<select name=\"type\" class=\"form-control\" id=\"id_type\"><option value=\"\" selected=\"\">Nada</option><option value=\"Cash\">Cash</option><option value=\"Check\">Check</option><option value=\"Electronic\">Electronic</option></select>")#}
-                    {#console.log(x)#}
-                    {#console.log(tds[1])#}
+
                     oldValuesBeforeEdit = [];
+                    {# We're handling td's instead of the whole tr since the buttons are already binded to the actions#}
                     tds.map(function (i, e) {
                         oldValuesBeforeEdit.push($(e).prop('outerHTML'))
                     })
 
                     $(tds[0]).html($("<input type=\"date\" style='padding: 0' name=\"date_received\" class=\"form-control\" required id=\"id_date_received\">").val(moment($(tds[0]).html(), 'MM/DD/YYYY').format('yyyy-MM-DD')))
-
                     $(tds[1]).html(FUNDS_TYPES.val($(tds[1]).html()))
-                    {#$(tds[1]).html(x)#}
-                    tds = tds.slice(2)
-                    tds.prop('contenteditable', true)
+                    $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
+                    $(tds[3]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                    $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+
+                    {#tds.prop('contenteditable', true)#}
                     tds.closest("tr").css({
                         'border-top': '3px #6d8786 dashed',
                         'border-bottom': '3px #6d8786 dashed',
@@ -311,9 +317,9 @@
             $(buttons[1]).html('Delete');
 
             tds.splice(-1, 1)
-            $(tds.slice(0, 3)).css({"cursor": "text"})
+            $(tds.slice(0, 2)).css({"cursor": "auto"})
 
-            tds.prop('contenteditable', false)
+            {#tds.prop('contenteditable', false)#}
             tds.closest("tr").css({
                 'border': "none",
                 'color': '#000'
@@ -322,22 +328,29 @@
             {#$this.parentsUntil("table").find('button').attr("disabled", false);#}
 
             {# Set the cell to the date was selected and remove the input element #}
-            $(tds[3]).html(dateFormat($(tds[3]).children().last().val(), 'MM/DD/YYYY'))
-            $(tds[4]).html($(tds[4]).children().last().val())
+            $(tds[2]).html(dateFormat($(tds[2]).children().last().val(), 'MM/DD/YYYY'))
+            {#$(tds[3]).html($(tds[3]).children().last().val())#}
 
         }
 
         function edit_donation(row_index, table_type, $row, $this) {
             let old_data = tables_data[table_type][row_index]
             let keys = ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"]
-            let columns = $row.find("td").slice(1, -1)
+            {# Remove the actions column #}
+            let columns = $row.find("td").slice(0, -1)
+            console.log(columns)
+            console.log(old_data)
 
             let new_data = old_data
             columns.each(function (i) {
-                new_data[keys[i]] = $(this).html()
+                console.log($(this).children().last().val())
+                let cellChild = $(this).children()
+                if (cellChild.length > 0)
+                    new_data[keys[i]] = $(this).children().last().val()
+                else
+                    new_data[keys[i]] = $(this).html()
             })
-
-            new_data["date_received"] = moment(new_data["date_received"], 'MM/DD/YYYY').format('MM/DD/YYYY')
+            {#new_data["date_received"] = moment(new_data["date_received"], 'YYYY/DD/MM').format('MM/DD/YYYY')#}
 
             $("body").css("cursor", "wait")
 
@@ -383,13 +396,14 @@
         function bindRemoveButton(table_type) {
             $("#" + table_type + " .deletebtn-funds").click(function () {
                 let tds = $(this).closest('tr').find('td')
-                tds = tds.slice(3)
-                tds.splice(-1, 1)
+                tds = tds.slice(2)
+                {#tds.splice(-1, 1)#}
 
                 if ($(this).html() === "Cancel") {
+                    $("body").css("cursor", "auto")
                     tds.map(function (i, e) {
                         $(tds[i]).html($(oldValuesBeforeEdit[i]).html())
-                     })
+                    })
                     oldValuesBeforeEdit = []
                     exitEditRowMode($(this))
                     return;

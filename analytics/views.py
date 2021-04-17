@@ -1,22 +1,15 @@
-from math import ceil
-from typing import Dict
-from django.db.models.query_utils import Q
-
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect
-from django.shortcuts import render
-from django.db.models import Sum
-from django.db.models.functions import Extract
-import datetime
 import json
 import traceback
-from helpers import FailedJsonResponse
-from .forms import RawDataForm, ChartsForm
 
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+
+from helpers import FailedJsonResponse
+from helpers import remove_html_tags
+from input.forms import FundsForm, ItemForm
+from .forms import RawDataForm, ChartsForm
 from .queries import *
 from .vars import *
-from input.forms import FundsForm, ItemForm
-
 
 get_zeros_list = lambda n: [0] * n
 
@@ -48,8 +41,12 @@ def raw_data(request):
 
 
 def edit_donations(request):
-
-    return render(request, 'analytics/edit_donations.html', {'funds_form_types': FundsForm()})
+    # forms = {
+    #     'donor_form': DonorInformationForm(),
+    #     'donation_info_form': DonationForm(),
+    #     'funds_form': FundsForm(),
+    # }
+    return render(request, 'analytics/edit_donations.html', {'funds_form_types': FundsForm(), 'item_form': ItemForm()})
 
 
 def get_table(request):
@@ -83,11 +80,11 @@ def get_table(request):
 
 
 def get_donation_count_date_qty(request):
-    if (request.method == "GET"):
+    if request.method == "GET":
 
         json_response = {}
         for key in QUERY_DATA.keys():
-            qty_count_by_month = [0 for i in range(12)]
+            qty_count_by_month = [0 for _ in range(12)]
 
             list_of_data = list(get_quantity_group_by_date(QUERY_DATA[key]["MODEL"], "month"))
 
@@ -102,11 +99,11 @@ def get_donation_count_date_qty(request):
 
 
 def get_donation_count_month(request):
-    if (request.method == "GET"):
+    if request.method == "GET":
 
         json_response = {}
         for key in QUERY_DATA.keys():
-            qty_count_by_month = [0 for i in range(12)]
+            qty_count_by_month = [0 for _ in range(12)]
 
             list_of_data = list(get_donation_count_by_date(QUERY_DATA[key]["MODEL"], "month"))
 
@@ -121,7 +118,7 @@ def get_donation_count_month(request):
 
 
 def get_donation_item_count(request):
-    if (request.method == "GET"):
+    if request.method == "GET":
 
         json_response = {}
         for key in QUERY_DATA.keys():
@@ -135,7 +132,7 @@ def get_donation_item_count(request):
 
 
 def get_donation_fund_count(request):
-    if (request.method == "GET"):
+    if request.method == "GET":
 
         fund_types = list(FundType.objects.all())
         json_response = {}
@@ -151,13 +148,18 @@ def get_donation_fund_count(request):
         return JsonResponse(results, safe=False)
 
 
-
 # @login_required
 def update_item(request):
     if request.method == "POST":
         try:
             ids = []
             update_data = json.loads(request.POST["update_data"])
+
+            # Sanitize data
+            for k, v in update_data.items():
+                if type(v) not in (int, float, bool):
+                    update_data[k] = remove_html_tags(v)
+
             print(update_data)
             ids.append(update_data["donor_id"])
             ids.append(update_data["donation_id"])
@@ -178,12 +180,13 @@ def update_item(request):
 
 
 def delete_item(request):
-    if (request.method == "POST"):
+    # TODO sanitize data
+    if request.method == "POST":
         try:
-            id = request.POST["item_id"]
+            item_id = request.POST["item_id"]
             model = QUERY_DATA[request.POST["table_type"]]["MODEL"]
-            res = delete_item_entry(model, id)
-            print(f"{id=}")
+            res = delete_item_entry(model, item_id)
+            print(f"{item_id=}")
 
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + "entry, please try again."}

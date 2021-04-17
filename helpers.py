@@ -3,8 +3,8 @@ from django.http import JsonResponse
 
 
 def __remove_html_tags(data, strip=True, tags=[], attributes={}, protocols=[]):
-    bleach.clean(data, strip=strip, tags=tags, attributes=attributes, protocols=protocols)
-    data.replace("{", "").replace("}", "").replace("%", "")
+    data = bleach.clean(data, strip=strip, tags=tags, attributes=attributes, protocols=protocols)
+    data = data.replace("{", "").replace("}", "").replace("%", "")
     return data
 
 
@@ -24,9 +24,8 @@ def remove_html_tags(data, strip=True, tags=[], attributes={}, protocols=[]):
     # Allow more types (any str like type) if needed
     elif type(data) == str:
         data = __remove_html_tags(data)
-
     else:
-        raise TypeError(f"Expected dict or str type, got {type(data)} instead")
+        raise TypeError(f"{type(data)} is an invalid datatype")
 
     return data
 

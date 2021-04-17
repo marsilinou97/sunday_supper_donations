@@ -137,8 +137,10 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top {
     padding: 12px;
 }
 
-main.container {
+div.container {
     margin-top: 100px;
+    max-width: unset;
+    width: 70%;
 }
 
 .navbar-dark .navbar-brand {
@@ -201,4 +203,12 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
 
 .ui-autocomplete-loading {
     background: white url("ui-anim_basic_16x16.gif") right center no-repeat;
+}
+
+.edit_donation table {
+    table-layout: fixed
+}
+
+.edit_donation table thead {
+    display: table;
 }
