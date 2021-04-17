@@ -211,21 +211,23 @@ button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
 
 .edit_donation table thead {
     display: table;
+}
+
 /* Universal styling */
-body{
+body {
     background-color: #CCE3DE;
 }
 
-.btn-primary.read{
+.btn-primary.read {
     border: 1px solid #000000;
     background-color: #19AA8D !important;
     font-weight: bold;
 }
 
-.foreground-item{
+.foreground-item {
     background-color: #EAF4F4 !important;
 }
 
-.background-wrapper{
+.background-wrapper {
     background-color: #A4C3B2 !important;
 }
