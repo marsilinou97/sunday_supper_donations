@@ -39,8 +39,8 @@ INSTALLED_APPS = [
 
     'users',
     'input',
-    'analytics'
-
+    'analytics',
+    'settings'
 ]
 
 MIDDLEWARE = [

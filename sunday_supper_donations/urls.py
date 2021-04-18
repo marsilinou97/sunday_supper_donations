@@ -21,6 +21,7 @@ from django.conf import settings
 from django.urls import include, path
 
 from input import views as input_views
+from settings import views as settings_views
 from users import views as users_views
 from users.forms import UserLoginForm
 import debug_toolbar
@@ -39,4 +40,5 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('maketoken/', users_views.registration_token, name='maketoken'),
     path('__debug__/', include(debug_toolbar.urls)),
+    path('settings/',include('settings.urls')),
 ]
