@@ -25,7 +25,7 @@
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.3.1/jquery.maskedinput.min.js"></script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     {#JQuery #}
@@ -103,19 +103,24 @@
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownSettings" role="button" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                        <li><a class="dropdown-item" href="{% url 'change_password' %}">Change password or email address</a></li>
-                        {% if user.is_staff %}
-                            <li><a class="dropdown-item" href="{% url 'maketoken' %}">Create registration link</a></li>
-                            <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage registration links</a></li>
-                            <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage user roles</a></li>
-                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django admin page (advanced)</a></li>
-                        {% endif %}
-                        <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
-                    </ul>
-                </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownSettings" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
+                            <li><a class="dropdown-item" href="{% url 'change_password' %}">Change password or email
+                                address</a></li>
+                            {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'maketoken' %}">Create registration link</a>
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage
+                                    registration links</a></li>
+                                <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage user roles</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django admin page
+                                    (advanced)</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
+                        </ul>
+                    </li>
                     <!-- Mostly for debugging, but might be nice to keep anyway! -->
                     <li class="nav-item disabled">
                         <a class="navbar-text"> ( Logged in as {{ user.username }} ) </a>
