@@ -17,7 +17,9 @@ def remove_html_tags(data, strip=True, tags=[], attributes={}, protocols=[]):
     :param protocols: allowed protocols
     :return: cleaned data
     """
-    if type(data) == dict:
+    if data is None:
+        return data
+    elif type(data) == dict:
         for k, v in data.items():
             if type(v) == str:
                 data[k] = __remove_html_tags(v, strip=strip, tags=tags, attributes=attributes, protocols=protocols)
@@ -26,7 +28,6 @@ def remove_html_tags(data, strip=True, tags=[], attributes={}, protocols=[]):
         data = __remove_html_tags(data)
     else:
         raise TypeError(f"{type(data)} is an invalid datatype")
-
     return data
 
 

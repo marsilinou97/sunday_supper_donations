@@ -334,9 +334,17 @@
 
         }
 
+        const tables_keys = {
+            "funds_table": ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"],
+            "giftcards_table": ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"],
+            "foods_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
+            "clothing_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
+            "misc_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
+        };
+
         function edit_donation(row_index, table_type, $row, $this) {
             let old_data = tables_data[table_type][row_index]
-            let keys = ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"]
+            let keys = tables_keys[table_type]
             {# Remove the actions column #}
             let columns = $row.find("td").slice(0, -1)
             console.log(columns)
@@ -351,7 +359,6 @@
                 else
                     new_data[keys[i]] = $(this).html()
             })
-            {#new_data["date_received"] = moment(new_data["date_received"], 'YYYY/DD/MM').format('MM/DD/YYYY')#}
 
             $("body").css("cursor", "wait")
 

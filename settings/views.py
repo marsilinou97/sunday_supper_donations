@@ -143,7 +143,7 @@ def update_token_data(request):
         token_id = update_data["token_id"]
         fields = update_data["feilds"]
 
-        with transaction.Atomic():
+        with transaction.atomic():
             success = queries.update_token_data(token_id, fields)[0]
             if not success:
                 raise Exception("Token id: " + str(token_id) + " not updated")

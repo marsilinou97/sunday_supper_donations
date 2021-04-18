@@ -1,6 +1,7 @@
 import json
 import traceback
 
+from django.db import transaction
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
@@ -149,12 +150,13 @@ def get_donation_fund_count(request):
 
 
 # @login_required
+@transaction.atomic
 def update_item(request):
     if request.method == "POST":
         try:
             ids = []
             update_data = json.loads(request.POST["update_data"])
-
+            # print(update_data)
             # Sanitize data
             for k, v in update_data.items():
                 if type(v) not in (int, float, bool):
@@ -165,10 +167,14 @@ def update_item(request):
             ids.append(update_data["donation_id"])
             ids.append(update_data["item_id"])
             ids.append(update_data["item_id"])
-            res = update_item_entry(ids, update_data, request.POST["table_type"])
-            if not res:
-                res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
-                return FailedJsonResponse(res)
+            with transaction.atomic():
+                print(update_data["date_received"])
+                res = update_item_entry(ids, update_data, request.POST["table_type"])
+                if not res:
+                    res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
+                    raise Exception("Some exception :(")
+                    # return FailedJsonResponse(res)
+
             return JsonResponse(res, safe=False)
 
         except Exception as e:
