@@ -5,7 +5,7 @@
 {% block content %}
 
 
-     <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
 
     <div class="shadow p-3 mb-5 rounded border foreground-item">
         <form method="post" class="text-center">
@@ -13,10 +13,10 @@
             {{ form }}
             <div class="row">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 shadow p-3 read">Filter</button>
+                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Filter</button>
                 </div>
                 <div class="col">
-                    <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 shadow p-3 read">Export</button>
+                    <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export</button>
                 </div>
 
             </div>
@@ -77,7 +77,7 @@
                    data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
                    data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                    data-search-on-enter-key="true">
-                <thead id="fund_header">
+                <thead class="fund_header">
                 <tr>
                     <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
@@ -102,7 +102,7 @@
                    data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
                    data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                    data-search-on-enter-key="true">
-                <thead id="giftcard_header">
+                <thead class="giftcard_header">
                 <tr>
                     <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">id</th>
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
@@ -127,7 +127,7 @@
                    data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
                    data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                    data-search-on-enter-key="true">
-                <thead id="food_header">
+                <thead class="food_header">
                 <tr>
                     <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID</th>
                     <th data-sortable="true" data-field="first_name" data-filter-control="input" class="text-capitalize">First Name</th>
@@ -151,7 +151,7 @@
                    data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
                    data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                    data-search-on-enter-key="true">
-                <thead id="clothing_header">
+                <thead class="clothing_header">
                 <tr>
                     <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID</th>
                     <th data-sortable="true" data-field="first_name" data-filter-control="input" class="text-capitalize">First Name</th>
@@ -175,7 +175,7 @@
                    data-show-columns="true" data-show-export="true" data-ajax="getTableData" data-show-refresh="true"
                    data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                    data-search-on-enter-key="true">
-                <thead id="misc_header">
+                <thead class="misc_header">
                 <tr>
                     <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID
                     </th>

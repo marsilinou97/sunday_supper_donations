@@ -12,6 +12,7 @@
         {% endfor %}
     {% endif %}
 
+
     <div class="donor-info-form mb-5">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
@@ -180,7 +181,7 @@
                                         </select>
         {#                                {{ donor_form.state }}#}
                                 </span>
-                                <span>
+                                <span class="mb-4">
                                     <b>{{ donor_form.zip.label }}</b>
                                        {{ donor_form.zip }}
                                 </span>
