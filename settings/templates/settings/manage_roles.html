@@ -16,7 +16,7 @@
                                 <th data-sortable="true" data-field="id" data-filter-control="input">ID</th>
                                 <th data-sortable="true" data-field="username" data-filter-control="input">Username</th>
                                 <th data-sortable="true" data-field="email" data-filter-control="input">Email</th>
-                                <th data-sortable="true" data-field="active" data-filter-control="select">Active</th>
+                                <th data-sortable="true" data-field="is_active" data-filter-control="select">Active</th>
                                 <th data-sortable="true" data-field="role" data-filter-control="select">Role</th>
                                 <th data-field="action" data-formatter="actionFormatter">Action</th>
                             </tr>
@@ -170,7 +170,7 @@
             }
 
             const tables_keys = {
-              "users_table": ["id", "username", "email", "active", "role"]
+              "users_table": ["id", "username", "email", "is_active", "role"]
             };
 
             function update_user_data(row_index, table_type, $row, $this){
@@ -229,7 +229,7 @@
                 $.ajax({
                     url: 'activate_user/',
                     datatype: 'json',
-                    data: {"table_type": table_type, "id": new_data["id"], "active": new_data["active"]},
+                    data: {"table_type": table_type, "id": new_data["id"], "active": new_data["is_active"]},
                     type: 'POST',
                     headers: {
                         "X-CSRFToken": getCookie("csrftoken")
