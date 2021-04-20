@@ -1,7 +1,10 @@
 {% extends 'users/base.html' %}
+
 {% load static %}
 
 {% block content %}
+
+
     <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
 
     <div class="shadow p-3 mb-5 rounded border foreground-item">
@@ -10,12 +13,10 @@
             {{ form }}
             <div class="row">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Filter
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Filter</button>
                 </div>
                 <div class="col">
-                    <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export
-                    </button>
+                    <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export</button>
                 </div>
 
             </div>
@@ -81,15 +82,11 @@
                     <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                     <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
-                    <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
-                        data-filter-control="input">Date Received
-                    </th>
+                    <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                     <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">
-                        Comments
-                    </th>
+                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">Comments</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -107,19 +104,14 @@
                    data-search-on-enter-key="true">
                 <thead class="giftcard_header">
                 <tr>
-                    <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">id
-                    </th>
+                    <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">id</th>
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                     <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
-                    <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
-                        data-filter-control="input">Date Received
-                    </th>
+                    <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                     <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">
-                        Comments
-                    </th>
+                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">Comments</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -137,24 +129,13 @@
                    data-search-on-enter-key="true">
                 <thead class="food_header">
                 <tr>
-                    <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID
-                    </th>
-                    <th data-sortable="true" data-field="first_name" data-filter-control="input"
-                        class="text-capitalize">First Name
-                    </th>
-                    <th data-sortable="true" data-field="last_name" data-filter-control="input" class="text-capitalize">
-                        Last Name
-                    </th>
-                    <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
-                        data-filter-control="input">Date Received
-                    </th>
-                    <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
-                        Type
-                    </th>
+                    <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID</th>
+                    <th data-sortable="true" data-field="first_name" data-filter-control="input" class="text-capitalize">First Name</th>
+                    <th data-sortable="true" data-field="last_name" data-filter-control="input" class="text-capitalize">Last Name</th>
+                    <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">Type</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">
-                        Comments
-                    </th>
+                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">Comments</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -172,24 +153,13 @@
                    data-search-on-enter-key="true">
                 <thead class="clothing_header">
                 <tr>
-                    <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID
-                    </th>
-                    <th data-sortable="true" data-field="first_name" data-filter-control="input"
-                        class="text-capitalize">First Name
-                    </th>
-                    <th data-sortable="true" data-field="last_name" data-filter-control="input" class="text-capitalize">
-                        Last Name
-                    </th>
-                    <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
-                        data-filter-control="input">Date Received
-                    </th>
-                    <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
-                        Type
-                    </th>
+                    <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID</th>
+                    <th data-sortable="true" data-field="first_name" data-filter-control="input" class="text-capitalize">First Name</th>
+                    <th data-sortable="true" data-field="last_name" data-filter-control="input" class="text-capitalize">Last Name</th>
+                    <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">Type</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">
-                        Comments
-                    </th>
+                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">Comments</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -209,22 +179,12 @@
                 <tr>
                     <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true">ID
                     </th>
-                    <th data-sortable="true" data-field="first_name" data-filter-control="input"
-                        class="text-capitalize">First Name
-                    </th>
-                    <th data-sortable="true" data-field="last_name" data-filter-control="input" class="text-capitalize">
-                        Last Name
-                    </th>
-                    <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
-                        data-filter-control="input">Date Received
-                    </th>
-                    <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
-                        Type
-                    </th>
+                    <th data-sortable="true" data-field="first_name" data-filter-control="input" class="text-capitalize">First Name</th>
+                    <th data-sortable="true" data-field="last_name" data-filter-control="input" class="text-capitalize">Last Name</th>
+                    <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">Type</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
-                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">
-                        Comments
-                    </th>
+                    <th data-sortable="true" data-field="comments" data-filter-control="input" class="text-capitalize">Comments</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -409,9 +369,7 @@
             })
         }
 
-        function dateFormat(value, row, index) {
-            return moment(value).format('MM/DD/YYYY');
-        }
+
     </script>
 
 
