@@ -236,7 +236,11 @@ body {
     background-color: #A4C3B2 !important;
 }
 
-/*TODO fix*/
+hr {
+    background-color: #000000 !important;
+}
+
+/* TODO fix/remove */
 main.container {
     margin-top: 100px;
 }

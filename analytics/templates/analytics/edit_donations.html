@@ -1,21 +1,32 @@
 {% extends 'users/base.html' %}
 
+{% load static %}
+
 {% block content %}
+
+    <!-- Includes styling for tables -->
+    <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
+
+
     <div class="alert alert-success fade in text-center hide" role="alert">
         <strong class="msg"> </strong>
     </div>
     <h1 class="text-center">Edit Donations</h1>
+    <hr>
+
     <div id="content" class="content edit_donation">
         <div id="content" class="content raw_data">
-            <div class="donation_table">
+
+            <div class="donation_table p-3 m-5">
                 <h2 class="text-center">Funds</h2>
+                <hr>
                 <table id="funds_table" data-height="460" class="table table-striped table-bordered data-table"
                        data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
                        data-show-columns="true" data-show-export="true" data-ajax="getTableData"
                        data-show-refresh="true" data-escape="true"
                        data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                        data-search-on-enter-key="true">
-                    <thead>
+                    <thead class="fund_header">
                     <tr>
                         <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             id
@@ -38,15 +49,16 @@
                 </table>
             </div>
 
-            <div class="donation_table">
+            <div class="donation_table p-3 m-5">
                 <h2 class="text-center">Gift Card</h2>
+                <hr>
                 <table id="giftcards_table" data-height="460" class="table table-striped table-bordered data-table"
                        data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
                        data-show-columns="true" data-show-export="true" data-ajax="getTableData"
                        data-show-refresh="true" data-escape="true"
                        data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                        data-search-on-enter-key="true">
-                    <thead>
+                    <thead class="giftcard_header">
                     <tr>
                         <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             id
@@ -68,16 +80,17 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <div class="donation_table">
 
+            <div class="donation_table p-3 m-5">
                 <h2 class="text-center">Food</h2>
+                <hr>
                 <table id="foods_table" data-height="460" class="table table-striped table-bordered data-table"
                        data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
                        data-show-columns="true" data-show-export="true" data-ajax="getTableData"
                        data-show-refresh="true" data-escape="true"
                        data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                        data-search-on-enter-key="true">
-                    <thead>
+                    <thead class="food_header">
                     <tr>
                         <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             ID
@@ -105,15 +118,16 @@
                 </table>
             </div>
 
-            <div class="donation_table">
+            <div class="donation_table p-3 m-5">
                 <h2 class="text-center">Clothing</h2>
+                <hr>
                 <table id="clothing_table" data-height="460" class="table table-striped table-bordered data-table"
                        data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
                        data-show-columns="true" data-show-export="true" data-ajax="getTableData"
                        data-show-refresh="true" data-escape="true"
                        data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                        data-search-on-enter-key="true">
-                    <thead>
+                    <thead class="clothing_header">
                     <tr>
                         <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             ID
@@ -141,16 +155,17 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <div class="donation_table">
+            <div class="donation_table p-3 m-5">
 
                 <h2 class="text-center">Miscellaneous</h2>
+                <hr>
                 <table id="misc_table" data-height="460" class="table table-striped table-bordered data-table"
                        data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
                        data-show-columns="true" data-show-export="true" data-ajax="getTableData"
                        data-show-refresh="true" data-escape="true"
                        data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
                        data-search-on-enter-key="true">
-                    <thead>
+                    <thead class="misc_header">
                     <tr>
                         <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
                             ID

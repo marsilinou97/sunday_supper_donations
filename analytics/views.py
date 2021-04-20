@@ -132,6 +132,7 @@ def get_donation_item_count(request):
         return JsonResponse(json_response, safe=False)
 
 
+# Removed
 def get_donation_fund_count(request):
     if request.method == "GET":
 
