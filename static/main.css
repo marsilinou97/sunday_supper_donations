@@ -1,3 +1,11 @@
+* {
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
 .form-control, .form-control:focus, .input-group-addon {
     border-color: #e1e1e1;
 }

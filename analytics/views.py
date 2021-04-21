@@ -58,6 +58,10 @@ def get_table(request):
             offset = int(request.GET["offset"])
             limit = int(request.GET["limit"])
 
+            search_keyword = request.GET["search"]
+            order_direction = request.GET["order"]  # asc, desc
+            order_by = request.GET["sort"]  # column name
+
             query_info = QUERY_DATA[model]
             rows_count = query_info["MODEL"].objects.count()
 
@@ -157,7 +161,6 @@ def update_item(request):
         try:
             ids = []
             update_data = json.loads(request.POST["update_data"])
-            # print(update_data)
             # Sanitize data
             for k, v in update_data.items():
                 if type(v) not in (int, float, bool):
