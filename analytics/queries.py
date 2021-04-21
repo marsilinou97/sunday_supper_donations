@@ -8,7 +8,8 @@ from django.db.models import F
 from analytics.vars import *
 
 
-def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int):
+def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int,
+                             order_by_column: str = "", search_keyword: str = ""):
     try:
         select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
         for key in item_specific_fields.keys():
@@ -23,7 +24,12 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
             **select_fields
         ).values(
             *fields_keys
-        )[offset:offset + limit]
+        )
+
+        if order_by_column:
+            query = query.order_by(order_by_column)
+
+        query = query[offset:offset + limit]
     except Exception as e:
         query = None
         print(e)

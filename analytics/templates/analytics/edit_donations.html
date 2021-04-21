@@ -345,8 +345,11 @@
 
             {# Set the cell to the date was selected and remove the input element #}
             $(tds[2]).html(dateFormat($(tds[2]).children().last().val(), 'MM/DD/YYYY'))
-            {#$(tds[3]).html($(tds[3]).children().last().val())#}
-
+            tds = tds.splice(3);
+            console.log(tds)
+            $(tds).each(function (i) {
+                $(this).html($(this).children().last().val())
+            })
         }
 
         const tables_keys = {
@@ -391,7 +394,7 @@
                     tables_data[table_type][row_index] = new_data;
                     $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
                     $(".alert .msg").html("Record was updated successfully.")
-                    exitEditRowMode($this)
+                    exitEditRowMode($this);
                     $("body").css("cursor", "auto")
                     setTimeout(
                         function () {

@@ -62,6 +62,9 @@ def get_table(request):
             order_direction = request.GET["order"]  # asc, desc
             order_by = request.GET["sort"]  # column name
 
+            if order_direction == "desc" and order_by:
+                order_by = "-" + order_by
+
             query_info = QUERY_DATA[model]
             rows_count = query_info["MODEL"].objects.count()
 
@@ -72,7 +75,8 @@ def get_table(request):
             if offset > rows_count:
                 raise ValueError
 
-            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit)
+            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit,
+                                                 order_by, search_keyword)
             json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
 
             return JsonResponse(json_response, safe=False)
