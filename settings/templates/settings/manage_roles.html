@@ -1,7 +1,312 @@
 {% extends 'users/base.html' %}
 {% block content %}
     {% if user.is_authenticated %}
-        <h1>Manage roles</h1>
+        <h1 class="text-center">Manage User Roles</h1>
+        <div id="content" class="content manage_roles">
+            <div id="content" class="content get_user_data">
+                <div class="users_table">
+                    <table id="users_table" data-height="460" class="table table-striped table-bordered data-table"
+                           data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                           data-show-columns="true" data-show-export="true" data-ajax="getTableData"
+                           data-show-refresh="true"
+                           data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                           data-search-on-enter-key="true">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true" data-field="id" data-filter-control="input">ID</th>
+                                <th data-sortable="true" data-field="username" data-filter-control="input">Username</th>
+                                <th data-sortable="true" data-field="email" data-filter-control="input">Email</th>
+                                <th data-sortable="true" data-field="is_active" data-filter-control="select">Active</th>
+                                <th data-sortable="true" data-field="role" data-filter-control="select">Role</th>
+                                <th data-field="action" data-formatter="actionFormatter">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div style="display: none" id="boolean_values">
+          {{ form.active }}
+        </div>
+        <div style="display: none" id="available_roles">
+          {{ form.role }}
+        </div>
+        <script>
+            let BOOLEANS = $("#boolean_values").children().last();
+            let USERS_ROLES = $("#available_roles").children().last();
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            let tables_data = {};
+            function getTableData(params) {
+                let table_type = $(this)[0].$el.attr("id")
+                $.ajax({
+                    url: 'get_user_data/',
+                    datatype: 'json',
+                    data: $.param(params.data) + "&table_type=" + table_type,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(table_type)
+                        console.log(data)
+                        tables_data[table_type] = data["rows"]
+                        params.success({
+                            "rows": data["rows"],
+                            "total": data["total"]
+                        })
+                    },
+                    error: function (er) {
+                        params.error(er);
+                        console.log("Error while pulling data with the following parameters:  " + er)
+                    }
+
+                });
+            }
+
+            $(window).on('load', function () {
+                $('.data-table').each(function () {
+                    let table_type = $(this).attr("id")
+                    $(this).bootstrapTable({
+                        onPostBody(data) {
+                            bindEditButton(table_type)
+                            bindRemoveButton(table_type)
+                        }
+
+                    });
+                })
+            })
+
+            let editing = false;
+            function actionFormatter(i, row) {
+                let html = []
+                $.each(row, function (k, v) {
+                    if (k === 'id') {
+                        html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
+                        html.push('<button type="button" class="deletebtn-users btn btn-primary btn-danger ms-2" >Delete</button>')
+                    }
+                })
+                return html.join("")
+            }
+
+            let oldData = []
+
+            function bindEditButton(table_type) {
+                if (editing) return
+                editing = true;
+                $("#" + table_type + " .editbtn").click(function(){
+                    let $this = $(this);
+                    let $row = $this.parents("tr")
+                    let tds = $this.closest('tr').find('td')
+                    tds.last().children().last().html("Cancel")
+                    tds.splice(-1,1)
+
+                    if ($this.html() === 'Edit'){
+                        $this.html('Save');
+                        $(tds.slice(0,3)).css({"cursor": "not-allowed"})
+                        tds = tds.slice(3)
+
+                        oldData = [];
+                        tds.map(function(i, e){
+                            oldData.push($(e).prop('outerHTML'))
+                        })
+
+                        // ID, Username, Email, Active, Role
+                        // keep the commented out lines until i figure out how to do drop-downs for active/role
+                        // $(tds[0]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[0]).html())) // email
+                        // $(tds[0]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[0]).html())) // active; should be drop-down for true/false
+                        $(tds[0]).html(BOOLEANS.val($(tds[0]).html()))
+                        // $(tds[1]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[1]).html())) // role; should be drop-down for all types of user roles
+                        $(tds[1]).html(USERS_ROLES.val($(tds[1]).html()))
+                        // $(tds[3]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                        // $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+
+                        tds.closest("tr").css({
+                            'border-top': '3px #6d8786 dashed',
+                            'border-bottom': '3px #6d8786 dashed',
+                            'color': '#000'
+                        });
+                        $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
+                    } else{
+                        let table_type = $(this).parents(".table").attr('id')
+                        let row_index = $row.attr("data-index")
+                        update_user_data(row_index, table_type, $row, $this);
+                    }
+                });
+                editing = false;
+            }
+
+            function dateFormat(value, row, index){
+              return moment(value).format("MM/DD/YYYY");
+            }
+
+            function exitEditRowMode($this){
+                let tds = $this.closest('tr').find('td')
+                let buttons = tds.last().children()
+                $(buttons[0]).html('Edit');
+                $(buttons[1]).html('Delete');
+
+                tds.splice(-1,1)
+                $(tds.slice(0,3)).css({"cursor": "auto"})
+
+                tds.closest("tr").css({
+                    "border": "none",
+                    "color": "#000"
+                });
+                $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+            }
+
+            const tables_keys = {
+              "users_table": ["id", "username", "email", "is_active", "role"]
+            };
+
+            function update_user_data(row_index, table_type, $row, $this){
+                let old_data = tables_data[table_type][row_index]
+                let keys = tables_keys[table_type]
+                let columns = $row.find("td").slice(0,-1)
+                console.log(columns)
+                console.log(old_data)
+
+                let new_data = old_data
+                columns.each(function(i){
+                    console.log($(this).children().last().val())
+                    let cellChild = $(this).children()
+                    if (cellChild.length > 0)
+                        new_data[keys[i]] = $(this).children().last().val()
+                    else
+                        new_data[keys[i]] = $(this).html()
+                })
+
+                $("body").css("cursor", "wait")
+
+                $.ajax({
+                    url: 'update_user_role/',
+                    datatype: 'json',
+                    data: {"table_type": table_type, "id": new_data["id"], "role": new_data["role"]},
+                    type: 'POST',
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    success: function(resp){
+                        console.log(resp)
+                        console.log("UPDATED")
+                        tables_data[table_type][row_index] = new_data;
+                        $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
+                        $(".alert .msg").html("Record was updated successfully.")
+                        exitEditRowMode($this)
+                        $("body").css("cursor", "auto")
+                        setTimeout(
+                            function () {
+                                $(".alert").slideUp(300)
+                            }, 3000);
+                    },
+                    error: function(er){
+                        console.log(JSON.stringify(er))
+                        console.log("Error while saving:  " + er.responseJSON.error)
+                        $(".alert").addClass("alert-danger").hide().removeClass("alert-success hide").slideDown(300)
+                        $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
+                        $("body").css("cursor", "auto")
+                        setTimeout(
+                            function () {
+                                $(".alert").slideUp(300)
+                            }, 6000);
+                    }
+                });
+
+                $.ajax({
+                    url: 'activate_user/',
+                    datatype: 'json',
+                    data: {"table_type": table_type, "id": new_data["id"], "active": new_data["is_active"]},
+                    type: 'POST',
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    success: function(resp){
+                        console.log(resp)
+                        console.log("UPDATED")
+                        tables_data[table_type][row_index] = new_data;
+                        $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
+                        $(".alert .msg").html("Record was updated successfully.")
+                        exitEditRowMode($this)
+                        $("body").css("cursor", "auto")
+                        setTimeout(
+                            function () {
+                                $(".alert").slideUp(300)
+                            }, 3000);
+                    },
+                    error: function(er){
+                        console.log(JSON.stringify(er))
+                        console.log("Error while saving:  " + er.responseJSON.error)
+                        $(".alert").addClass("alert-danger").hide().removeClass("alert-success hide").slideDown(300)
+                        $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
+                        $("body").css("cursor", "auto")
+                        setTimeout(
+                            function () {
+                                $(".alert").slideUp(300)
+                            }, 6000);
+                    }
+                });
+            }
+
+            function bindRemoveButton(table_type) {
+                $("#" + table_type + " .deletebtn-users").click(function(){
+                    let tds = $(this).closest('tr').find('td')
+                    tds = tds.slice(3)
+
+                    if ($(this).html() === "Cancel"){
+                        $("body").css("cursor", "auto")
+                        tds.map(function(i, e){
+                            $(tds[i]).html($(oldData[i]).html())
+                        })
+                        oldData = []
+                        exitEditRowMode($(this))
+                    }
+                    return;
+
+                    // if (!confirm("Are you sure?")) return
+                    let row_id = $(this).parentsUntil("tr").parent().find("td").find().text()
+                    let row = $(this).parentsUntil("tr").parent()
+                    let table_type = $(this).parents(".table").attr("id")
+                    console.log("remove button " + row_id + " " + table_type);
+                    if (row_id == null) return;
+
+                    // $.ajax({
+                    //   url:
+                    // });
+                })
+            };
+
+            let $table = $('#users_table')
+
+            $(function () {
+                $('#toolbar').find('select').change(function () {
+                    $table.bootstrapTable('destroy').bootstrapTable({
+                        exportDataType: $(this).val(),
+                        exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'pdf'],
+                        columns: [
+                            {
+                                //Rename columns
+                                field: 'id',
+                                title: 'ID'
+                            }
+                        ]
+                    })
+                }).trigger('change')
+            })
+        </script>
     {% else %}
         <p><a href="/login/">Log in</a> to visit this page.</p>
     {% endif %}

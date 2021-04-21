@@ -8,7 +8,9 @@ from django.http.response import JsonResponse
 from django.db import transaction, IntegrityError
 from django.utils.translation import activate
 
+from settings.forms import *
 from settings.queries import *
+from users.models import RegistrationToken
 import settings.queries as queries
 import traceback
 import json
@@ -16,10 +18,7 @@ import json
 @login_required
 def change_password(request):
     if request.method == 'POST':
-        # print(request.POST + '\n\n\n\n')
         form = PasswordChangeForm(request.user, request.POST)
-        # print(form)
-        # return render(request, "settings/change_password.html")
 
         if form.is_valid():
             user = form.save()
@@ -35,17 +34,16 @@ def change_password(request):
 @login_required
 def manage_roles(request):
     if request.user.is_authenticated:
-        return render(request, "settings/manage_roles.html")
+        form = UserRoleForm()
+        context = {"form": form}
+        return render(request, "settings/manage_roles.html", context)
 
 @login_required
 def manage_registration_links(request):
     if request.user.is_authenticated:
-        return render(request, "settings/manage_registration_links.html")
-
-@login_required
-def manage_registration_links_get_table(request):
-    if request.user.is_authenticated:
-        return render(request, "settings/manage_registration_links.html")
+        form = TokenForm()
+        context = {"form": form}
+        return render(request, "settings/manage_registration_links.html", context)
 
 @login_required
 def help(request):
@@ -56,14 +54,12 @@ def help(request):
 def index(request):
     if request.method == 'POST':
         return change_password(request)
-    """
-    if request.user.is_authenticated:
-        return render(request,"settings/settings.html")
-    """
 
 @login_required
 def get_user_data(request):
-    return JsonResponse(list(get_users_info()), safe=False)
+    json_response = {"rows":list(queries.get_users_info())}
+    return JsonResponse(json_response, safe=False)
+    # return JsonResponse(list(get_users_info()), safe=False)
 
 @login_required
 def get_roles(request):
@@ -108,15 +104,15 @@ def activate_user(request):
 
         response.update({"id": id})
         response.update({"active": active})
-        
+
         with transaction.atomic():
             queries.activate_user(id, active)
 
         response.update({"success": True})
-        response.update({"message": str(id) + " | activated: " + str(active)})    
+        response.update({"message": str(id) + " | activated: " + str(active)})
 
-        return JsonResponse(response, safe= False) 
-    
+        return JsonResponse(response, safe= False)
+
     except Exception as e:
         response.update({"success": False})
         response.update({"message": str(e)})
@@ -127,33 +123,43 @@ def get_token_data(request):
 
     if request.method != "GET":
         return HttpResponse("ERROR...")
-    
-    return JsonResponse(list(queries.get_token_data()), safe=False)
+
+    rows_count = RegistrationToken.objects.count()
+    json_response = {"rows":list(queries.get_token_data()), "total": rows_count}
+    return JsonResponse(json_response, safe=False)
+    # return JsonResponse(list(queries.get_token_data()), safe=False)
 
 @login_required
 def update_token_data(request):
 
-    try: 
+    try:
         if request.method != "POST":
             raise Exception("Request not POST")
-        
+
         response = {}
 
         update_data = json.loads(request.POST["update_data"])
-        token_id = update_data["token_id"]
-        fields = update_data["feilds"]
+        token_id = update_data["id"]
+
+        # creator_name isn't in the users_registrationtoken table
+        update_data.pop("creator_name")
+
+        #just to be safe
+        if update_data["active"] == "True":
+            update_data["active"] = True
+        else:
+            update_data["active"] = False
 
         with transaction.atomic():
-            success = queries.update_token_data(token_id, fields)[0]
+            success = queries.update_token_data(token_id, update_data)#[0]
             if not success:
                 raise Exception("Token id: " + str(token_id) + " not updated")
-            
+
         response.update({"success": True})
         response.update({"message": "Token id: " + str(token_id) + " updated"})
         return JsonResponse(response, safe= False)
-    
+
     except Exception as e:
         response.update({"success": False})
         response.update({"message": str(e)})
         return JsonResponse(response, safe=False)
-        
