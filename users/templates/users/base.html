@@ -88,19 +88,22 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                   aria-expanded="false">Analytics</a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
+            {% if user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">Analytics</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            {% endif %}
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     <li class="nav-item dropdown">

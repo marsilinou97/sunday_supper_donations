@@ -1,6 +1,7 @@
 import json
 import traceback
 
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -15,32 +16,28 @@ from .vars import *
 get_zeros_list = lambda n: [0] * n
 
 
+# TODO replace login decorators with middleware
+@login_required(login_url="login")
 def index(request):
     if request.method == 'GET':
-
         form = ChartsForm()
-
         context = {"form": form}
-
         return render(request, 'analytics/analytics.html', context)
-
     else:
         return HttpResponse("ERROR...")
 
 
+@login_required(login_url="login")
 def raw_data(request):
     if request.method == "GET":
-
         form = RawDataForm()
-
         context = {"form": form}
-
         return render(request, 'analytics/rawdata.html', context)
-
     else:
         return HttpResponse("ERROR...")
 
 
+@login_required(login_url="login")
 def edit_donations(request):
     # forms = {
     #     'donor_form': DonorInformationForm(),
@@ -50,6 +47,7 @@ def edit_donations(request):
     return render(request, 'analytics/edit_donations.html', {'funds_form_types': FundsForm(), 'item_form': ItemForm()})
 
 
+@login_required(login_url="login")
 def get_table(request):
     # Get request parse
     if request.method == "GET":
@@ -88,6 +86,7 @@ def get_table(request):
         return HttpResponse("ERROR...")
 
 
+@login_required(login_url="login")
 def get_donation_count_date_qty(request):
     if request.method == "GET":
 
@@ -107,6 +106,7 @@ def get_donation_count_date_qty(request):
         return JsonResponse(json_response, safe=False)
 
 
+@login_required(login_url="login")
 def get_donation_count_month(request):
     if request.method == "GET":
 
@@ -126,6 +126,7 @@ def get_donation_count_month(request):
         return JsonResponse(json_response, safe=False)
 
 
+@login_required(login_url="login")
 def get_donation_item_count(request):
     if request.method == "GET":
 
@@ -141,6 +142,7 @@ def get_donation_item_count(request):
 
 
 # Removed
+@login_required(login_url="login")
 def get_donation_fund_count(request):
     if request.method == "GET":
 
@@ -158,7 +160,7 @@ def get_donation_fund_count(request):
         return JsonResponse(results, safe=False)
 
 
-# @login_required
+@login_required(login_url="login")
 @transaction.atomic
 def update_item(request):
     if request.method == "POST":
@@ -193,6 +195,7 @@ def update_item(request):
     return FailedJsonResponse({"error": "Unknown method"})
 
 
+@login_required(login_url="login")
 def delete_item(request):
     # TODO sanitize data
     if request.method == "POST":
