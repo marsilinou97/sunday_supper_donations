@@ -40,10 +40,10 @@
     </div>
 </div>
 <div style="display: none" id="state_values">
-    {{ us_states }}
+    {{ form.state }}
 </div>
 <script>
-    let STATE_VALUES = $("state_values").children().last();
+    let STATE_VALUES = $("#state_values").children().last();
 
     function getCookie(name) {
         let cookieValue = null;
@@ -178,7 +178,7 @@
         });
 
         $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
-        tds = tds.splice(0);
+        tds = tds.splice(2);
         console.log(tds)
         $(tds).each(function (i) {
             $(this).html($(this).children().last().val())
@@ -190,6 +190,7 @@
     };
 
     function edit_donor(row_index, table_type, $row, $this) {
+        let tds = $this.closest("tr").find("td")
         let old_data = tables_data[table_type][row_index]
         let keys = tables_keys[table_type]
         let columns = $row.find("td").slice(0,-1)
@@ -247,7 +248,7 @@
     function bindRemoveButton(table_type){
         $("#" + table_type + " .deletebtn-donors").click(function () {
             let tds = $(this).closest("tr").find("td")
-            tds = tds.slice(0)
+            tds = tds.slice(1)
 
             if ($(this).html() === "Cancel"){
                 $("body").css("cursor", "auto")

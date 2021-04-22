@@ -10,9 +10,8 @@ from django.forms import ChoiceField
 from helpers import FailedJsonResponse
 from helpers import remove_html_tags
 from input.models import Donor
-from input.forms import FundsForm, ItemForm
+from input.forms import FundsForm, ItemForm, DonorEditForm
 from input.queries import get_donor_list_wo_anonymous
-from input.views import us_states as us_states
 from .forms import RawDataForm, ChartsForm
 from .queries import *
 from .vars import *
@@ -53,7 +52,9 @@ def edit_donations(request):
 @login_required(login_url="login")
 def edit_donors(request):
     context = {}
-    context['us_states'] = ChoiceField(required=False, choices=us_states)
+    # context['us_states'] = ChoiceField(required=False, choices=us_states)
+    # context['us_states'] = us_states
+    context['form'] = DonorEditForm()
     return render(request, 'analytics/edit_donors.html', context)
 
 @login_required(login_url="login")
