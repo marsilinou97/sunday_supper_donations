@@ -93,6 +93,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
                 </li>
+                <!-- Analytics dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown"
@@ -101,12 +102,13 @@
                         <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
                         <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
                         <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
-
+                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donors' %}">Edit Donors</a></li>
                     </ul>
                 </li>
             {% endif %}
             <li class="nav-item">
                 {% if user.is_authenticated %}
+                    <!-- Setting dropdown -->
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownSettings" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
