@@ -39,7 +39,6 @@ class UserRoleForm(forms.Form):
     for i in range(len(available_roles)):
         available_roles[i] = (available_roles[i]['role'],
                                 available_roles[i]['role'])
-    print(available_roles)
     role = forms.ChoiceField(required=False, choices=available_roles)
 
     class Meta:
