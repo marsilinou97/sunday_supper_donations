@@ -181,7 +181,7 @@ class FundsForm(forms.Form):
 
     amount = forms.DecimalField(required=False)
     fund_types = [
-        (None,"Nada"),
+        (None,"N/A"),
         ('Cash', 'Cash'),
         ('Check', 'Check'),
         ('Electronic', 'Electronic')
