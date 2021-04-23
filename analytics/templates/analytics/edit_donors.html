@@ -178,7 +178,7 @@
         });
 
         $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
-        tds = tds.splice(2);
+        tds = tds.splice(1);
         console.log(tds)
         $(tds).each(function (i) {
             $(this).html($(this).children().last().val())
