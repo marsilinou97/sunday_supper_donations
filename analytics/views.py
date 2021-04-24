@@ -1,5 +1,8 @@
 from math import ceil
 from typing import Dict
+
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models.query_utils import Q
 
 from django.http import HttpResponse, JsonResponse
@@ -11,6 +14,13 @@ import datetime
 import json
 import traceback
 from helpers import FailedJsonResponse
+from django.forms import ChoiceField
+
+from helpers import FailedJsonResponse
+from helpers import remove_html_tags
+from input.models import Donor
+from input.forms import FundsForm, ItemForm, DonorEditForm
+from input.queries import get_donor_list_wo_anonymous
 from .forms import RawDataForm, ChartsForm
 
 from .queries import *
@@ -48,6 +58,45 @@ def raw_data(request):
 def edit_donations(request):
     return render(request, 'analytics/edit_donations.html')
 
+@login_required(login_url="login")
+def edit_donors(request):
+    context = {}
+    # context['us_states'] = ChoiceField(required=False, choices=us_states)
+    # context['us_states'] = us_states
+    context['form'] = DonorEditForm()
+    return render(request, 'analytics/edit_donors.html', context)
+
+@login_required(login_url="login")
+def edit_donors_get_table(request):
+    json_response = {"rows": list(get_donor_list_wo_anonymous()), "total": Donor.objects.count() - 1}
+    return JsonResponse(json_response, safe=False)
+
+@login_required(login_url="login")
+def update_donor(request):
+    if request.method == "POST":
+        try:
+            update_data = json.loads(request.POST["update_data"])
+            # Sanitize data
+            for k, v in update_data.items():
+                if type(v) not in (int, float, bool):
+                    update_data[k] = remove_html_tags(v)
+
+            print(update_data)
+            id = update_data["id"]
+            # update_data.pop("id") # Don't want to accidentally update the Donor's id
+            with transaction.atomic():
+                print(id)
+                result = update_table_entry(Donor, {"id": id}, update_data)
+                if not result:
+                    result = {"error": "Couldn't update the Donor entry, please try again"}
+                    raise Exception("Some exception :(")
+            return JsonResponse(result, safe=False)
+        except Exception as e:
+            print(traceback.format_exc())
+            print(f"The error is {e}")
+            return FailedJsonResponse({"error": "Unexpected error occurred while updating data"})
+
+    return FailedJsonResponse({"error": "Unknown method"})
 
 def get_table(request):
     # Get request parse

@@ -1,0 +1,283 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Includes styling for tables -->
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}"> -->
+
+
+<div class="alert alert-success fade in text-center hide" role="alert">
+    <strong class="msg"> </strong>
+</div>
+<h1 class="text-center">Edit Donors</h1>
+<div id="content" class="content edit_donor">
+    <div id="content" class="content raw_data">
+        <div class="donors_table p-3 m-5">
+            <table id="donors_table" data-height="460" class="table table-striped table-bordered data-table"
+                   data-search="true" data-pagination="true" data-advanced-search="true" data-show-toggle="true"
+                   data-show-columns="true" data-show-export="false" data-ajax="getTableData"
+                   data-show-refresh="true" data-escape="true"
+                   data-page-list="[5,10, 25, 50]" data-page-size="10" data-side-pagination="server"
+                   data-search-on-enter-key="true">
+                <thead class="donor_header">
+                <tr>
+                    <th data-sortable="true" data-filter-control="input" data-field="id">ID</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="first_name">First Name</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="last_name">Last Name</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="email_address">Email Address</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="phone_number">Phone Number</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="address_line1">Address Line 1</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="address_line2">Address Line 2</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="city">City</th>
+                    <th data-sortable="true" data-filter-control="select" data-field="state">State</th>
+                    <th data-sortable="true" data-filter-control="input" data-field="zipcode">Zipcode</th>
+                    <th data-field="action" data-formatter="actionFormatter">Action</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="display: none" id="state_values">
+    {{ form.state }}
+</div>
+<script>
+    let STATE_VALUES = $("#state_values").children().last();
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    let tables_data = {};
+
+    function getTableData(params){
+        let table_type = $(this)[0].$el.attr("id")
+        $.ajax({
+            url: 'get_table/',
+            datatype: 'json',
+            data: $.param(params.data) + "&table_type=" + table_type,
+            type: 'GET',
+            success: function (data) {
+                // TODO: remove debug code?
+                console.log(table_type)
+                console.log(data)
+                tables_data[table_type] = data["rows"]
+                params.success({
+                    "rows": data["rows"],
+                    "total": data["total"]
+                })
+            },
+            error: function (err) {
+                params.error(err);
+                console.log("Error while pulling data with the following parameters:  " + err)
+            }
+        });
+    }
+
+    $(window).on('load', function (){
+        $('.data-table').each(function () {
+            let table_type = $(this).attr("id")
+            $(this).bootstrapTable({
+                onPostBody(data){
+                    bindEditButton(table_type)
+                    bindRemoveButton(table_type)
+                }
+            });
+        })
+    })
+
+    let editing = false;
+
+    function actionFormatter(i, row) {
+        let html = []
+        $.each(row, function (k, v) {
+            if (k === 'first_name') {
+                html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
+                html.push('<button type="button" class="deletebtn-donors btn btn-primary btn-danger ms-2" >Delete</button>')
+            }
+        })
+        return html.join("")
+    }
+
+    let valuesBeforeEdit = []
+
+    function bindEditButton(table_type) {
+        if (editing) return
+        editing = true;
+        $("#" + table_type + " .editbtn").click(function () {
+            let $this = $(this);
+            let $row = $this.parents("tr")
+            let tds = $this.closest("tr").find("td")
+            tds.last().children().last().html("Cancel")
+            tds.splice(-1,1)
+
+            if ($this.html() === 'Edit'){
+                $this.html('Save');
+
+                // only the id should be uneditable
+                $(tds.slice(0,1)).css({"cursor": "not-allowed"})
+                tds = tds.slice(1)
+
+                valuesBeforeEdit = [];
+
+                tds.map(function (i, e) {
+                    valuesBeforeEdit.push($(e).prop('outerHTML'))
+                })
+
+                // first, last, email, phone, address1, address2, city, state, zip
+                $(tds[0]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[0]).html()))
+                $(tds[1]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[1]).html()))
+                $(tds[2]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
+                $(tds[3]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+                $(tds[5]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[5]).html()))
+                $(tds[6]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[6]).html()))
+                $(tds[7]).html(STATE_VALUES.val($(tds[7]).html()))
+                $(tds[8]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[8]).html()))
+
+                tds.closest("tr").css({
+                    'border-top': '3px #6d8786 dashed',
+                    'border-bottom': '3px #6d8786 dashed',
+                    'color': '#000'
+                });
+                $this.parentsUntil("table").find('tr').not($($this.closest('tr'))).animate({opacity: 0.4}, 300);
+            } else {
+                let table_type = $(this).parents(".table").attr('id')
+                let row_index = $row.attr("data-index")
+                edit_donor(row_index, table_type, $row, $this)
+            }
+        });
+        editing = false;
+    }
+
+    function exitEditRowMode($this){
+        let tds = $this.closest("tr").find("td")
+        let buttons = tds.last().children()
+        $(buttons[0]).html("Edit");
+        $(buttons[1]).html("Delete");
+
+        tds.splice(-1,1)
+        $(tds.slice(0,1).css({"cursor": "auto"}))
+
+        tds.closest("tr").css({
+            'border': "none",
+            'color': '#000'
+        });
+
+        $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+        tds = tds.splice(2);
+        console.log(tds)
+        $(tds).each(function (i) {
+            $(this).html($(this).children().last().val())
+        })
+    }
+
+    const tables_keys = {
+        "donors_table": ["id","first_name","last_name","email_address","phone_number","address_line1","address_line2","city","state","zipcode"]
+    };
+
+    function edit_donor(row_index, table_type, $row, $this) {
+        let tds = $this.closest("tr").find("td")
+        let old_data = tables_data[table_type][row_index]
+        let keys = tables_keys[table_type]
+        let columns = $row.find("td").slice(0,-1)
+        console.log(columns)
+        console.log(old_data)
+
+        let new_data = old_data
+        columns.each(function (i) {
+            console.log($(this).children().last().val())
+            let cellChild = $(this).children()
+            if (cellChild.length > 0)
+                new_data[keys[i]] = $(this).children().last().val()
+            else
+                new_data[keys[i]] = $(this).html()
+        })
+
+        $("body").css("cusor", "wait")
+
+        $.ajax({
+            url: 'update_donor/',
+            datatype: 'json',
+            data: {"table_type": table_type, "update_data": JSON.stringify(new_data)},
+            type: "POST",
+            headers:{
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            success: function (resp) {
+                console.log(resp)
+                console.log("SAVED")
+                tables_data[table_type][row_index] = new_data;
+                $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
+                $(".alert .msg").html("Record was updated successfully.")
+                exitEditRowMode($this);
+                $("body").css("cursor", "auto")
+                setTimeout(
+                    function () {
+                        $(".alert").slideUp(300)
+                    }, 3000);
+            },
+            error: function (er) {
+                console.log(JSON.stringify(er))
+                console.log("Error while saving:  " + er.responseJSON.error)
+                $(".alert").addClass("alert-danger").hide().removeClass("alert-success hide").slideDown(300)
+                $(".alert .msg").html("Error while updating record. " + er.responseJSON.error)
+                $("body").css("cursor", "auto")
+                setTimeout(
+                    function () {
+                        $(".alert").slideUp(300)
+                    }, 6000);
+
+            }
+        });
+    }
+
+    function bindRemoveButton(table_type){
+        $("#" + table_type + " .deletebtn-donors").click(function () {
+            let tds = $(this).closest("tr").find("td")
+            tds = tds.slice(1)
+
+            if ($(this).html() === "Cancel"){
+                $("body").css("cursor", "auto")
+                tds.map(function (i, e) {
+                    $(tds[i]).html($(valuesBeforeEdit[i]).html())
+                })
+                valuesBeforeEdit = []
+                exitEditRowMode($(this))
+                return;
+            }
+        })
+
+        return;
+    }
+
+    $(function () {
+        $('#toolbar').find('select').change(function () {
+            $table.bootstrapTable('destroy').bootstrapTable({
+                exportDataType: $(this).val(),
+                exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'pdf'],
+                columns: [
+                    {
+                        //Rename columns
+                        field: 'id',
+                        title: 'ID'
+                    }
+                ]
+            })
+        }).trigger('change')
+    })
+</script>
+{% endblock %}

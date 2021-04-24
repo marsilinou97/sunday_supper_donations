@@ -90,29 +90,55 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link text-white" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                   aria-expanded="false">Analytics</a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Charts</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Tables</a></li>
-                    <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donations</a></li>
 
-                </ul>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <!-- Analytics dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">Analytics</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donors' %}">Edit Donors</a></li>
+                    </ul>
+                </li>
+            {% endif %}
 
             <li class="nav-item">
 
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
                         <li class="nav-item active">
-                            <a class="nav-link text-white href="{% url 'admin:index' %}">Admin</a>
+                            <a class="nav-link text-white" href="{% url 'admin:index' %}">Admin</a>
                         </li>
                     {% else %}
                     {% endif %}
+
+                    <!-- Setting dropdown -->
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownSettings" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
+                            <li><a class="dropdown-item" href="{% url 'change_password' %}">Change password or email
+                                address</a></li>
+                            {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'maketoken' %}">Create registration link</a>
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage
+                                    registration links</a></li>
+                                <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage user roles</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django admin page
+                                    (advanced)</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
+                        </ul>
+                    </li>
+
                     <!-- Mostly for debugging, but might be nice to keep anyway! -->
                     <li class="nav-item active">
                         <a class="navbar-text text-white"> [ Logged in as {{ user.username }} ] </a>
