@@ -30,7 +30,7 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
     return query
 
 
-def get_quantity_group_by_date(model: models.Model, date_type: str):
+def get_quantity_group_by_date(model: models.Model, date_type: str, year: int = None):
     date = {
         date_type: Extract("item__donation__date_received", date_type)
     }

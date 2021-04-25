@@ -87,7 +87,12 @@ def get_donation_count_date_qty(request):
         for key in QUERY_DATA.keys():
             qty_count_by_month = [0 for _ in range(12)]
 
-            list_of_data = list(get_quantity_group_by_date(QUERY_DATA[key]["MODEL"], "month"))
+            query_set = get_quantity_group_by_date(QUERY_DATA[key]["MODEL"], "month")
+
+            if request.GET.get("year", ""):
+                pass
+
+            list_of_data = list(query_set)
 
             for row in list_of_data:
                 qty_count_by_month[row["month"] - 1] += row["qty"]
