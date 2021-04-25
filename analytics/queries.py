@@ -9,7 +9,7 @@ from analytics.vars import *
 
 
 def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int,
-                             order_by_column: str = "", order_by_direction="", search_keyword: str = ""):
+                             order_by_column: str = "", order_by_direction="", search_keyword: str = "", exact={}):
     try:
         select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
         for key in item_specific_fields.keys():
@@ -26,6 +26,16 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
             *fields_keys
         )
 
+        if exact and exact.get("date_received_from", None) and exact.get("date_received_to", None):
+            print("RANGE")
+            print([exact.get("date_received_from"), exact.get("date_received_to")])
+            query = query.filter(date_received__range=[exact.get("date_received_from"), exact.get("date_received_to")])
+            del exact["date_received_from"]
+            del exact["date_received_to"]
+
+        if exact:
+            query = query.filter(**exact)
+
         if search_keyword:
             print("**" * 100)
             print(f"{search_keyword=}")
@@ -38,7 +48,8 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
         # MyClass.objects.filter(name__icontains=my_parameter)
 
         if order_by_column:
-            print("ORDER" * 100)
+            # print("ORDER" * 100)
+            if order_by_direction == "desc": order_by_column = "-" + order_by_column
             query = query.order_by(order_by_column)
 
         query = query[offset:offset + limit]
