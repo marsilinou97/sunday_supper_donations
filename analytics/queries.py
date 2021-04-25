@@ -4,12 +4,12 @@ from django.db.models.functions.datetime import Extract
 from input.models import *
 import sys  # debugging
 from django.db import connection
-from django.db.models import F
+from django.db.models import F, Q
 from analytics.vars import *
 
 
 def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int,
-                             order_by_column: str = "", search_keyword: str = ""):
+                             order_by_column: str = "", order_by_direction="", search_keyword: str = "", exact={}):
     try:
         select_fields = dict(RAW_DATA_BASE_FIELDS_KEYS)
         for key in item_specific_fields.keys():
@@ -26,7 +26,30 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
             *fields_keys
         )
 
+        if exact and exact.get("date_received_from", None) and exact.get("date_received_to", None):
+            print("RANGE")
+            print([exact.get("date_received_from"), exact.get("date_received_to")])
+            query = query.filter(date_received__range=[exact.get("date_received_from"), exact.get("date_received_to")])
+            del exact["date_received_from"]
+            del exact["date_received_to"]
+
+        if exact:
+            query = query.filter(**exact)
+
+        if search_keyword:
+            print("**" * 100)
+            print(f"{search_keyword=}")
+            filters = Q(first_name__icontains=search_keyword) | \
+                      Q(last_name__icontains=search_keyword) | \
+                      Q(comments__icontains=search_keyword) | \
+                      Q(sub_type__icontains=search_keyword)
+            query = query.filter(filters)
+            print(query.query)
+        # MyClass.objects.filter(name__icontains=my_parameter)
+
         if order_by_column:
+            # print("ORDER" * 100)
+            if order_by_direction == "desc": order_by_column = "-" + order_by_column
             query = query.order_by(order_by_column)
 
         query = query[offset:offset + limit]

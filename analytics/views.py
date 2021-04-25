@@ -1,3 +1,4 @@
+import os
 from math import ceil
 from typing import Dict
 
@@ -58,6 +59,7 @@ def raw_data(request):
 def edit_donations(request):
     return render(request, 'analytics/edit_donations.html')
 
+
 @login_required(login_url="login")
 def edit_donors(request):
     context = {}
@@ -66,10 +68,12 @@ def edit_donors(request):
     context['form'] = DonorEditForm()
     return render(request, 'analytics/edit_donors.html', context)
 
+
 @login_required(login_url="login")
 def edit_donors_get_table(request):
     json_response = {"rows": list(get_donor_list_wo_anonymous()), "total": Donor.objects.count() - 1}
     return JsonResponse(json_response, safe=False)
+
 
 @login_required(login_url="login")
 def update_donor(request):
@@ -98,30 +102,69 @@ def update_donor(request):
 
     return FailedJsonResponse({"error": "Unknown method"})
 
+
 def get_table(request):
     # Get request parse
     if request.method == "GET":
         try:
-            model = request.GET["table_type"]
-            offset = int(request.GET["offset"])
-            limit = int(request.GET["limit"])
+            """
+                {
+                    table_type: 
+                    offset:
+                    limit:
+                    sort:
+                    order:
+                    search:
+                    exact: {
+                        first_name:
+                        last_name:
+                    }
+                    range: 
+                }
+            """
+            exact_search = request.GET.get("exact", None)
+            print(dict(request.GET))
+            if not exact_search:
+                model = request.GET["table_type"]
+                offset = int(request.GET["offset"])
+                limit = int(request.GET["limit"])
+                order_by_column = request.GET["sort"]
+                order_by_direction = request.GET["order"]
+                search_keyword = request.GET["search"]
+            else:
+                request.GET = json.loads(request.GET["exact"])
+                model = request.GET["table_type"]
+                offset = 0
+                limit = 10
+                order_by_column = ""
+                order_by_direction = "asc"
+                search_keyword = ""
 
             query_info = QUERY_DATA[model]
             rows_count = query_info["MODEL"].objects.count()
 
             if model not in QUERY_DATA.keys():
                 raise ValueError
-            if limit < 0 or offset < 0:
-                raise ValueError
-            if offset > rows_count:
-                raise ValueError
+            if request.GET.get("exact", ""):
+                if limit < 0 or offset < 0:
+                    raise ValueError
+                if offset > rows_count:
+                    raise ValueError
+            exact = request.GET.get("exact", {})
+            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit,
+                                                 order_by_column, order_by_direction, search_keyword, exact)
 
-            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit)
-            json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
+            # json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
+            json_response = {"rows": list(query_set), "total": len(list(query_set))}
+
+            if not json_response["rows"]: json_response = {"total": 0, "rows": []}
 
             return JsonResponse(json_response, safe=False)
 
         except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             print(f"The error is {e}")
             return HttpResponse("ERROR...")
     else:
@@ -196,7 +239,6 @@ def get_donation_fund_count(request):
             })
 
         return JsonResponse(results, safe=False)
-
 
 
 # @login_required
