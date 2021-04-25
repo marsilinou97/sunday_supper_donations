@@ -154,6 +154,7 @@ def get_table(request):
             query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit,
                                                  order_by_column, order_by_direction, search_keyword, exact)
 
+            # TODO check if no search being performed to return total number of rows, other wise return len(results)
             # json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
             json_response = {"rows": list(query_set), "total": len(list(query_set))}
 
