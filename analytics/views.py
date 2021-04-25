@@ -58,6 +58,7 @@ def raw_data(request):
 def edit_donations(request):
     return render(request, 'analytics/edit_donations.html')
 
+
 @login_required(login_url="login")
 def edit_donors(request):
     context = {}
@@ -66,10 +67,12 @@ def edit_donors(request):
     context['form'] = DonorEditForm()
     return render(request, 'analytics/edit_donors.html', context)
 
+
 @login_required(login_url="login")
 def edit_donors_get_table(request):
     json_response = {"rows": list(get_donor_list_wo_anonymous()), "total": Donor.objects.count() - 1}
     return JsonResponse(json_response, safe=False)
+
 
 @login_required(login_url="login")
 def update_donor(request):
@@ -98,6 +101,7 @@ def update_donor(request):
 
     return FailedJsonResponse({"error": "Unknown method"})
 
+
 def get_table(request):
     # Get request parse
     if request.method == "GET":
@@ -105,6 +109,9 @@ def get_table(request):
             model = request.GET["table_type"]
             offset = int(request.GET["offset"])
             limit = int(request.GET["limit"])
+            order_by_column = request.GET["sort"]
+            order_by_direction = request.GET["order"]
+            search_keyword = request.GET["search"]
 
             query_info = QUERY_DATA[model]
             rows_count = query_info["MODEL"].objects.count()
@@ -116,8 +123,12 @@ def get_table(request):
             if offset > rows_count:
                 raise ValueError
 
-            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit)
+            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit,
+                                                 order_by_column, order_by_direction, search_keyword)
+
             json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
+
+            if not json_response["rows"]: json_response = {"total": 0, "rows": []}
 
             return JsonResponse(json_response, safe=False)
 
@@ -196,7 +207,6 @@ def get_donation_fund_count(request):
             })
 
         return JsonResponse(results, safe=False)
-
 
 
 # @login_required
