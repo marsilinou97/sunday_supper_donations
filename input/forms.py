@@ -2,7 +2,7 @@ from datetime import datetime
 from django import forms
 from .models import *
 from helpers import remove_html_tags
-
+from input.queries import get_subtypes_for_choicefield
 
 class DonorInformationForm(forms.ModelForm):
     first_name = forms.CharField(required=False)
@@ -137,17 +137,20 @@ class ItemForm(forms.Form):
                   ('misc', 'Miscellaneous')
                   ]
 
-    clothing_types = [
-        ('men','Men'),
-        ('women','Women'),
-        ('children','Children')
-    ]
+    # clothing_types = [
+    #     ('men','Men'),
+    #     ('women','Women'),
+    #     ('children','Children')
+    # ]
+    #
+    # business = [
+    #     ("Trader Joe's","Trader Joe's"),
+    #     ('tar','Target'),
+    #     ('bestbuy','BestBuy')
+    # ]
 
-    business = [
-        ("Trader Joe's","Trader Joe's"),
-        ('tar','Target'),
-        ('bestbuy','BestBuy')
-    ]
+    clothing_types = get_subtypes_for_choicefield("clothingtypes")
+    business = get_subtypes_for_choicefield("businesses")
 
     type = forms.ChoiceField(required=False, choices=DONATION_TYPES)
     quantity = forms.IntegerField(required=False)
@@ -180,12 +183,14 @@ class ItemForm(forms.Form):
 class FundsForm(forms.Form):
 
     amount = forms.DecimalField(required=False)
-    fund_types = [
-        (None,"N/A"),
-        ('Cash', 'Cash'),
-        ('Check', 'Check'),
-        ('Electronic', 'Electronic')
-    ]
+    # fund_types = [
+    #     (None,"N/A"),
+    #     ('Cash', 'Cash'),
+    #     ('Check', 'Check'),
+    #     ('Electronic', 'Electronic')
+    # ]
+    fund_types = get_subtypes_for_choicefield("fundtypes")
+    fund_types.insert(0,(None,"N/A"))
 
     type = forms.ChoiceField(required=False, choices=fund_types)
 
