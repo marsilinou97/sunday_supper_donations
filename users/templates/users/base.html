@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="robots" content="noindex">
 
+    <link rel="icon" type="img/png" href="/static/favicon.png">
+
     <title>Sunday Supper</title>
 
     {#    TODO: remove all unused imports #}
@@ -95,18 +97,18 @@
 
             {% if user.is_authenticated %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link text-white" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <!-- Analytics dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown"
                        aria-expanded="false">Analytics</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Main page...</a></li>
-                        <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Raw Data</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Charts</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Tables</a></li>
                         <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
-                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donors' %}">Edit Donors</a></li>
+                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donors' %}">Edit Donor</a></li>
                     </ul>
                 </li>
             {% endif %}
@@ -123,7 +125,7 @@
 
                     <!-- Setting dropdown -->
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownSettings" role="button"
+                        <a href="#" class="nav-link dropdown-toggle text-white" id="navbarDropdownSettings" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
                             <li><a class="dropdown-item" href="{% url 'change_password' %}">Change password or email
