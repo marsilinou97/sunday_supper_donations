@@ -7,43 +7,68 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
 
-    <div class="shadow p-3 mb-5 rounded border foreground-item">
+        <div class="container" id="search">
+            <div class="shadow p-5 mb-5 rounded border foreground-item">
+                <div class="row center-text g-1">
+
+                    <div class="col text-center">
+                        <label for="id_first_name">First name:</label>
+                    </div>
+
+                    <div class="col">
+                        <input class="form-control" type="text" name="first_name" maxlength="50" placeholder="First Name" id="id_first_name">
+                    </div>
+
+                    <div class="col text-center">
+                        <label for="id_last_name">Last name:</label>
+                    </div>
+
+                    <div class="col">
+                        <input class="form-control" type="text" name="last_name" maxlength="50" placeholder="Last Name" id="id_last_name">
+                    </div>
+
+                    <div class="col text-center">
+                        <label for="id_donation_date_from">Donation Date From:</label>
+                    </div>
+                    <div class="col">
+                        <input class="form-control" type="date" name="donation_date_from" placeholder="YYYY-MM-DD" id="id_donation_date_from">
+                    </div>
+
+                    <div class="col text-center">
+                        <label for="id_donation_date_to">Donation Date To:</label>
+                    </div>
+                    <div class="col">
+                        <input class="form-control" type="date" name="donation_date_to" placeholder="YYYY-MM-DD" id="id_donation_date_to">
+                    </div>
+
+                    <div class="col text-center">
+                        <label for="pagesize">Number of Rows:</label>
+                    </div>
+
+                    <div class="col">
+                        <select id="select-rows" name="pagesize" id="pagesize" class="form-control">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
 
 
-        <div id="search">
-            <div class="row">
-                <div class="col">
-                    <label for="pagesize">Number of Rows:</label>
-                    <select name="pagesize" id="pagesize" class="form-control">
-                        <option value="5">5</option>
-                        <option value="10" selected>10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read"
+                                onclick="submit_search_form()">Filter
+                        </button>
+                    </div>
+
+                    <div class="col">
+                        <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export
+                        </button>
+                    </div>
                 </div>
             </div>
-            <label for="id_first_name">First name:</label>
-            <input type="text" name="first_name" maxlength="50" placeholder="First Name" id="id_first_name">
-            <label for="id_last_name">Last name:</label>
-            <input type="text" name="last_name" maxlength="50" placeholder="Last Name" id="id_last_name">
-            <label for="id_donation_date_from">Donation date from:</label>
-            <input type="date" name="donation_date_from" placeholder="YYYY-MM-DD" id="id_donation_date_from">
-            <label for="id_donation_date_to">Donation date to:</label>
-            <input type="date" name="donation_date_to" placeholder="YYYY-MM-DD" id="id_donation_date_to">
-
-            <div class="row">
-                <div class="col">
-                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read"
-                            onclick="submit_search_form()">Filter
-                    </button>
-                </div>
-                <div class="col">
-                    <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export
-                    </button>
-                </div>
-            </div>
-
-
         </div>
 
         {#        <form method="get" class="text-center" onsubmit="">#}
@@ -61,7 +86,8 @@
         {##}
         {#            </div>#}
         {#        </form>#}
-    </div>
+            </div>
+
 
 
     <fieldset>
