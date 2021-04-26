@@ -12,66 +12,168 @@
         {% endfor %}
     {% endif %}
 
-
     <div class="donor-info-form mb-5">
         <form method="post" onsubmit="return submit_form()">
             {% csrf_token %}
-            <h1 class="text-center">Input Page</h1>
+            <h1 class="text-center mb-5">Input Page</h1>
             <hr>
 
-            <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
-            <label for="anonymous" class="anonymous">Anonymous Donor</label>
-            <hr>
 
             <!-- Begin Grid -->
-            <div class="container shadow" id="form-wrapper">
-
+            <div class="container shadow m-3" id="form-wrapper">
                 <div class="row p-3">
 
-                    <div class="col-3 m-2 foreground-item">
+                    <div class="col m-2 foreground-item">
+                        <h3 class="d-flex justify-content-center">Donor Information</h3>
+                        <hr>
 
-                        <div id="donation_form">
-                            <h3 class="d-flex justify-content-center"> Donation Information</h3>
-                            <div>
+                        <div class="row p-3 align-items-center">
 
-                                <span>
-                                    <b>{{ donation_info_form.date_received.label }}</b>
-                                       {{ donation_info_form.date_received }}
-                                </span>
-                                <span>
-                                    <div><b>{{ donation_info_form.thanks_sent.label }}</b></div>
-                                    <div>{{ donation_info_form.thanks_sent }}</div>
-                                </span>
-
-                                <span>
-                                    <b>{{ donation_info_form.comment.label }}</b>
-                                       {{ donation_info_form.comment }}
-                                </span>
+                            <div class="col text-center align-top">
+                                <label for="toggleAutocomplete">
+                                    Autocomplete
+                                    <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
+                                </label>
                             </div>
-                        </div>
-                    </div> <!-- End donation column -->
 
-                    <div class="col-3 foreground-item m-2">
-                        <div id="funds_form" >
-                            <h3 class="d-flex justify-content-center">Funds</h3>
+                            <div class="col text-center align-bottom">
+                                <label for="anonymous" class="anonymous">
+                                    Anonymous Donor
+                                    <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
+                                </label>
+                            </div>
 
-                            <span>
-                                <b>{{ funds_form.type.label }}</b>
-                                   {{ funds_form.type }}
-                            </span>
-                            <span>
-                                <b>{{ funds_form.amount.label }}</b>
-                                   {{ funds_form.amount }}
-                            </span>
 
                         </div>
-                    </div> <!-- End funds column -->
+
+                        <div class="mb-4" id="donor_form">
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.first_name.label }}</b>
+                                        <div id='donor_form_first_name'>
+                                            {{ donor_form.first_name }}
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.last_name.label }}</b>
+                                        {{ donor_form.last_name }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.email.label }}</b>
+                                        {{ donor_form.email }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.phone_number.label }}</b>
+                                        {{ donor_form.phone_number }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.address1.label }}</b>
+                                        {{ donor_form.address1 }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.address2.label }}</b>
+                                        {{ donor_form.address2 }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.city.label }}</b>
+                                        {{ donor_form.city }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <b>{{ donor_form.state.label }}</b>
+                                        <select name="state" id="id_state" class="form-control">
+                                            <option value="" disabled selected>State</option>
+                                            {% for state,abr in states.items %}
+                                            <option value="{{ abr }}">{{ state.title }}</option>
+                                            {% endfor %}
+                                        </select>
+        {#                                {{ donor_form.state }}#}
+                                    </span>
+                                </div>
+
+                                <div class="col">
+                                    <span class="mb-4">
+                                        <b>{{ donor_form.zip.label }}</b>
+                                        {{ donor_form.zip }}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> <!-- End Donor Information column -->
 
                     <div class="col m-2 foreground-item">
 
+                        <div id="donation_form">
+
+                            <div>
+                                <h3 class="text-center"> Donation Information</h3>
+                                <hr>
+                            </div>
+
+                            <div class="row p-3 align-items-center">
+
+
+                                <div class="col-3">
+                                    <span>
+                                        <b>{{ donation_info_form.thanks_sent.label }}</b>
+                                        {{ donation_info_form.thanks_sent }}
+                                    </span>
+                                </div>
+
+                                <div class="col-4 m-2">
+                                    <span>
+                                        <b>{{ donation_info_form.date_received.label }}</b>
+                                        {{ donation_info_form.date_received }}
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <div class="row p-3">
+                                <div class="col m-2">
+                                    <span>
+                                        <b>{{ donation_info_form.comment.label }}</b>
+                                            {{ donation_info_form.comment }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!-- End Donation Information column -->
+
+                </div> <!-- End First Row -->
+
+                <div class="row p-3">
+                    <div class="col m-2 foreground-item">
                         <div id="items_form">
 
                             <h3 class="d-flex justify-content-center">Items</h3>
+                            <hr>
 
                             <div class="d-flex justify-content-end">
 
@@ -112,109 +214,54 @@
                             </table>
 
                         </div>
-                    </div> <!-- end items column -->
+                    </div>
+                    <div class="col m-2 foreground-item">
 
-                </div> <!-- end first row -->
+                        <div id="funds_form">
+
+                            <h3 class="d-flex justify-content-center">Funds</h3>
+                            <hr>
+
+                            <span>
+                                <div class=" mb-5">
+                                    <b>{{ funds_form.type.label }}</b>
+                                    {{ funds_form.type }}
+                                </div>
+
+                            </span>
+                            <span>
+                                <div>
+                                    <b>{{ funds_form.amount.label }}</b>
+                                       {{ funds_form.amount }}
+                                </div>
+                            </span>
+
+                        </div>
+
+                    </div> <!-- End Funds Column -->
+
+                </div> <!-- End Second Row -->
 
                 <div class="row p-3">
 
-                    <div class="col-6 m-2 foreground-item">
-
-                        <div id="donor_form">
-
-                            <h3 class="d-flex justify-content-center">Donor Information</h3>
-                            <label for="toggleAutocomplete">
-                                Toggle autocomplete
-                                <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
-                            </label>
-
-
-                            <div class="wrapperX">
-                                <span>
-                                    <b>{{ donor_form.first_name.label }}</b>
-                                    <div id='donor_form_first_name'>
-                                        {{ donor_form.first_name }}
-                                    </div>
-                                </span>
-
-                                <span>
-                                    <b>{{ donor_form.last_name.label }}</b>
-                                       {{ donor_form.last_name }}
-                                </span>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 1em;">
-                                <span>
-                                    <b>{{ donor_form.email.label }}</b>
-                                       {{ donor_form.email }}
-                                </span>
-                                <span>
-                                    <b>{{ donor_form.phone_number.label }}</b>
-                                       {{ donor_form.phone_number }}
-                                </span>
-                            </div>
-
-                            <div class="wrapperX">
-                                <span>
-                                    <b>{{ donor_form.address1.label }}</b>
-                                       {{ donor_form.address1 }}
-                                </span>
-                                <span>
-                                    <b>{{ donor_form.address2.label }}</b>
-                                       {{ donor_form.address2 }}
-                                </span>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 1em;">
-                                <span>
-                                    <b>{{ donor_form.city.label }}</b>
-                                       {{ donor_form.city }}
-                                </span>
-
-                                <span>
-                                    <b>{{ donor_form.state.label }}</b>
-                                    <select name="state" id="id_state" class="form-control">
-                                    <option value="" disabled selected>State</option>
-                                        {% for state,abr in states.items %}
-                                    <option value="{{ abr }}">{{ state.title }}</option>
-                                        {% endfor %}
-                                        </select>
-        {#                                {{ donor_form.state }}#}
-                                </span>
-                                <span class="mb-4">
-                                    <b>{{ donor_form.zip.label }}</b>
-                                       {{ donor_form.zip }}
-                                </span>
-
-                            </div>
-
+                    <div class="col m-2 foreground-item">
+                        <div>
+                            <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 btn-danger border border-dark shadow" id="clear_fields">
+                                Clear
+                            </button>
                         </div>
-                    </div> <!-- end donor info column -->
+                    </div>
 
                     <div class="col m-2 foreground-item">
-                        <div class="row">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 shadow read">Submit</button>
+                        </div>
+                    </div>
 
-                            <div class="col-6">
-                                <div>
-                                    <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 btn-danger border border-dark shadow" id="clear_fields">
-                                        Clear
-                                    </button>
-                                    <div id="clear" class=""></div>
-                                </div>
-                            </div>
+                </div> <!-- End Third Row -->
 
-                            <div class="col">
-                                <div>
-                                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 shadow read">Enter</button>
-                                </div>
-                            </div>
+            </div> <!-- End Grid-->
 
-                        </div> <!-- end nested row -->
-                    </div> <!-- end buttons column -->
-
-                </div> <!-- end second row -->
-
-            </div> <!-- end grid -->
         </form>
     </div>
 
@@ -529,3 +576,4 @@
     </script>
 
 {% endblock %}
+
