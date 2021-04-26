@@ -1,8 +1,13 @@
-from datetime import datetime
+from datetime import date
 from django import forms
+from django.core.validators import DecimalValidator,MinValueValidator
 from .models import *
 from helpers import remove_html_tags
 from input.queries import get_subtypes_for_choicefield
+
+
+decimalValidators = [MinValueValidator(limit_value=0.0), DecimalValidator(max_digits=10,decimal_places=2)]
+
 
 class DonorInformationForm(forms.ModelForm):
     first_name = forms.CharField(required=False)
@@ -37,8 +42,8 @@ class DonorInformationForm(forms.ModelForm):
         self.fields["zip"].widget.attrs.update({"placeholder": "Zip Code"})
         self.fields["email"].widget.attrs.update({"placeholder": "Email"})
 
-US_STATES = [('',''), ('al', 'Alabama'), ('ak', 'Alaska'), ('as', 'American Samoa'), ('az', 'Arizona'), ('ar', 'Arkansas'),
-             ('ca', 'California'), ('co', 'Colorado'), ('ct', 'Connecticut'), ('de', 'Delaware'), ('dc', 'District of Columbia'),
+US_STATES = [('',''), ('ca', 'California'), ('al', 'Alabama'), ('ak', 'Alaska'), ('as', 'American Samoa'), ('az', 'Arizona'), ('ar', 'Arkansas'),
+             ('co', 'Colorado'), ('ct', 'Connecticut'), ('de', 'Delaware'), ('dc', 'District of Columbia'),
              ('fl', 'Florida'), ('ga', 'Georgia'), ('gu', 'Guam'), ('hi', 'Hawaii'), ('id', 'Idaho'), ('il', 'Illinois'),
              ('in', 'Indiana'), ('ia', 'Iowa'), ('ks', 'Kansas'), ('ky', 'Kentucky'), ('la', 'Louisiana'), ('me', 'Maine'),
              ('md', 'Maryland'), ('ma', 'Massachusetts'), ('mi', 'Michigan'), ('mn', 'Minnesota'), ('ms', 'Mississippi'),
@@ -137,28 +142,17 @@ class ItemForm(forms.Form):
                   ('misc', 'Miscellaneous')
                   ]
 
-    # clothing_types = [
-    #     ('men','Men'),
-    #     ('women','Women'),
-    #     ('children','Children')
-    # ]
-    #
-    # business = [
-    #     ("Trader Joe's","Trader Joe's"),
-    #     ('tar','Target'),
-    #     ('bestbuy','BestBuy')
-    # ]
+
 
     clothing_types = get_subtypes_for_choicefield("clothingtypes")
     business = get_subtypes_for_choicefield("businesses")
 
     type = forms.ChoiceField(required=False, choices=DONATION_TYPES)
-    quantity = forms.IntegerField(required=False)
+    quantity = forms.IntegerField(required=False, validators=[MinValueValidator(limit_value=1)])
     sub_type_name = forms.CharField(required=False)
     sub_type_clothing = forms.ChoiceField(required=False, choices=clothing_types)
     sub_type_business = forms.ChoiceField(required=False, choices=business)
-    amount = forms.DecimalField(required=False)
-
+    amount = forms.DecimalField(required=False, validators=decimalValidators)
 
     class Meta:
         # model = input
@@ -173,22 +167,18 @@ class ItemForm(forms.Form):
             visible.field.widget.attrs['class'] = 'form-control'
 
         self.fields["type"].widget.attrs.update({"placeholder": "Type"})
-        self.fields["quantity"].widget.attrs.update({"placeholder": "0"})
+        self.fields["quantity"].widget.attrs.update({"placeholder": 1, "min": 1, "max": 99})
         self.fields["sub_type_name"].widget.attrs.update({"placeholder": "Name"})
         self.fields["sub_type_clothing"].widget.attrs.update({"placeholder": "Type"})
         self.fields["sub_type_business"].widget.attrs.update({"placeholder": "Business"})
-        self.fields["amount"].widget.attrs.update({"placeholder": "0"})
+        self.fields["amount"].widget.attrs.update({"placeholder": 0, "min": 0, "max": 9999})
 
 
 class FundsForm(forms.Form):
+    
 
-    amount = forms.DecimalField(required=False)
-    # fund_types = [
-    #     (None,"N/A"),
-    #     ('Cash', 'Cash'),
-    #     ('Check', 'Check'),
-    #     ('Electronic', 'Electronic')
-    # ]
+    amount = forms.DecimalField(required=False, validators=decimalValidators)
+
     fund_types = get_subtypes_for_choicefield("fundtypes")
     fund_types.insert(0,(None,"N/A"))
 
@@ -205,3 +195,5 @@ class FundsForm(forms.Form):
         for visible in fields:
             # Add class to each of the form elements
             visible.field.widget.attrs['class'] = 'form-control'
+
+        self.fields["amount"].widget.attrs.update({"min": 0, "max": 99999})
