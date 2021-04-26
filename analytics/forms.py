@@ -35,8 +35,7 @@ class RawDataForm(forms.Form):
 
 
 class ChartsForm(forms.Form):
-    first_name = forms.CharField(max_length=50, required=False)
-    last_name = forms.CharField(max_length=50, required=False)
+
     donation_year = forms.CharField(max_length=4, required=False)
 
     class Meta:
@@ -45,8 +44,6 @@ class ChartsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ChartsForm, self).__init__(*args, **kwargs)
 
-        self.fields["first_name"].widget.attrs.update({"placeholder": "First Name"})
-        self.fields["last_name"].widget.attrs.update({"placeholder": "Last Name"})
         self.fields["donation_year"].widget.attrs.update({"placeholder": "YYYY"})
 
 
