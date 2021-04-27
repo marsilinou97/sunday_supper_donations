@@ -9,6 +9,7 @@
 
     <div class="shadow p-3 mb-5 rounded border foreground-item">
 
+        <input type="button" value="Download" onclick="download_my_file()">
 
         <div id="search">
             <div class="row">
@@ -337,6 +338,10 @@
 
 
     <script>
+        function download_my_file() {
+            window.location = "download_my_file"
+        }
+
         {#function datesSorter0(sortName, sortOrder, data) {#}
         {#    let order = sortOrder === 'desc' ? -1 : 1#}
         {#    data.sort(datesSorter_, order)#}
@@ -359,7 +364,8 @@
         }
 
         function isNumeric(str) {
-            if (typeof str != "string") return false // we only process strings!
+            if (typeof str == "number") return true;
+            else if (typeof str != "string") return false // we only process strings!
             return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
                 !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
         }
@@ -373,7 +379,7 @@
             } else if (isNumeric(a)) {
                 {#console.log("NUMBER")#}
                 {#console.log(Math.sign(a - b))#}
-                return Math.sign(a - b);
+                return Math.sign(a - b) * order;
             } else {
                 if (a < b) return order * -1;
                 if (a > b) return order;

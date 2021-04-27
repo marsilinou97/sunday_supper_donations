@@ -103,6 +103,19 @@ def update_donor(request):
     return FailedJsonResponse({"error": "Unknown method"})
 
 
+from wsgiref.util import FileWrapper
+from django.http import HttpResponse
+
+
+def download(request, filename="test.txt"):
+    # TODO create the file and pass the path to the function
+    wrapper = FileWrapper(open(filename, 'rb'))
+    response = HttpResponse(wrapper, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
+
+
 def get_table(request):
     # Get request parse
     if request.method == "GET":
@@ -135,7 +148,7 @@ def get_table(request):
                 request.GET = json.loads(request.GET["exact"])
                 model = request.GET["table_type"]
                 offset = 0
-                limit = 10
+                limit = int(request.GET["limit"])
                 order_by_column = ""
                 order_by_direction = "asc"
                 search_keyword = ""
