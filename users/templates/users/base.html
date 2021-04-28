@@ -96,8 +96,16 @@
         <ul class="navbar-nav mr-auto">
 
             {% if user.is_authenticated %}
-                <li class="nav-item active">
-                    <a class="nav-link text-white" href="{% url 'input_index' %}">Home <span class="sr-only">(current)</span></a>
+                <!-- Input dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">Input</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item " href="{% url 'input_index' %}">Input Donation</a></li>
+                        <li><a class="dropdown-item " href="{% url 'add_businesses' %}">Add a Business</a></li>
+                        <li><a class="dropdown-item " href="{% url 'edit_businesses' %}">Edit Businesses</a></li>
+                    </ul>
                 </li>
                 <!-- Analytics dropdown -->
                 <li class="nav-item dropdown">
