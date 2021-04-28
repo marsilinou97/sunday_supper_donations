@@ -39,6 +39,12 @@
                     </button>
                 </div>
                 <div class="col">
+                    <button type="submit"
+                            class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 btn-danger border border-dark shadow"
+                            onclick="exitExactSearchMode()">Clear
+                    </button>
+                </div>
+                <div class="col">
                     <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export
                     </button>
                 </div>
@@ -138,6 +144,9 @@
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                     <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Date Received
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                     <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
@@ -180,6 +189,9 @@
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                     <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Date Received
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                     <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
@@ -226,6 +238,9 @@
                         Last Name
                     </th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Date Received
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
                         Type
                     </th>
@@ -273,6 +288,9 @@
                         Last Name
                     </th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Date Received
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
                         Type
                     </th>
@@ -320,6 +338,9 @@
                         Last Name
                     </th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Date Received
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
                         Type
                     </th>
@@ -338,14 +359,11 @@
 
 
     <script>
+        let exactSearchOn = false;
+
         function download_my_file() {
             window.location = "download_my_file"
         }
-
-        {#function datesSorter0(sortName, sortOrder, data) {#}
-        {#    let order = sortOrder === 'desc' ? -1 : 1#}
-        {#    data.sort(datesSorter_, order)#}
-        {# }#}
 
         function datesSorter(sortName, sortOrder, data) {
             let order = sortOrder === 'desc' ? -1 : 1
@@ -387,13 +405,6 @@
             }
         }
 
-        {#function queryParams(params) {#}
-        {#    console.log("PARAMs: ")#}
-        {#    console.log(params)#}
-        {#    console.log($(this))#}
-        {#    return params#}
-        {# }#}
-
         function getClosure($this) {
             const exact = {
                 "exact": {},
@@ -416,39 +427,52 @@
             return exact;
         }
 
-        function submit_search_form() {
+
+        function exitExactSearchMode() {
+            exactSearchOn = false;
+            $("#search input").each(function () {
+                $(this).val('')
+                $("#pagesize").val("10")
+            })
+        }
+
+        function getBulkSearchResult($this, page = null) {
+            const $thisTable = $this
+            const exact = getClosure($this)
+
+            {#console.log(exact)#}
+            $.ajax({
+                url: 'get_table/',
+                datatype: 'json',
+                data: {"exact": JSON.stringify(exact)},
+                type: 'GET',
+                success: function (data) {
+                    if (page != null) return data
+                    $thisTable.bootstrapTable('load', {
+                        "rows": data["rows"],
+                        "total": data["total"]
+                    })
+                    console.log("LOADED DATA")
+                },
+                error: function (er) {
+                    console.log("ERROR!436")
+                    {#params.error(er);#}
+                    console.log("Error while pulling data with the following parameters:  " + er)
+                }
+            });
+        }
+
+        function submit_search_form(o = null) {
+            exactSearchOn = true;
             {# TODO add some checks data and strings/names #}
             {#console.log($("#id_donation_date_from").val() === "" && $("#id_donation_date_to").val() === "")#}
             {#if (#}
             {#    ($("#id_last_name").val() !== "" || $("#id_first_name").val() !== "") ||#}
             {#    ($("#donation_date_from").val() !== "" && $("#donation_date_to").val() !== "")#}
             {#) return 0;#}
-
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
-                    const $thisTable = $(this)
-                    const exact = getClosure($(this))
-                    console.log(exact)
-                    $.ajax({
-                        url: 'get_table/',
-                        datatype: 'json',
-                        data: {"exact": JSON.stringify(exact)},
-                        type: 'GET',
-                        success: function (data) {
-                            console.log(data)
-                            console.log("OK")
-                            console.log($(this))
-                            $thisTable.bootstrapTable('load', {
-                                "rows": data["rows"],
-                                "total": data["total"]
-                            })
-                        },
-                        error: function (er) {
-                            console.log("ERROR!436")
-                            params.error(er);
-                            console.log("Error while pulling data with the following parameters:  " + er)
-                        }
-                    });
+                    getBulkSearchResult($(this))
                 } else {
                 }
             })
@@ -456,22 +480,29 @@
 
 
         function getTableData(params) {
-            {#console.log("Params: ")#}
-            {#console.log(params)#}
-            let table_type = ""
-            
-            if ("exact" in params)
-                table_type = params["table_type"]
-            else
-                table_type = $(this)[0].$el.attr("id")
+            let table_type, parameters = ""
+            if (exactSearchOn) {
+                const $this = $("#" + $(this)[0].$el.attr("id"))
+                const exact = getClosure($this)
+                {#table_type = $(this)[0].$el.attr("id")#}
+                exact["offset"] = params.data.offset;
+                parameters = {"exact": JSON.stringify(exact)}
+            } else {
+                if ("exact" in params)
+                    table_type = params["table_type"]
+                else
+                    table_type = $(this)[0].$el.attr("id")
+
+                parameters = $.param(params.data) + "&table_type=" + table_type
+            }
 
             $.ajax({
                 url: 'get_table/',
                 datatype: 'json',
-                data: $.param(params.data) + "&table_type=" + table_type,
+                data: parameters,
                 type: 'GET',
                 success: function (data) {
-                    {#console.log(data)#}
+                    console.log(data)
                     params.success({
                         "rows": data["rows"],
                         "total": data["total"]
@@ -538,7 +569,7 @@
                 } else {
                     $('#clothing_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('clothing_table')
-                    tablesData.splice(index, 1) 
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -550,7 +581,7 @@
                 } else {
                     $('#foods_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('foods_table')
-                    tablesData.splice(index, 1) 
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -597,7 +628,7 @@
                     exact.date_from = $("#id_donation_date_from").val()
                 if ($("#id_donation_date_to").val() !== "")
                     exact.date_to = $("#id_donation_date_to").val()
-                
+
                 const exportParams = {exact: exact, tables_selected: tablesData}
 
                 $.ajax({
