@@ -330,9 +330,14 @@
                         $(tds[1]).html(MISC_TYPES.val($(tds[1]).html()))
                     }
 
-                    $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
-                    $(tds[3]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
-                    $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+                    if (table_type === "funds_table" || table_type === "giftcards_table"){
+                        $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
+                        $(tds[3]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                        $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+                    } else{
+                        $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
+                        $(tds[3]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                    }
 
                     {#tds.prop('contenteditable', true)#}
                     tds.closest("tr").css({
