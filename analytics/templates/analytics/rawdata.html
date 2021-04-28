@@ -8,9 +8,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
 
     <div class="shadow p-3 mb-5 rounded border foreground-item">
-
-        <input type="button" value="Download" onclick="download_my_file()">
-
         <div id="search">
             <div class="row">
                 <div class="col">
@@ -49,8 +46,7 @@
                     </button>
                 </div>
             </div>
-
-
+            <div class="text-center exact_search_msg"></div>
         </div>
 
         {#        <form method="get" class="text-center" onsubmit="">#}
@@ -361,10 +357,6 @@
     <script>
         let exactSearchOn = false;
 
-        function download_my_file() {
-            window.location = "download_my_file"
-        }
-
         function datesSorter(sortName, sortOrder, data) {
             let order = sortOrder === 'desc' ? -1 : 1
             data.sort(function (a, b) {
@@ -432,7 +424,13 @@
             exactSearchOn = false;
             $("#search input").each(function () {
                 $(this).val('')
-                $("#pagesize").val("10")
+            })
+            $("#pagesize").val("10")
+            $(".exact_search_msg").text("")
+            $('.data-table').each(function () {
+                if ($(this).attr("id") !== undefined) {
+                    $(this).bootstrapTable('refresh')
+                }
             })
         }
 
@@ -463,13 +461,19 @@
         }
 
         function submit_search_form(o = null) {
-            exactSearchOn = true;
             {# TODO add some checks data and strings/names #}
-            {#console.log($("#id_donation_date_from").val() === "" && $("#id_donation_date_to").val() === "")#}
-            {#if (#}
-            {#    ($("#id_last_name").val() !== "" || $("#id_first_name").val() !== "") ||#}
-            {#    ($("#donation_date_from").val() !== "" && $("#donation_date_to").val() !== "")#}
-            {#) return 0;#}
+            if (($("#id_last_name").val() === "" && $("#id_first_name").val() === "")) {
+                console.log("EMPTY NAME")
+                if (($("#id_donation_date_from").val() === "" || $("#id_donation_date_to").val() === "")) {
+                    console.log("EMPTY DATE")
+                    return 0;
+                }
+            }
+            console.log("YEEEEEEEEs")
+
+            exactSearchOn = true;
+            $(".exact_search_msg").text("Exact Search Mode On")
+
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
                     getBulkSearchResult($(this))
