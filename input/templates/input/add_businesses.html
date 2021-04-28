@@ -1,0 +1,29 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success fade in text-center" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if user.is_authenticated %}
+        <!-- Add a business -->
+            <h1 class='text-center'>Add a Business</h1>
+            <div class="" id="add_business_form">
+                <form class="" action="" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label"><h1><strong><ul>
+                            <li><a href="http://ihasabucket.com/">New Business</a></li>
+                        </ul></strong></h1></label>
+                        <input type="text" id="name" name="name" class="form-control">
+                    </div>
+                </form>
+                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+            </div>
+    {% else %}
+        <p><a href="/login/">Log in</a> to visit this page.</p>
+    {% endif %}
+{% endblock %}
