@@ -142,8 +142,6 @@ class ItemForm(forms.Form):
                   ('misc', 'Miscellaneous')
                   ]
 
-
-
     clothing_types = get_subtypes_for_choicefield("clothingtypes")
     business = get_subtypes_for_choicefield("businesses")
 
@@ -188,6 +186,27 @@ class FundsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(FundsForm, self).__init__(*args, **kwargs)
+
+        fields = self.visible_fields()
+        for visible in fields:
+            # Add class to each of the form elements
+            visible.field.widget.attrs['class'] = 'form-control'
+
+        self.fields["amount"].widget.attrs.update({"min": 0, "max": 99999})
+
+class FundsEditForm(forms.Form):
+    amount = forms.DecimalField(required=False, validators=decimalValidators)
+
+    fund_types = get_subtypes_for_choicefield("fundtypes")
+
+    type = forms.ChoiceField(required=False, choices=fund_types)
+
+    class Meta:
+        # model = input
+        fields = ['type', 'amount']
+
+    def __init__(self, *args, **kwargs):
+        super(FundsEditForm, self).__init__(*args, **kwargs)
 
         fields = self.visible_fields()
         for visible in fields:
