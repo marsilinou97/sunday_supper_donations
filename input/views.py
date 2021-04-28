@@ -242,10 +242,12 @@ def edit_businesses(request):
 
 def get_businesses(request):
     if request.method == 'GET':
-        data = get_subtypes_by_name("businesses")
-        # data = list(data.items())
-        # for i in range(len(data)):
-        #     data[i] = data[i][1]
+        data = Business.objects.values()
+        data.order_by("name")
+        offset = int(request.GET["offset"])
+        limit = int(request.GET["limit"])
+        data = data[offset:offset + limit]
+        data = list(data)
         json_response = {"rows": data, "total": Business.objects.count()}
         return JsonResponse(json_response, safe=False)
     else:
