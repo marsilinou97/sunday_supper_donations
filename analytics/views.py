@@ -57,7 +57,9 @@ def raw_data(request):
 
 
 def edit_donations(request):
-    return render(request, 'analytics/edit_donations.html')
+    return render(request, 'analytics/edit_donations.html', {'funds_form_types': FundsForm(), 'item_form': ItemForm()})
+
+    # return render(request, 'analytics/edit_donations.html')
 
 
 @login_required(login_url="login")
@@ -147,7 +149,7 @@ def get_table(request):
             else:
                 request.GET = json.loads(request.GET["exact"])
                 model = request.GET["table_type"]
-                offset = 0
+                offset = int(request.GET["offset"])
                 limit = int(request.GET["limit"])
                 order_by_column = ""
                 order_by_direction = "asc"
@@ -164,15 +166,17 @@ def get_table(request):
                 if offset > rows_count:
                     raise ValueError
             exact = request.GET.get("exact", {})
-            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit,
-                                                 order_by_column, order_by_direction, search_keyword, exact)
+            query_set, count = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset,
+                                                        limit, order_by_column, order_by_direction, search_keyword,
+                                                        exact)
 
             # TODO check if no search being performed to return total number of rows, other wise return len(results)
+            json_response = {"rows": list(query_set), "total": count}
             # json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
-            json_response = {"rows": list(query_set), "total": len(list(query_set))}
+            # json_response = {"rows": list(query_set), "total": len(list(query_set))}
 
             if not json_response["rows"]: json_response = {"total": 0, "rows": []}
-
+            print(json_response)
             return JsonResponse(json_response, safe=False)
 
         except Exception as e:

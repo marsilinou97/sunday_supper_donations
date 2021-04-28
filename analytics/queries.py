@@ -51,12 +51,12 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
             # print("ORDER" * 100)
             if order_by_direction == "desc": order_by_column = "-" + order_by_column
             query = query.order_by(order_by_column)
-
+        count = query.count()
         query = query[offset:offset + limit]
     except Exception as e:
         query = None
         print(e)
-    return query
+    return query, count
 
 
 def get_quantity_group_by_date(model: models.Model, date_type: str):

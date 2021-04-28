@@ -25,7 +25,8 @@ RAW_DATA_BASE_FIELDS_KEYS = {
        "date_received": F('item__donation__date_received'),
        "quantity": F('item__quantity'),
        "comments": F('item__donation__comments'),
-       'donor_id': F('item__donation__donor__id')
+       'donor_id': F('item__donation__donor__id'),
+       'thanks_sent': F('item__donation__thanks_sent')
 }
 
 RAW_DATA_BASE_FIELDS = [
@@ -33,6 +34,7 @@ RAW_DATA_BASE_FIELDS = [
        'first_name',
        'last_name',
        'date_received',
+       'thanks_sent',
        'quantity',
        'comments',
        'item_id',
