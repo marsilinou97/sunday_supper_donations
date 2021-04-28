@@ -1,16 +1,18 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
-    <div class="shadow p-3 mb-5 border rounded foreground-item">
-        <form method="post" class="text-center">
-            {% csrf_token %}
+    <div class="form-group d-flex justify-content-center">
+        <div class="shadow p-3 mb-5 border rounded foreground-item w-75">
+            <form method="post">
+                {% csrf_token %}
 
-            {{ form }}
-
-            <button id ="analyticsButton" type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Filter</button>
-        </form>
+                <div class="d-flex justify-content-center">
+                {{ form }}
+                </div>
+                <button id ="analyticsButton" type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Filter</button>
+            </form>
+        </div>
     </div>
-
     <div class="mt-5">
 
         <h1 class="text-center mb-5">Analytics</h1>
