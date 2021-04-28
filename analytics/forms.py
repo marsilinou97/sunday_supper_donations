@@ -1,5 +1,15 @@
 from django import forms
 from helpers import remove_html_tags
+from datetime import date
+
+# Generate range of years for year dropdown. Default value set to current calendar year.
+current_year = date.today().year
+
+YEAR_CHOICES = [(current_year, current_year)]
+
+for year in range(2015, current_year + 21):
+    YEAR_CHOICES.append((year, year))
+
 
 
 class RawDataForm(forms.Form):
@@ -34,17 +44,19 @@ class RawDataForm(forms.Form):
         return cleaned_data
 
 
+
 class ChartsForm(forms.Form):
 
-    donation_year = forms.CharField(max_length=4, required=False)
+    donation_year = forms.ChoiceField(label="Donation Year", choices=YEAR_CHOICES)
 
     class Meta:
-        fields = ['first_name', 'last_name', 'donation_year']
+        fields = ['donation_year']
 
     def __init__(self, *args, **kwargs):
         super(ChartsForm, self).__init__(*args, **kwargs)
 
-        self.fields["donation_year"].widget.attrs.update({"placeholder": "YYYY"})
+        self.fields["donation_year"].widget.attrs.update({"class": "form-control-lg"})
+        self.fields["donation_year"].widget.attrs.update({"id": "year-dropdown"})
 
 
     def clean(self):
