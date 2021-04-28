@@ -163,6 +163,7 @@
             $(tds).each(function (i) {
                 $(this).html($(this).children().last().val())
             })
+            $("#businesses_table").bootstrapTable("refresh")
         }
 
         const tables_keys = {
@@ -212,7 +213,6 @@
                         function () {
                             $(".alert").slideUp(300)
                         }, 3000);
-                    $("#businesses_table").bootstrapTable("refresh")
                 },
                 error: function (er) {
                     console.log(JSON.stringify(er))
