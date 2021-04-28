@@ -459,7 +459,7 @@
             {#console.log("Params: ")#}
             {#console.log(params)#}
             let table_type = ""
-
+            
             if ("exact" in params)
                 table_type = params["table_type"]
             else
@@ -504,16 +504,17 @@
 
         $(document).ready(function () {
 
-            let tablesData = [[], [], [], [], []]
+            let tablesData = ['funds_table', 'giftcards_table', 'clothing_table', 'foods_table', 'misc_table']
 
 
             $('#fund').change(function () {
                 if (this.checked === true) {
                     $('#funds_table').parents(".donation_table").slideDown(300);
-                    tablesData[0] = tableToAOA('fundheader', 'fundtable')
+                    tablesData.push('funds_table')
                 } else {
                     $('#funds_table').parents(".donation_table").slideUp(300);
-                    tablesData[0] = []
+                    var index = tablesData.indexOf('funds_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -521,10 +522,11 @@
             $('#gift').change(function () {
                 if (this.checked === true) {
                     $('#giftcards_table').parents(".donation_table").slideDown(300);
-                    tablesData[1] = tableToAOA('giftcardheader', 'giftcardtable')
+                    tablesData.push('giftcards_table')
                 } else {
                     $('#giftcards_table').parents(".donation_table").slideUp(300);
-                    tablesData[1] = []
+                    var index = tablesData.indexOf('giftcards_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -532,10 +534,11 @@
             $('#clothing').change(function () {
                 if (this.checked === true) {
                     $('#clothing_table').parents(".donation_table").slideDown(300);
-                    tablesData[2] = tableToAOA('clothingheader', 'clothingtable')
+                    tablesData.push('clothing_table')
                 } else {
                     $('#clothing_table').parents(".donation_table").slideUp(300);
-                    tablesData[2] = []
+                    var index = tablesData.indexOf('clothing_table')
+                    tablesData.splice(index, 1) 
                 }
             });
 
@@ -543,10 +546,11 @@
             $('#food').change(function () {
                 if (this.checked === true) {
                     $('#foods_table').parents(".donation_table").slideDown(300);
-                    tablesData[3] = tableToAOA('foodheader', 'foodtable')
+                    tablesData.push('foods_table')
                 } else {
                     $('#foods_table').parents(".donation_table").slideUp(300);
-                    tablesData[3] = []
+                    var index = tablesData.indexOf('foods_table')
+                    tablesData.splice(index, 1) 
                 }
             });
 
@@ -554,10 +558,11 @@
             $('#misc').change(function () {
                 if (this.checked === true) {
                     $('#misc_table').parents(".donation_table").slideDown(300);
-                    tablesData[4] = tableToAOA('mischeader', 'misctable')
+                    tablesData.push('misc_table')
                 } else {
                     $('#misc_table').parents(".donation_table").slideUp(300);
-                    tablesData[4] = []
+                    var index = tablesData.indexOf('misc_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -565,80 +570,62 @@
                 if (this.checked === true) {
                     $('table').parents(".donation_table").slideDown(300);
                     $("input[type=checkbox].donation_select").prop('checked', true);
-                    tablesData[0] = tableToAOA('fundheader', 'fundtable')
-                    tablesData[1] = tableToAOA('giftcardheader', 'giftcardtable')
-                    tablesData[2] = tableToAOA('clothingheader', 'clothingtable')
-                    tablesData[3] = tableToAOA('foodheader', 'foodtable')
-                    tablesData[4] = tableToAOA('mischeader', 'misctable')
+                    tablesData.push('funds_table')
+                    tablesData.push('giftcards_table')
+                    tablesData.push('clothing_table')
+                    tablesData.push('foods_table')
+                    tablesData.push('misc_table')
                 } else {
                     {#$('h3').slideUp(300);#}
                     $('table').parents(".donation_table").slideUp(300);
                     $("input[type=checkbox].donation_select").prop('checked', false);
-                    tablesData = [[], [], [], [], []]
+                    tablesData = []
                 }
             });
 
 
             {#Handles export feature#}
             $('#export').click(function (e) {
-                e.preventDefault()
-                const wb = XLSX.utils.book_new();
-                wb.Props = {
-                    Title: 'Test',
-                    Author: 'Sunday Supper',
-                    CreateDate: new Date()
-                }
 
-                var wscols = [
-                    {wch: 20},
-                    {wch: 20},
-                    {wch: 20},
-                    {wch: 20},
-                    {wch: 20}
-                ];
+                const exact = {}
 
-                const sheetNames = ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Misc.']
-                for (var i = 0; i < sheetNames.length; i++) {
-                    wb.SheetNames.push(sheetNames[i])
-                    wb.Sheets[sheetNames[i]] = XLSX.utils.aoa_to_sheet(tablesData[i])
-                    wb.Sheets[sheetNames[i]]['!cols'] = wscols
-                }
+                if ($("#id_first_name").val() !== "")
+                    exact.first_name = $("#id_first_name").val()
+                if ($("#id_last_name").val() !== "")
+                    exact.last_name = $("#id_last_name").val()
+                if ($("#id_donation_date_from").val() !== "")
+                    exact.date_from = $("#id_donation_date_from").val()
+                if ($("#id_donation_date_to").val() !== "")
+                    exact.date_to = $("#id_donation_date_to").val()
+                
+                const exportParams = {exact: exact, tables_selected: tablesData}
 
+                $.ajax({
+                    url: 'download_my_file/',
+                    datatype: 'json',
+                    data: {"data": JSON.stringify(exportParams)},
+                    type: 'GET',
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function (data) {
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(data);
+                        a.href = url;
+                        a.download = 'test.xls';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function (er) {
+                        console.log(er)
+                    }
 
-                const excelFileName = (new Date()).toString()
+                });
+            });
 
-                const wbOut = XLSX.writeFile(wb, excelFileName + ".xlsx", {bookType: 'xlsx', type: 'binary'})
-
-            })
-        });
-
-        let tableToAOA = function (headerId, tableID) {
-            let header = [[$('#' + headerId).text()]]
-
-            var tableheader = $('#' + tableID + ' tr').map(function () {
-                return [
-                    $('th', this).map(function () {
-                        return $(this).text();
-                    }).get()
-                ];
-            }).get();
-
-            var tableData = $('#' + tableID + ' tr').map(function () {
-                return [
-                    $('td', this).map(function () {
-                        return $(this).text();
-                    }).get()
-                ];
-            }).get();
-
-            let AoA = header.concat(tableheader.concat(tableData));
-
-            return AoA.filter(function (a) {
-                return a.length > 0
-            })
-        }
-
-
+        })
     </script>
 
 
