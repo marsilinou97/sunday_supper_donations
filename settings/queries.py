@@ -3,8 +3,10 @@ from users.models import *
 from django.db.models import F
 from django.contrib.auth.models import Group, User
 
-def get_users_info():
-    return User.objects.annotate(role=F('groups__name')).values('id','username', 'email', 'role', 'is_active')
+def get_users_info(offset: int, limit: int):
+    users = User.objects.annotate(role=F('groups__name')).values('id','username', 'email', 'role', 'is_active')
+    users = users[offset:offset + limit]
+    return users
 
 def get_all_roles():
     return Group.objects.annotate(role=F('name')).values('role')
@@ -12,7 +14,7 @@ def get_all_roles():
 def update_user_role(id: int, role: str):
     user = User.objects.get(id=id)
     user.groups.clear()
-    
+
     new_role = Group.objects.get(name=role)
     new_role.user_set.add(user)
 
@@ -21,8 +23,10 @@ def activate_user(id: int, active: bool):
     user.is_active = active
     user.save()
 
-def get_token_data():
-    return RegistrationToken.objects.select_related('user').annotate(creator_name=F('creator__username')).values()
+def get_token_data(offset: int, limit: int):
+    tokens = RegistrationToken.objects.select_related('user').annotate(creator_name=F('creator__username')).values()
+    tokens = tokens[offset:offset + limit]
+    return tokens
 
 def update_token_data(token_id: int, data: dict):
     return RegistrationToken.objects.filter(id=token_id).update(**data)
