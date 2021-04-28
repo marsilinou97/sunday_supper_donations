@@ -21,6 +21,7 @@ TABLE_HEADERS_FORMATTED = {
        'first_name' : 'First Name',
        'last_name': 'Last Name',
        'date_received': 'Date Received',
+       'thanks_sent': 'Thank Sent',
        'sub_type': 'Sub Type',
        'amount': 'Amount',
        'quantity': 'Quantity',

@@ -32,7 +32,7 @@ def export_tables_to_excel(params):
             exact=filters
         )
 
-        table_data = list(table_data)
+        table_data_ = list(table_data[0])
 
         ws = wb.add_sheet(table_name)
 
@@ -40,15 +40,15 @@ def export_tables_to_excel(params):
 
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
-
-        for col_num, column in enumerate(table_data[0].keys()):
+        
+        for col_num, column in enumerate(dict(table_data_[0]).keys()):
             ws.write(row_num, col_num, TABLE_HEADERS_FORMATTED[column] , font_style)
 
         # Sheet body, remaining rows
         font_style = xlwt.XFStyle()
 
 
-        for row in table_data:
+        for row in table_data[0]:
             row_to_list = list(row.values())
             row_num += 1
             for col_num in range(len(row_to_list)):
