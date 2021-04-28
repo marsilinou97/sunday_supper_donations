@@ -27,6 +27,8 @@ from .forms import RawDataForm, ChartsForm
 from .queries import *
 from .vars import *
 
+from analytics.excel import export_tables_to_excel
+
 get_zeros_list = lambda n: [0] * n
 
 
@@ -109,12 +111,15 @@ from wsgiref.util import FileWrapper
 from django.http import HttpResponse
 
 
-def download(request, filename="test.txt"):
+def download(request, filename="test.xls"):
     # TODO create the file and pass the path to the function
-    wrapper = FileWrapper(open(filename, 'rb'))
-    response = HttpResponse(wrapper, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
-    response['Content-Length'] = os.path.getsize(filename)
+    export_tables_to_excel(json.loads(request.GET['data']))
+    
+    path = './temp_downloads/'+filename
+    wrapper = FileWrapper(open(path, 'rb'))
+    response = HttpResponse(wrapper, content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(path)
+    response['Content-Length'] = os.path.getsize(path)
     return response
 
 

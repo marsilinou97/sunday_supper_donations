@@ -17,6 +17,24 @@ table_headers = {
     'giftcards': ('first_name', 'last_name', 'date_received', 'business_name', 'XXXX', 'amount', 'quantity'),
     'miscellaneous': ('first_name', 'last_name', 'date_received', 'XXXX', 'misc_name', 'quantity')}
 
+TABLE_HEADERS_FORMATTED = {
+       'first_name' : 'First Name',
+       'last_name': 'Last Name',
+       'date_received': 'Date Received',
+       'sub_type': 'Sub Type',
+       'amount': 'Amount',
+       'quantity': 'Quantity',
+       'id' : 'ID',
+       'comments': 'Comments',
+       'item_id': 'Item ID',
+       'donor_id': 'Donor ID',
+       'donation_id': 'Donation ID',
+       'item_type': 'Item Type'
+}
+
+TABLE_NAMES_FORMATTED = {
+}
+
 
 RAW_DATA_BASE_FIELDS_KEYS = {
        "donation_id": F("item__donation__id"),
