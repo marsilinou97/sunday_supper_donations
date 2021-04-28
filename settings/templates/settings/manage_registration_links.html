@@ -59,6 +59,7 @@
             let tables_data = {};
             function getTableData(params) {
                 let table_type = $(this)[0].$el.attr("id")
+                console.log(params.data)
                 $.ajax({
                     url: 'get_token_data/',
                     datatype: 'json',
@@ -100,7 +101,7 @@
                 $.each(row, function (k, v) {
                     if (k === 'id') {
                         html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
-                        html.push('<button type="button" class="deletebtn-tokens btn btn-primary btn-danger ms-2" >Delete</button>')
+                        html.push('<button type="button" class="deletebtn-tokens btn btn-primary btn-danger ms-2" >Button!</button>')
                     }
                 })
                 return html.join("")
@@ -120,6 +121,7 @@
 
                     if ($this.html() === 'Edit'){
                         $this.html('Save');
+                        // $("#cancelbutton").display = "block"
                         $(tds.slice(0,4)).css({"cursor": "not-allowed"})
                         tds = tds.slice(4)
 
@@ -128,12 +130,6 @@
                             oldData.push($(e).prop('outerHTML'))
                         })
 
-                        // ID, Token, Date Created, Creator, Active, Expiration Period
-                        // $(tds[0]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[0]).html()))
-                        // $(tds[1]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[1]).html()))
-                        // $(tds[2]).html($("<input type=\"date\" style='padding: 0' name=\"date_received\" class=\"form-control\" required id=\"id_date_received\">").val(moment($(tds[2]).html(), 'MM/DD/YYYY').format('yyyy-MM-DD')))
-                        // $(tds[3]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
-                        // $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
                         $(tds[0]).html(BOOLEANS.val($(tds[0]).html()))
                         $(tds[1]).html($("<input type=\"number\" min=\"0\" max=\"365\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[1]).html()))
 
@@ -160,7 +156,8 @@
                 let tds = $this.closest('tr').find('td')
                 let buttons = tds.last().children()
                 $(buttons[0]).html('Edit');
-                $(buttons[1]).html('Delete');
+                $(buttons[1]).html('Button!');
+                // $(buttons[1]).display = "none";
 
                 tds.splice(-1,1)
                 $(tds.slice(0,4)).css({"cursor": "auto"})
@@ -171,6 +168,11 @@
                 });
                 $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
                 $(tds[2]).html(dateFormat($(tds[2]).children().last().val(), 'MM/DD/YYYY'))
+                tds = tds.splice(5);
+                $(tds).each(function (i){
+                    $(this).html($(this).children().last().val())
+                })
+                $("#tokens_table").bootstrapTable("refresh")
             }
 
             const tables_keys = {

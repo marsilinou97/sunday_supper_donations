@@ -57,7 +57,11 @@ def index(request):
 
 @login_required
 def get_user_data(request):
-    json_response = {"rows":list(queries.get_users_info())}
+    if request.method != "GET":
+        return HttpResponse("Error")
+    offset = int(request.GET["offset"])
+    limit = int(request.GET["limit"])
+    json_response = {"rows":list(queries.get_users_info(offset, limit))}
     return JsonResponse(json_response, safe=False)
     # return JsonResponse(list(get_users_info()), safe=False)
 
@@ -124,8 +128,10 @@ def get_token_data(request):
     if request.method != "GET":
         return HttpResponse("ERROR...")
 
+    offset = int(request.GET["offset"])
+    limit = int(request.GET["limit"])
     rows_count = RegistrationToken.objects.count()
-    json_response = {"rows":list(queries.get_token_data()), "total": rows_count}
+    json_response = {"rows":list(queries.get_token_data(offset, limit)), "total": rows_count}
     return JsonResponse(json_response, safe=False)
     # return JsonResponse(list(queries.get_token_data()), safe=False)
 

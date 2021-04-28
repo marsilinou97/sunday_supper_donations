@@ -196,13 +196,29 @@
         </div>
     </div>
     <div style="display: none" id="item_form">
-        {{ item_form }}
+        {{ item_form.type }}
     </div>
     <div style="display: none" id="funds_types">
         {{ funds_form_types.type }}
     </div>
+    <div style="display: none" id="businesses">
+        {{ item_form.sub_type_business }}
+    </div>
+    <div style="display: none" id="clothing_types">
+        {{ item_form.sub_type_clothing }}
+    </div>
+    <div style="display: none" id="food_types">
+        {{ item_form.sub_type_name }}
+    </div>
+    <div style="display: none" id="misc_types">
+        {{ item_form.sub_type_name }}
+    </div>
     <script>
-        let FUNDS_TYPES = $("#funds_types").children().last()
+        let FUNDS_TYPES = $("#funds_types").children().last();
+        let BUSINESSES = $("#businesses").children().last();
+        let CLOTHING_TYPES = $("#clothing_types").children().last();
+        let FOOD_TYPES = $("#food_types").children().last();
+        let MISC_TYPES = $("#misc_types").children().last();
 
         function getCookie(name) {
             let cookieValue = null;
@@ -302,10 +318,26 @@
                     })
 
                     $(tds[0]).html($("<input type=\"date\" style='padding: 0' name=\"date_received\" class=\"form-control\" required id=\"id_date_received\">").val(moment($(tds[0]).html(), 'MM/DD/YYYY').format('yyyy-MM-DD')))
-                    $(tds[1]).html(FUNDS_TYPES.val($(tds[1]).html()))
-                    $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
-                    $(tds[3]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
-                    $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+                    if (table_type === "funds_table"){
+                        $(tds[1]).html(FUNDS_TYPES.val($(tds[1]).html()))
+                    } else if (table_type === "giftcards_table"){
+                        $(tds[1]).html(BUSINESSES.val($(tds[1]).html()))
+                    } else if (table_type === "foods_table"){
+                        $(tds[1]).html(FOOD_TYPES.val($(tds[1]).html()))
+                    } else if (table_type === "clothing_table"){
+                        $(tds[1]).html(CLOTHING_TYPES.val($(tds[1]).html()))
+                    } else if (table_type === "misc_table"){
+                        $(tds[1]).html(MISC_TYPES.val($(tds[1]).html()))
+                    }
+
+                    if (table_type === "funds_table" || table_type === "giftcards_table"){
+                        $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
+                        $(tds[3]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                        $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
+                    } else{
+                        $(tds[2]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[2]).html()))
+                        $(tds[3]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
+                    }
 
                     {#tds.prop('contenteditable', true)#}
                     tds.closest("tr").css({
@@ -345,7 +377,7 @@
 
             {# Set the cell to the date was selected and remove the input element #}
             $(tds[2]).html(dateFormat($(tds[2]).children().last().val(), 'MM/DD/YYYY'))
-            tds = tds.splice(3);
+            // tds = tds.splice(3);
             console.log(tds)
             $(tds).each(function (i) {
                 $(this).html($(this).children().last().val())
@@ -395,6 +427,7 @@
                     $(".alert").addClass("alert-success").hide().removeClass("alert-danger hide").slideDown(300)
                     $(".alert .msg").html("Record was updated successfully.")
                     exitEditRowMode($this);
+                    $("#" + table_type).bootstrapTable("refresh");
                     $("body").css("cursor", "auto")
                     setTimeout(
                         function () {

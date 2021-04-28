@@ -182,6 +182,7 @@
                     "color": "#000"
                 });
                 $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+                $("#users_table").bootstrapTable("refresh")
             }
 
             const tables_keys = {

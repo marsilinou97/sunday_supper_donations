@@ -20,7 +20,7 @@ from django.forms import ChoiceField
 from helpers import FailedJsonResponse
 from helpers import remove_html_tags
 from input.models import Donor
-from input.forms import FundsForm, ItemForm, DonorEditForm
+from input.forms import FundsForm, FundsEditForm, ItemForm, DonorEditForm
 from input.queries import get_donor_list_wo_anonymous
 from .forms import RawDataForm, ChartsForm
 
@@ -57,15 +57,12 @@ def raw_data(request):
 
 
 def edit_donations(request):
-    return render(request, 'analytics/edit_donations.html')
-
+    context = {'funds_form_types': FundsEditForm(), 'item_form': ItemForm()}
+    return render(request, 'analytics/edit_donations.html', context)
 
 @login_required(login_url="login")
 def edit_donors(request):
-    context = {}
-    # context['us_states'] = ChoiceField(required=False, choices=us_states)
-    # context['us_states'] = us_states
-    context['form'] = DonorEditForm()
+    context = {'form': DonorEditForm()}
     return render(request, 'analytics/edit_donors.html', context)
 
 
@@ -109,7 +106,7 @@ def get_table(request):
         try:
             """
                 {
-                    table_type: 
+                    table_type:
                     offset:
                     limit:
                     sort:
@@ -119,7 +116,7 @@ def get_table(request):
                         first_name:
                         last_name:
                     }
-                    range: 
+                    range:
                 }
             """
             exact_search = request.GET.get("exact", None)
@@ -155,8 +152,8 @@ def get_table(request):
                                                  order_by_column, order_by_direction, search_keyword, exact)
 
             # TODO check if no search being performed to return total number of rows, other wise return len(results)
-            # json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
-            json_response = {"rows": list(query_set), "total": len(list(query_set))}
+            json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
+            # json_response = {"rows": list(query_set), "total": len(list(query_set))}
 
             if not json_response["rows"]: json_response = {"total": 0, "rows": []}
 

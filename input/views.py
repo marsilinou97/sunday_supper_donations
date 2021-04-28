@@ -1,14 +1,17 @@
 import bleach
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction, IntegrityError
 from django.forms import formset_factory
 from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
+import json
 
-from input.queries import get_donor_list_wo_anonymous, get_donors_w_first_nm, get_donors_w_last_nm
-from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm
+from input.queries import get_donor_list_wo_anonymous, get_donors_w_first_nm, get_donors_w_last_nm, get_subtypes_by_name
+from .forms import DonationForm, DonorInformationForm, FundsForm, ItemForm, BusinessForm, BusinessEditForm
 from .models import *
+from analytics.queries import update_table_entry
 
 us_states = {
     '':'', 'California': 'ca', 'Alabama': 'al', 'Alaska': 'ak', 'American Samoa': 'as', 'Arizona': 'az', 'Arkansas': 'ar',
@@ -210,7 +213,6 @@ def view_get_donors(request):
     else:
         return HttpResponse("Error")
 
-
 # @login_required
 def index(request):
     if request.method == 'POST':
@@ -233,3 +235,71 @@ def index(request):
     else:
         messages.error(request, "Error")
         pass
+
+def edit_businesses(request):
+    context = {"form": BusinessEditForm()}
+    return render(request, 'input/edit_businesses.html', context)
+
+def get_businesses(request):
+    if request.method == 'GET':
+        data = Business.objects.values()
+        data.order_by("name")
+        offset = int(request.GET["offset"])
+        limit = int(request.GET["limit"])
+        data = data[offset:offset + limit]
+        data = list(data)
+        json_response = {"rows": data, "total": Business.objects.count()}
+        return JsonResponse(json_response, safe=False)
+    else:
+        return HttpResponse("Error getting businesses")
+
+def add_businesses(request):
+    if request.method == "POST":
+        form = BusinessForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Business added")
+            return redirect('add_businesses')
+        else:
+            print(f"Error adding business {form.errors}")
+            messages.error(request, form.errors)
+
+    return render(request, 'input/add_businesses.html')
+
+def delete_businesses(request):
+    if request.method == "POST":
+        try:
+            name = request.POST["name"]
+            result = Business.objects.filter(name=name).delete()[0]
+            if not result:
+                return JsonResponse(f"{result}", safe=False)
+        except Exception as e:
+            print(f"Exception: {e}")
+        return HttpResponse("Error")
+
+def update_businesses(request):
+    response = {}
+    try:
+        if request.method != "POST":
+            raise Exception("Request not POST")
+        update_data = json.loads(request.POST["update_data"])
+        print("\"", update_data, "\"",sep="\n")
+        filter = {"name": update_data["old_name"]}
+        update = {"name": update_data["new_name"]}
+        success = update_table_entry(Business, filter, update)
+        # business = Business.objects.filter(name=update_data["name"])
+        # business.update(update_data["name"])
+        # success = business.save()
+        if not success:
+            raise Exception("Could not change \"" + update_data["old_name"] + "\" to \"" + update_data["new_name"] + "\"")
+
+        response["success"] = True
+        response["message"] = business + " successfully added"
+        print(response["message"])
+    except Exception as e:
+        response["success"] = False
+        response["message"] = str(e)
+        print("Exception:",str(e))
+    print("complete")
+    return JsonResponse(response, safe=False)
