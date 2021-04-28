@@ -175,8 +175,6 @@ class ItemForm(forms.Form):
 
 
 class FundsForm(forms.Form):
-    
-
     amount = forms.DecimalField(required=False, validators=decimalValidators)
 
     fund_types = get_subtypes_for_choicefield("fundtypes")
@@ -197,3 +195,27 @@ class FundsForm(forms.Form):
             visible.field.widget.attrs['class'] = 'form-control'
 
         self.fields["amount"].widget.attrs.update({"min": 0, "max": 99999})
+
+class BusinessForm(forms.ModelForm):
+    class Meta:
+        model = Business
+        fields = ['name']
+
+class BusinessEditForm(forms.Form):
+    name = forms.CharField(required=True, max_length=50)
+
+    class Meta:
+        fields = ['name']
+
+    def __init__(self, *args, **kwargs):
+        super(BusinessEditForm, self).__init__(*args, **kwargs)
+
+        fields = self.visible_fields()
+        for visible in fields:
+            visible.field.widget.attrs['class'] = 'form-control'
+        self.fields["name"].widget.attrs.update({"placeholder": "Business Name"})
+
+    def clean(self):
+        cleaned_data = super(BusinessEditForm, self).clean()
+        cleaned_data = remove_html_tags(cleaned_data)
+        return cleaned_data
