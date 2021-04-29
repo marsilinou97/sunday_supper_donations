@@ -74,6 +74,7 @@ def get_quantity_group_by_date(model: models.Model, date_type: str, year = None)
         .annotate(**date) \
         .values(date_type) \
         .annotate(qty=Sum("item__quantity")) \
+        .filter(date_recieved__year = year) \
         .order_by()
 
     return query_set
@@ -109,7 +110,7 @@ def get_total_donation_count_qty(model: models.Model, year = None):
 
 def get_funds_count_qty(fund_type: FundType, year = None):
     year = year_specified(year)
-    
+
     query_set = Fund.objects \
         .filter(type=fund_type, item__donation__date_received__year = year) \
         .aggregate(qty=Sum("item__quantity"))

@@ -47,18 +47,18 @@
 <script>
 
     $('#year-dropdown').change(function() {
-        console.log($('#year-dropdown')[0].value)
+        fetchCharts($('#year-dropdown')[0].value)
     })
 
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
 
-    fetchCharts(2020)
+    fetchCharts(2021)
 
     function fetchCharts(year) {
         $.ajax({
             url: 'get_donation_count_date_qty/',
             datatype: 'json',
-            data: {}
+            data: {"year": year},
             type: 'GET',
             success: function (response) {
                 console.log('Donations W/ quantity (bar chart 1):', response);
@@ -108,6 +108,7 @@
         $.ajax({
             url: 'get_donation_count_month/',
             datatype: 'json',
+            data: {"year": year},
             type: 'GET',
             success: function (response) {
 
@@ -158,6 +159,7 @@
         $.ajax({
             url: 'get_donation_item_count/',
             datatype: 'json',
+            data: {"year": year},
             type: 'GET',
             success: function (response) {
                 console.log('Total donations by category (pie chart):', response);

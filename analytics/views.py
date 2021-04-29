@@ -192,11 +192,13 @@ def get_table(request):
 def get_donation_count_date_qty(request):
     if (request.method == "GET"):
 
+        year = request.GET["year"]
+
         json_response = {}
         for key in QUERY_DATA.keys():
             qty_count_by_month = [0 for i in range(12)]
 
-            list_of_data = list(get_quantity_group_by_date(QUERY_DATA[key]["MODEL"], "month"))
+            list_of_data = list(get_quantity_group_by_date(QUERY_DATA[key]["MODEL"], "month", year))
 
             for row in list_of_data:
                 qty_count_by_month[row["month"] - 1] += row["qty"]
@@ -211,11 +213,12 @@ def get_donation_count_date_qty(request):
 def get_donation_count_month(request):
     if (request.method == "GET"):
 
+        year = request.GET["year"]
         json_response = {}
         for key in QUERY_DATA.keys():
             qty_count_by_month = [0 for i in range(12)]
 
-            list_of_data = list(get_donation_count_by_date(QUERY_DATA[key]["MODEL"], "month"))
+            list_of_data = list(get_donation_count_by_date(QUERY_DATA[key]["MODEL"], "month", year))
 
             for row in list_of_data:
                 qty_count_by_month[row["month"] - 1] += row["count"]
@@ -229,10 +232,11 @@ def get_donation_count_month(request):
 
 def get_donation_item_count(request):
     if (request.method == "GET"):
+        year = request.GET["year"]
 
         json_response = {}
         for key in QUERY_DATA.keys():
-            results = get_total_donation_count_qty(QUERY_DATA[key]["MODEL"])
+            results = get_total_donation_count_qty(QUERY_DATA[key]["MODEL"], year)
 
             json_response.update({
                 key: results["qty"]
@@ -245,10 +249,12 @@ def get_donation_item_count(request):
 def get_donation_fund_count(request):
     if (request.method == "GET"):
 
+        year = request.GET["year"]
+
         fund_types = list(FundType.objects.all())
         json_response = {}
         for fund_type in fund_types:
-            results = get_funds_count_qty(fund_type)
+            results = get_funds_count_qty(fund_type, year)
             print(fund_type.name)
             print(results)
 
