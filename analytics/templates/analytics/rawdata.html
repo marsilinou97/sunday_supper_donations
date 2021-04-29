@@ -5,7 +5,7 @@
 {% block content %}
 
 
-    <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style/raw_data.css' %}">
 
     <div class="shadow p-3 mb-5 rounded border foreground-item">
         <div id="search">
@@ -350,8 +350,6 @@
             </table>
         </div>
     </div>
-
-
     <script>
         let exactSearchOn = false;
 
@@ -385,6 +383,7 @@
                     .tooltip('fixTitle');
             });
         }
+
 
         function datesSorter(sortName, sortOrder, data) {
             let order = sortOrder === 'desc' ? -1 : 1
@@ -557,7 +556,7 @@
             $('.data-table').each(function () {
                 let $table = $(this)
                 $table.bootstrapTable({
-                    onPostBody(data){
+                    onPostBody(data) {
                         $($table.parentsUntil(".donation_table")).find(".search").addClass("tool-tip")
                     }
                 });
@@ -699,6 +698,8 @@
 
         })
     </script>
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/autocomplete.js' %}"></script>
 
 {% endblock %}
