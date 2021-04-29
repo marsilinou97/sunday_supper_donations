@@ -1,11 +1,13 @@
 from django.db import models
 from django.db.models.aggregates import Count, Sum
+from django.db.models.functions import datetime
 from django.db.models.functions.datetime import Extract
 from input.models import *
 import sys  # debugging
 from django.db import connection
 from django.db.models import F, Q
 from analytics.vars import *
+import datetime
 
 
 def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, offset: int, limit: int,
@@ -59,9 +61,12 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
     return query
 
 
-def get_quantity_group_by_date(model: models.Model, date_type: str):
+def get_quantity_group_by_date(model: models.Model, date_type: str, year = None):
+    year = year_specified(year)
+
     date = {
-        date_type: Extract("item__donation__date_received", date_type)
+        date_type: Extract("item__donation__date_received", date_type),
+        "date_recieved": F("item__donation__date_received")
     }
 
     query_set = model.objects \
@@ -73,30 +78,39 @@ def get_quantity_group_by_date(model: models.Model, date_type: str):
     return query_set
 
 
-def get_donation_count_by_date(model: models.Model, date_type: str):
-    date = {
-        date_type: Extract("item__donation__date_received", date_type)
+def get_donation_count_by_date(model: models.Model, date_type: str, year = None):
+    year = year_specified(year)
+
+    annotations = {
+        date_type: Extract("item__donation__date_received", date_type),
+        "date_recieved": F("item__donation__date_received")
     }
 
     query_set = model.objects \
-        .annotate(**date) \
+        .annotate(**annotations) \
         .values(date_type) \
         .annotate(count=Count("*")) \
+        .filter(date_recieved__year = year) \
         .order_by()
 
     return query_set
 
 
-def get_total_donation_count_qty(model: models.Model):
+def get_total_donation_count_qty(model: models.Model, year = None):
+    year = year_specified(year)
+
     query_set = model.objects \
+        .filter(item__donation__date_received__year = year) \
         .aggregate(qty=Sum("item__quantity"))
 
     return query_set
 
 
-def get_funds_count_qty(fund_type: FundType):
+def get_funds_count_qty(fund_type: FundType, year = None):
+    year = year_specified(year)
+    
     query_set = Fund.objects \
-        .filter(type=fund_type) \
+        .filter(type=fund_type, item__donation__date_received__year = year) \
         .aggregate(qty=Sum("item__quantity"))
 
     return query_set
@@ -146,3 +160,11 @@ def update_item_entry(ids: list, data: dict, model_name: str):
     r3 = update_table_entry(QUERY_DATA[model_name]["MODEL"], {"item_id": ids[3]}, sub_item_fields)
     print(r0, r1, r2, r3)
     return r0 and r1 and r2 and r3
+
+
+def year_specified(year: int):
+    year_requested = None
+    if year == None:
+        return datetime.datetime.now().year
+    else:
+        return year
