@@ -52,9 +52,18 @@
 
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
 
+    const bar1Context = document.getElementById('bar-chart-1').getContext('2d');
+    const bar2Context = document.getElementById('bar-chart-2').getContext('2d');
+    const pieContext = document.getElementById('pie-chart').getContext('2d');
+
+    let bar1Chart = new Chart(bar1Context, { type: 'bar'})
+    let bar2Chart = new Chart(bar2Context, { type: 'bar'})
+    let pieChart = new Chart(pieContext, { type: 'pie'})
     fetchCharts(2021)
+    
 
     function fetchCharts(year) {
+
         $.ajax({
             url: 'get_donation_count_date_qty/',
             datatype: 'json',
@@ -63,12 +72,7 @@
             success: function (response) {
                 console.log('Donations W/ quantity (bar chart 1):', response);
 
-                var ctx = document.getElementById('bar-chart-1').getContext('2d');
-                var chart = new Chart(ctx, {
-
-                    type: 'bar',
-
-                    data: {
+                bar1Chart.data = {
                         labels: months,
                         datasets: [{
                             label: 'Funds',
@@ -96,9 +100,8 @@
                             borderColor: "#c45850",
                             data: response["misc_table"]
                         }]
-                    },
-                    options: {}
-                });
+                }
+                bar1Chart.update()
 
             }
         });
@@ -113,14 +116,8 @@
             success: function (response) {
 
                 console.log('Donations W/O quantity: (bar chart 2)', response);
-
-
-                var ctx = document.getElementById('bar-chart-2').getContext('2d');
-                var chart = new Chart(ctx, {
-
-                    type: 'bar',
-
-                    data: {
+                
+                bar2Chart.data = {
                         labels: months,
                         datasets: [{
                             label: 'Funds',
@@ -148,9 +145,8 @@
                             borderColor: "#c45850",
                             data: response["misc_table"]
                         }]
-                    },
-                    options: {}
-                });
+                }
+                bar2Chart.update()
             }
         });
 
@@ -164,10 +160,7 @@
             success: function (response) {
                 console.log('Total donations by category (pie chart):', response);
 
-                var ctx = document.getElementById('pie-chart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
+                pieChart.data = {
 
                     <!-- Donation Categories -->
                     labels: ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Miscellaneous'],
@@ -193,8 +186,9 @@
                         ],
                         borderWidth: 1
                     }]
-                },
-                options: {
+                }
+
+                pieChart.options = {
                     responsive: true,
                     maintainAspectRatio: false,
 
@@ -204,10 +198,10 @@
                                 beginAtZero: true
                             }
                         }]
-                    }
+                    } 
                 }
-            });
 
+                pieChart.update()
             }
         });
     }
