@@ -461,7 +461,7 @@
             const exact = {
                 "exact": {},
                 "table_type": $this.attr("id"),
-                "limit": $("#pagesize").val() - 0,
+                "limit": $("#select-rows").val() - 0,
                 "offset": 0,
                 "order": undefined,
                 "search": "",
@@ -485,7 +485,7 @@
             $("#search input").each(function () {
                 $(this).val('')
             })
-            $("#pagesize").val("10")
+            $("#select-rows").val("10")
             $(".exact_search_msg").text("")
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
