@@ -59,7 +59,7 @@ class DonorEditForm(forms.ModelForm):
     first_name = forms.CharField(required=False, max_length=50)
     last_name = forms.CharField(required=False, max_length=50)
     email = forms.EmailField(required=False, max_length=50)
-    phone_number = forms.CharField(required=False, max_length=11)
+    phone_number = forms.CharField(required=False, max_length=20)
     address1 = forms.CharField(required=False, max_length=50)
     address2 = forms.CharField(required=False, max_length=50)
     city = forms.CharField(required=False, max_length=50)

@@ -5,7 +5,7 @@
 {% block content %}
 
 
-    <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style/raw_data.css' %}">
 
         <div class="container form-group" id="search">
             <div class="shadow p-5 mb-5 rounded border foreground-item">
@@ -55,20 +55,25 @@
                     </div>
                 </div>
 
-
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read"
-                                onclick="submit_search_form()">Filter
-                        </button>
-                    </div>
-
-                    <div class="col">
-                        <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export
-                        </button>
-                    </div>
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read"
+                            onclick="submit_search_form()">Filter
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="submit"
+                            class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 btn-danger border border-dark shadow"
+                            onclick="exitExactSearchMode()">Clear
+                    </button>
+                </div>
+                <div class="col">
+                    <button id="export" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25 p-3 read">Export
+                    </button>
                 </div>
             </div>
+            <div class="text-center exact_search_msg"></div>
+        </div>
 
 
         {#        <form method="get" class="text-center" onsubmit="">#}
@@ -163,6 +168,9 @@
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                     <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Thanks Sent
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                     <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
@@ -205,6 +213,9 @@
                     <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                     <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Thanks Sent
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select">Type</th>
                     <th data-sortable="true" data-field="amount" data-filter-control="input">Amount</th>
                     <th data-sortable="true" data-field="quantity" data-filter-control="input">Quantity</th>
@@ -251,6 +262,9 @@
                         Last Name
                     </th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Thanks Sent
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
                         Type
                     </th>
@@ -298,6 +312,9 @@
                         Last Name
                     </th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Thanks Sent
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
                         Type
                     </th>
@@ -345,6 +362,9 @@
                         Last Name
                     </th>
                     <th data-sortable="true" data-field="date_received" data-filter-control="input">Date Received</th>
+                    <th data-sortable="true" data-field="thanks_sent" class="text-capitalize"
+                        data-filter-control="input">Thanks Sent
+                    </th>
                     <th data-sortable="true" data-field="sub_type" data-filter-control="select" class="text-capitalize">
                         Type
                     </th>
@@ -363,10 +383,39 @@
 
 
     <script>
-        {#function datesSorter0(sortName, sortOrder, data) {#}
-        {#    let order = sortOrder === 'desc' ? -1 : 1#}
-        {#    data.sort(datesSorter_, order)#}
-        {# }#}
+        let exactSearchOn = false;
+
+        function bindToolTip() {
+            $(function () {
+                // Tooltip Initializations
+                ToolTipStyling = function () {
+                    $('.tool-tip,[data-toggle="tooltip"]').tooltip({
+                        container: 'body',
+                        animation: true,
+                        delay: {
+                            show: 100,
+                            hide: 100
+                        }
+                    });
+                };
+
+                ToolTipStyling();
+
+                $('table').on('post-body.bs.table', function () {
+                    ToolTipStyling();
+                });
+
+                tooltipTitleSetter = function (that) {
+                    return $(that).val() === "" ? ' ' : $(that).val();
+                };
+            });
+
+            $('textarea.tool-tip').hover(function () {
+                $(this).attr("title", tooltipTitleSetter(this))
+                    .tooltip('fixTitle');
+            });
+        }
+
 
         function datesSorter(sortName, sortOrder, data) {
             let order = sortOrder === 'desc' ? -1 : 1
@@ -385,7 +434,8 @@
         }
 
         function isNumeric(str) {
-            if (typeof str != "string") return false // we only process strings!
+            if (typeof str == "number") return true;
+            else if (typeof str != "string") return false // we only process strings!
             return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
                 !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
         }
@@ -399,20 +449,13 @@
             } else if (isNumeric(a)) {
                 {#console.log("NUMBER")#}
                 {#console.log(Math.sign(a - b))#}
-                return Math.sign(a - b);
+                return Math.sign(a - b) * order;
             } else {
                 if (a < b) return order * -1;
                 if (a > b) return order;
                 return 0;
             }
         }
-
-        {#function queryParams(params) {#}
-        {#    console.log("PARAMs: ")#}
-        {#    console.log(params)#}
-        {#    console.log($(this))#}
-        {#    return params#}
-        {# }#}
 
         function getClosure($this) {
             const exact = {
@@ -436,39 +479,67 @@
             return exact;
         }
 
-        function submit_search_form() {
-            {# TODO add some checks data and strings/names #}
-            {#console.log($("#id_donation_date_from").val() === "" && $("#id_donation_date_to").val() === "")#}
-            {#if (#}
-            {#    ($("#id_last_name").val() !== "" || $("#id_first_name").val() !== "") ||#}
-            {#    ($("#donation_date_from").val() !== "" && $("#donation_date_to").val() !== "")#}
-            {#) return 0;#}
 
+        function exitExactSearchMode() {
+            exactSearchOn = false;
+            $("#search input").each(function () {
+                $(this).val('')
+            })
+            $("#pagesize").val("10")
+            $(".exact_search_msg").text("")
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
-                    const $thisTable = $(this)
-                    const exact = getClosure($(this))
-                    console.log(exact)
-                    $.ajax({
-                        url: 'get_table/',
-                        datatype: 'json',
-                        data: {"exact": JSON.stringify(exact)},
-                        type: 'GET',
-                        success: function (data) {
-                            console.log(data)
-                            console.log("OK")
-                            console.log($(this))
-                            $thisTable.bootstrapTable('load', {
-                                "rows": data["rows"],
-                                "total": data["total"]
-                            })
-                        },
-                        error: function (er) {
-                            console.log("ERROR!436")
-                            params.error(er);
-                            console.log("Error while pulling data with the following parameters:  " + er)
-                        }
-                    });
+                    $($(this).parentsUntil(".donation_table")).find(".search").attr("title", "")
+                    $(this).bootstrapTable('refresh')
+                }
+            })
+            $(".search input").prop("disabled", false)
+        }
+
+        function getBulkSearchResult($this, page = null) {
+            const $thisTable = $this
+            const exact = getClosure($this)
+
+            {#console.log(exact)#}
+            $.ajax({
+                url: 'get_table/',
+                datatype: 'json',
+                data: {"exact": JSON.stringify(exact)},
+                type: 'GET',
+                success: function (data) {
+                    if (page != null) return data
+                    $thisTable.bootstrapTable('load', {
+                        "rows": data["rows"],
+                        "total": data["total"]
+                    })
+                    console.log("LOADED DATA")
+                },
+                error: function (er) {
+                    console.log("ERROR!436")
+                    {#params.error(er);#}
+                    console.log("Error while pulling data with the following parameters:  " + er)
+                }
+            });
+        }
+
+        function submit_search_form(o = null) {
+            {# TODO add some checks data and strings/names #}
+            if (($("#id_last_name").val() === "" && $("#id_first_name").val() === "")) {
+                console.log("EMPTY NAME")
+                if (($("#id_donation_date_from").val() === "" || $("#id_donation_date_to").val() === "")) {
+                    console.log("EMPTY DATE")
+                    return 0;
+                }
+            }
+            console.log("YEEEEEEEEs")
+
+            exactSearchOn = true;
+            $(".exact_search_msg").text("Exact Search Mode On")
+            $(".search input").prop("disabled", true)
+            $('.data-table').each(function () {
+                if ($(this).attr("id") !== undefined) {
+                    $($(this).parentsUntil(".donation_table")).find(".search").attr("title", "Individual search is disabled. Click Clear to on top to enable this box")
+                    getBulkSearchResult($(this))
                 } else {
                 }
             })
@@ -476,19 +547,26 @@
 
 
         function getTableData(params) {
-            {#console.log("Params: ")#}
-            {#console.log(params)#}
-            let table_type = ""
+            let table_type, parameters = ""
+            if (exactSearchOn) {
+                const $this = $("#" + $(this)[0].$el.attr("id"))
+                const exact = getClosure($this)
+                {#table_type = $(this)[0].$el.attr("id")#}
+                exact["offset"] = params.data.offset;
+                parameters = {"exact": JSON.stringify(exact)}
+            } else {
+                if ("exact" in params)
+                    table_type = params["table_type"]
+                else
+                    table_type = $(this)[0].$el.attr("id")
 
-            if ("exact" in params)
-                table_type = params["table_type"]
-            else
-                table_type = $(this)[0].$el.attr("id")
+                parameters = $.param(params.data) + "&table_type=" + table_type
+            }
 
             $.ajax({
                 url: 'get_table/',
                 datatype: 'json',
-                data: $.param(params.data) + "&table_type=" + table_type,
+                data: parameters,
                 type: 'GET',
                 success: function (data) {
                     {#console.log(data)#}
@@ -508,7 +586,12 @@
 
         $(window).on('load', function () {
             $('.data-table').each(function () {
-                $(this).bootstrapTable({});
+                let $table = $(this)
+                $table.bootstrapTable({
+                    onPostBody(data) {
+                        $($table.parentsUntil(".donation_table")).find(".search").addClass("tool-tip")
+                    }
+                });
             })
         });
 
@@ -524,16 +607,17 @@
 
         $(document).ready(function () {
 
-            let tablesData = [[], [], [], [], []]
+            let tablesData = ['funds_table', 'giftcards_table', 'clothing_table', 'foods_table', 'misc_table']
 
 
             $('#fund').change(function () {
                 if (this.checked === true) {
                     $('#funds_table').parents(".donation_table").slideDown(300);
-                    tablesData[0] = tableToAOA('fundheader', 'fundtable')
+                    tablesData.push('funds_table')
                 } else {
                     $('#funds_table').parents(".donation_table").slideUp(300);
-                    tablesData[0] = []
+                    var index = tablesData.indexOf('funds_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -541,10 +625,11 @@
             $('#gift').change(function () {
                 if (this.checked === true) {
                     $('#giftcards_table').parents(".donation_table").slideDown(300);
-                    tablesData[1] = tableToAOA('giftcardheader', 'giftcardtable')
+                    tablesData.push('giftcards_table')
                 } else {
                     $('#giftcards_table').parents(".donation_table").slideUp(300);
-                    tablesData[1] = []
+                    var index = tablesData.indexOf('giftcards_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -552,10 +637,11 @@
             $('#clothing').change(function () {
                 if (this.checked === true) {
                     $('#clothing_table').parents(".donation_table").slideDown(300);
-                    tablesData[2] = tableToAOA('clothingheader', 'clothingtable')
+                    tablesData.push('clothing_table')
                 } else {
                     $('#clothing_table').parents(".donation_table").slideUp(300);
-                    tablesData[2] = []
+                    var index = tablesData.indexOf('clothing_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -563,10 +649,11 @@
             $('#food').change(function () {
                 if (this.checked === true) {
                     $('#foods_table').parents(".donation_table").slideDown(300);
-                    tablesData[3] = tableToAOA('foodheader', 'foodtable')
+                    tablesData.push('foods_table')
                 } else {
                     $('#foods_table').parents(".donation_table").slideUp(300);
-                    tablesData[3] = []
+                    var index = tablesData.indexOf('foods_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -574,10 +661,11 @@
             $('#misc').change(function () {
                 if (this.checked === true) {
                     $('#misc_table').parents(".donation_table").slideDown(300);
-                    tablesData[4] = tableToAOA('mischeader', 'misctable')
+                    tablesData.push('misc_table')
                 } else {
                     $('#misc_table').parents(".donation_table").slideUp(300);
-                    tablesData[4] = []
+                    var index = tablesData.indexOf('misc_table')
+                    tablesData.splice(index, 1)
                 }
             });
 
@@ -585,81 +673,65 @@
                 if (this.checked === true) {
                     $('table').parents(".donation_table").slideDown(300);
                     $("input[type=checkbox].donation_select").prop('checked', true);
-                    tablesData[0] = tableToAOA('fundheader', 'fundtable')
-                    tablesData[1] = tableToAOA('giftcardheader', 'giftcardtable')
-                    tablesData[2] = tableToAOA('clothingheader', 'clothingtable')
-                    tablesData[3] = tableToAOA('foodheader', 'foodtable')
-                    tablesData[4] = tableToAOA('mischeader', 'misctable')
+                    tablesData.push('funds_table')
+                    tablesData.push('giftcards_table')
+                    tablesData.push('clothing_table')
+                    tablesData.push('foods_table')
+                    tablesData.push('misc_table')
                 } else {
                     {#$('h3').slideUp(300);#}
                     $('table').parents(".donation_table").slideUp(300);
                     $("input[type=checkbox].donation_select").prop('checked', false);
-                    tablesData = [[], [], [], [], []]
+                    tablesData = []
                 }
             });
 
 
             {#Handles export feature#}
             $('#export').click(function (e) {
-                e.preventDefault()
-                const wb = XLSX.utils.book_new();
-                wb.Props = {
-                    Title: 'Test',
-                    Author: 'Sunday Supper',
-                    CreateDate: new Date()
-                }
 
-                var wscols = [
-                    {wch: 20},
-                    {wch: 20},
-                    {wch: 20},
-                    {wch: 20},
-                    {wch: 20}
-                ];
+                const exact = {}
 
-                const sheetNames = ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Misc.']
-                for (var i = 0; i < sheetNames.length; i++) {
-                    wb.SheetNames.push(sheetNames[i])
-                    wb.Sheets[sheetNames[i]] = XLSX.utils.aoa_to_sheet(tablesData[i])
-                    wb.Sheets[sheetNames[i]]['!cols'] = wscols
-                }
+                if ($("#id_first_name").val() !== "")
+                    exact.first_name = $("#id_first_name").val()
+                if ($("#id_last_name").val() !== "")
+                    exact.last_name = $("#id_last_name").val()
+                if ($("#id_donation_date_from").val() !== "")
+                    exact.date_from = $("#id_donation_date_from").val()
+                if ($("#id_donation_date_to").val() !== "")
+                    exact.date_to = $("#id_donation_date_to").val()
 
+                const exportParams = {exact: exact, tables_selected: tablesData}
 
-                const excelFileName = (new Date()).toString()
+                $.ajax({
+                    url: 'download_my_file/',
+                    datatype: 'json',
+                    data: {"data": JSON.stringify(exportParams)},
+                    type: 'GET',
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function (data) {
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(data);
+                        a.href = url;
+                        a.download = 'test.xls';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function (er) {
+                        console.log(er)
+                    }
 
-                const wbOut = XLSX.writeFile(wb, excelFileName + ".xlsx", {bookType: 'xlsx', type: 'binary'})
+                });
+            });
 
-            })
-        });
-
-        let tableToAOA = function (headerId, tableID) {
-            let header = [[$('#' + headerId).text()]]
-
-            var tableheader = $('#' + tableID + ' tr').map(function () {
-                return [
-                    $('th', this).map(function () {
-                        return $(this).text();
-                    }).get()
-                ];
-            }).get();
-
-            var tableData = $('#' + tableID + ' tr').map(function () {
-                return [
-                    $('td', this).map(function () {
-                        return $(this).text();
-                    }).get()
-                ];
-            }).get();
-
-            let AoA = header.concat(tableheader.concat(tableData));
-
-            return AoA.filter(function (a) {
-                return a.length > 0
-            })
-        }
-
-
+        })
     </script>
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/autocomplete.js' %}"></script>
 
 {% endblock %}

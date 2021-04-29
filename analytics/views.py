@@ -27,6 +27,8 @@ from .forms import RawDataForm, ChartsForm
 from .queries import *
 from .vars import *
 
+from analytics.excel import export_tables_to_excel
+
 get_zeros_list = lambda n: [0] * n
 
 
@@ -100,13 +102,29 @@ def update_donor(request):
     return FailedJsonResponse({"error": "Unknown method"})
 
 
+from wsgiref.util import FileWrapper
+from django.http import HttpResponse
+
+
+def download(request, filename="test.xls"):
+    # TODO create the file and pass the path to the function
+    export_tables_to_excel(json.loads(request.GET['data']))
+
+    path = './temp_downloads/'+filename
+    wrapper = FileWrapper(open(path, 'rb'))
+    response = HttpResponse(wrapper, content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(path)
+    response['Content-Length'] = os.path.getsize(path)
+    return response
+
+
 def get_table(request):
     # Get request parse
     if request.method == "GET":
         try:
             """
                 {
-                    table_type:
+                    table_type: 
                     offset:
                     limit:
                     sort:
@@ -131,8 +149,8 @@ def get_table(request):
             else:
                 request.GET = json.loads(request.GET["exact"])
                 model = request.GET["table_type"]
-                offset = 0
-                limit = 10
+                offset = int(request.GET["offset"])
+                limit = int(request.GET["limit"])
                 order_by_column = ""
                 order_by_direction = "asc"
                 search_keyword = ""
@@ -148,15 +166,17 @@ def get_table(request):
                 if offset > rows_count:
                     raise ValueError
             exact = request.GET.get("exact", {})
-            query_set = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset, limit,
-                                                 order_by_column, order_by_direction, search_keyword, exact)
+            query_set, count = get_model_raw_data_query(query_info["MODEL"], query_info["RAW_DATA_FIELDS"], offset,
+                                                        limit, order_by_column, order_by_direction, search_keyword,
+                                                        exact)
 
             # TODO check if no search being performed to return total number of rows, other wise return len(results)
-            json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
+            json_response = {"rows": list(query_set), "total": count}
+            # json_response = {"rows": list(query_set), "total": query_info["MODEL"].objects.count()}
             # json_response = {"rows": list(query_set), "total": len(list(query_set))}
 
             if not json_response["rows"]: json_response = {"total": 0, "rows": []}
-
+            print(json_response)
             return JsonResponse(json_response, safe=False)
 
         except Exception as e:
