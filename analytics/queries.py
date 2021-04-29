@@ -55,6 +55,7 @@ def get_model_raw_data_query(model: models.Model, item_specific_fields: dict, of
         query = query[offset:offset + limit]
     except Exception as e:
         query = None
+        count = 0
         print(e)
     return query, count
 

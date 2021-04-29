@@ -352,10 +352,39 @@
     </div>
 
 
-
-
     <script>
         let exactSearchOn = false;
+
+        function bindToolTip() {
+            $(function () {
+                // Tooltip Initializations
+                ToolTipStyling = function () {
+                    $('.tool-tip,[data-toggle="tooltip"]').tooltip({
+                        container: 'body',
+                        animation: true,
+                        delay: {
+                            show: 100,
+                            hide: 100
+                        }
+                    });
+                };
+
+                ToolTipStyling();
+
+                $('table').on('post-body.bs.table', function () {
+                    ToolTipStyling();
+                });
+
+                tooltipTitleSetter = function (that) {
+                    return $(that).val() === "" ? ' ' : $(that).val();
+                };
+            });
+
+            $('textarea.tool-tip').hover(function () {
+                $(this).attr("title", tooltipTitleSetter(this))
+                    .tooltip('fixTitle');
+            });
+        }
 
         function datesSorter(sortName, sortOrder, data) {
             let order = sortOrder === 'desc' ? -1 : 1
@@ -429,9 +458,11 @@
             $(".exact_search_msg").text("")
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
+                    $($(this).parentsUntil(".donation_table")).find(".search").attr("title", "")
                     $(this).bootstrapTable('refresh')
                 }
             })
+            $(".search input").prop("disabled", false)
         }
 
         function getBulkSearchResult($this, page = null) {
@@ -473,9 +504,10 @@
 
             exactSearchOn = true;
             $(".exact_search_msg").text("Exact Search Mode On")
-
+            $(".search input").prop("disabled", true)
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
+                    $($(this).parentsUntil(".donation_table")).find(".search").attr("title", "Individual search is disabled. Click Clear to on top to enable this box")
                     getBulkSearchResult($(this))
                 } else {
                 }
@@ -506,7 +538,7 @@
                 data: parameters,
                 type: 'GET',
                 success: function (data) {
-                    console.log(data)
+                    {#console.log(data)#}
                     params.success({
                         "rows": data["rows"],
                         "total": data["total"]
@@ -523,7 +555,12 @@
 
         $(window).on('load', function () {
             $('.data-table').each(function () {
-                $(this).bootstrapTable({});
+                let $table = $(this)
+                $table.bootstrapTable({
+                    onPostBody(data){
+                        $($table.parentsUntil(".donation_table")).find(".search").addClass("tool-tip")
+                    }
+                });
             })
         });
 
