@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'input_page.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style/input_page.css' %}">
 
     {% if messages %}
         {% for message in messages %}
@@ -191,24 +191,24 @@
 
                             <table class="table shadow p-3 mb-5 bg-body rounded">
                                 <thead>
-                                    <tr>
-                                        <th class="col-1">#</th>
-                                        <th class="col-3">Type</th>
-                                        <th class="col-2">Qty.</th>
-                                        <th class="col-3">Sub Type</th>
-                                        <th class="col-3">Amount</th>
-                                    </tr>
+                                <tr>
+                                    <th class="col-1">#</th>
+                                    <th class="col-3">Type</th>
+                                    <th class="col-2">Qty.</th>
+                                    <th class="col-3">Sub Type</th>
+                                    <th class="col-3">Amount</th>
+                                </tr>
                                 </thead>
 
                                 <tbody id="items_body">
-                                    {{ item_formset.management_form }}
-                                    {% for item_form in item_formset %}
-                                        <tr class="shadow p-3 mb-5 bg-body rounded">
-                                            <td>{{ item_form.type }}</td>
-                                            <td>{{ item_form.quantity }}</td>
-                                            <td>{{ item_form.sub_type_business }}</td>
-                                        </tr>'
-                                    {% endfor %}
+                                {{ item_formset.management_form }}
+                                {% for item_form in item_formset %}
+                                    <tr class="shadow p-3 mb-5 bg-body rounded">
+                                        <td>{{ item_form.type }}</td>
+                                        <td>{{ item_form.quantity }}</td>
+                                        <td>{{ item_form.sub_type_business }}</td>
+                                    </tr>'
+                                {% endfor %}
 
                                 </tbody>
                             </table>
@@ -285,107 +285,8 @@
     </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/autocomplete.js' %}"></script>
     <script type="text/javascript">
-
-
-        function onAutocompleteItemSelect(event, ui) {
-            $("#id_first_name").val(ui.item.first_name);
-            $("#id_last_name").val(ui.item.last_name);
-            $("#id_email").val(ui.item.email_address);
-            $("#id_phone_number").val(ui.item.phone_number);
-            $("#id_address1").val(ui.item.address_line1);
-            $("#id_address2").val(ui.item.address_line2);
-            $("#id_city").val(ui.item.city);
-            $("#id_state").val(ui.item.state); // might not be that easy but let's find out :)
-            $("#id_zip").val(ui.item.zipcode);
-            // // debug
-            // console.log(ui.item.first_name + " " + ui.item.email + " " + ui.item.phone_number + " " + ui.item.address1 + " " + ui.item.address2 + " " + ui.item.city + " " + ui.item.state + " " + ui.item.zipcode);
-            return false;
-        }
-
-        function prettyPrintAutocompleteResults(autocompleteFunction) {
-            autocompleteFunction.autocomplete("instance")._renderItem = function (ul, item) {
-                // build the li option for the ul element
-                // the donor always has at least a first name
-                // the user won't be able to see " " + "" so we don't have to worry about the last name being blank
-                var option = "<div><strong>" + item.first_name + " " + item.last_name + "</strong>";
-
-                // add the email, phone, address lines (if they exist)
-                if (!(item.email_address === "")) {
-                    option = option + "<br>" + item.email_address;
-                }
-                if (!(item.phone_number === "")) {
-                    option = option + "<br>" + item.phone_number;
-                }
-                if (!(item.address_line1 === "")) {
-                    option = option + "<br>" + item.address_line1;
-                }
-                if (!(item.address_line2 === "")) {
-                    option = option + "<br>" + item.address_line2;
-                }
-
-                // if the city, state, or zipcode exist, add them in "city, state, zipcode" format
-                // any blank attributes here get filled with ?'s
-                if (!(item.city === "" && item.state === "" && item.zipcode === "")) {
-                    option = option + "<br>";
-                    if (item.city === "") {
-                        option = option + "?, ";
-                    } else {
-                        option = option + item.city + ", ";
-                    }
-                    if (item.state === "") {
-                        option = option + "?, ";
-                    } else {
-                        option = option + item.state + ", ";
-                    }
-                    if (item.zipcode === "") {
-                        option = option + "?";
-                    } else {
-                        option = option + item.zipcode;
-                    }
-                }
-                option = option + "</div>";
-
-                return $("<li>").append(option).appendTo(ul);
-            };
-        }
-
-        $(function () {
-            // autocomplete 'em
-            prettyPrintAutocompleteResults($('#id_first_name').autocomplete({
-                minLength: 2,
-                source: "get_donors/?name_type=first",
-                focus: function (event, ui) {
-                    $("#id_first_name").val(ui.item.first_name);
-                    return false;
-                },
-                select: onAutocompleteItemSelect,
-                messages: {
-                    noResults: function (_) {
-                        console.log("There were no matches.")
-                        {# Disable searching functionality once the user gets no results back #}
-                        {# Autocomplete should be disabled if more than a threshold (5) consecutive empty results #}
-                        {# TODO display a toggle button to pause the autocomplete functionality #}
-                        {# Changes should effect both autocomplete fields #}
-                        $('#id_first_name').autocomplete("disable");
-                        {#$('#id_first_name').autocomplete("enable");#}
-                    },
-                    results: function (count) {
-                        console.log("There were " + count + " matches")
-                    }
-                }
-            }));
-
-            prettyPrintAutocompleteResults($('#id_last_name').autocomplete({
-                minLength: 2,
-                source: "get_donors/?name_type=last",
-                focus: function (event, ui) {
-                    $("#id_last_name").val(ui.item.last_name);
-                    return false;
-                },
-                select: onAutocompleteItemSelect
-            }))
-        });
 
         function anonymousToggle() {
             $("#donor_form").slideToggle(300);
@@ -565,15 +466,6 @@
     <script src="https://s3.amazonaws.com/novaksolutions/free/jquery.maskedinput.min.js"></script>
     <script>
         $("#id_phone_number").mask("(999) 999-9999?");
-
-        /* Disable browser autocomplete, we can enable that only when the autocomplete functionality is enabled */
-        $("input").focus(function () {
-            $(this).attr("autocomplete", "new-password")
-        });
-
-        $('input').blur(function () {
-            $(this).removeAttr('autocomplete');
-        });
     </script>
 
 {% endblock %}

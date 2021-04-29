@@ -17,6 +17,25 @@ table_headers = {
     'giftcards': ('first_name', 'last_name', 'date_received', 'business_name', 'XXXX', 'amount', 'quantity'),
     'miscellaneous': ('first_name', 'last_name', 'date_received', 'XXXX', 'misc_name', 'quantity')}
 
+TABLE_HEADERS_FORMATTED = {
+       'first_name' : 'First Name',
+       'last_name': 'Last Name',
+       'date_received': 'Date Received',
+       'thanks_sent': 'Thank Sent',
+       'sub_type': 'Sub Type',
+       'amount': 'Amount',
+       'quantity': 'Quantity',
+       'id' : 'ID',
+       'comments': 'Comments',
+       'item_id': 'Item ID',
+       'donor_id': 'Donor ID',
+       'donation_id': 'Donation ID',
+       'item_type': 'Item Type'
+}
+
+TABLE_NAMES_FORMATTED = {
+}
+
 
 RAW_DATA_BASE_FIELDS_KEYS = {
        "donation_id": F("item__donation__id"),
@@ -25,7 +44,8 @@ RAW_DATA_BASE_FIELDS_KEYS = {
        "date_received": F('item__donation__date_received'),
        "quantity": F('item__quantity'),
        "comments": F('item__donation__comments'),
-       'donor_id': F('item__donation__donor__id')
+       'donor_id': F('item__donation__donor__id'),
+       'thanks_sent': F('item__donation__thanks_sent')
 }
 
 RAW_DATA_BASE_FIELDS = [
@@ -33,6 +53,7 @@ RAW_DATA_BASE_FIELDS = [
        'first_name',
        'last_name',
        'date_received',
+       'thanks_sent',
        'quantity',
        'comments',
        'item_id',

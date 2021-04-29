@@ -16,7 +16,7 @@ class Donor(models.Model):
     last_name = models.CharField(max_length=50)
 
     email_address = models.EmailField(max_length=50, blank=True, null=True)
-    phone_number = models.CharField(max_length=11, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
     address_line1 = models.CharField(max_length=50, blank=True, null=True)
     address_line2 = models.CharField(max_length=50, blank=True, null=True)
