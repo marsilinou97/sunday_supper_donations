@@ -20,10 +20,10 @@
 
 
             <!-- Begin Grid -->
-            <div class="container shadow m-3" id="form-wrapper">
+            <div class="container m-3" id="">
                 <div class="row p-3">
 
-                    <div class="col m-2 foreground-item">
+                    <div class="col m-2 foreground-item shadow">
                         <h3 class="d-flex justify-content-center">Donor Information</h3>
                         <hr>
 
@@ -126,7 +126,7 @@
                         </div>
                     </div> <!-- End Donor Information column -->
 
-                    <div class="col m-2 foreground-item">
+                    <div class="col m-2 foreground-item shadow">
 
                         <div id="donation_form">
 
@@ -169,7 +169,7 @@
                 </div> <!-- End First Row -->
 
                 <div class="row p-3">
-                    <div class="col m-2 foreground-item">
+                    <div class="col m-2 foreground-item shadow">
                         <div id="items_form">
 
                             <h3 class="d-flex justify-content-center">Items</h3>
@@ -215,7 +215,7 @@
 
                         </div>
                     </div>
-                    <div class="col m-2 foreground-item">
+                    <div class="col m-2 foreground-item shadow">
 
                         <div id="funds_form">
 
@@ -223,14 +223,14 @@
                             <hr>
 
                             <span>
-                                <div class=" mb-5">
+                                <div class="w-50 mb-5">
                                     <b>{{ funds_form.type.label }}</b>
                                     {{ funds_form.type }}
                                 </div>
 
                             </span>
                             <span>
-                                <div>
+                                <div class="w-50">
                                     <b>{{ funds_form.amount.label }}</b>
                                        {{ funds_form.amount }}
                                 </div>
@@ -244,17 +244,17 @@
 
                 <div class="row p-3">
 
-                    <div class="col m-2 foreground-item">
+                    <div class="col m-2 foreground-item shadow w-25">
                         <div>
-                            <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 btn-danger border border-dark shadow" id="clear_fields">
+                            <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 btn-danger border border-dark shadow" id="clear_fields">
                                 Clear
                             </button>
                         </div>
                     </div>
 
-                    <div class="col m-2 foreground-item">
+                    <div class="col m-2 foreground-item shadow">
                         <div>
-                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-3 w-22 shadow read">Submit</button>
+                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 shadow read">Submit</button>
                         </div>
                     </div>
 

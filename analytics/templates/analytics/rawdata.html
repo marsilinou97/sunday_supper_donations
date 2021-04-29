@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'raw_data.css' %}">
 
-        <div class="container" id="search">
+        <div class="container form-group" id="search">
             <div class="shadow p-5 mb-5 rounded border foreground-item">
                 <div class="row center-text g-1">
 
@@ -15,7 +15,7 @@
                         <label for="id_first_name">First name:</label>
                     </div>
 
-                    <div class="col">
+                    <div class="col form-group">
                         <input class="form-control" type="text" name="first_name" maxlength="50" placeholder="First Name" id="id_first_name">
                     </div>
 
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
 
         {#        <form method="get" class="text-center" onsubmit="">#}
         {#            {% csrf_token %}#}
