@@ -240,3 +240,16 @@ hr{
     width: 45%;
     margin: 0 2%;
 }
+
+
+.placeholder-text {
+    position: relative;
+    display: none;
+}
+.placeholder-text .col {
+margin-top: 15%;
+    font-size: 15pt;
+    font-weight: 700;
+    position: absolute;
+    width: 100%;
+}
