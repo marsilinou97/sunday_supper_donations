@@ -292,33 +292,75 @@
         }
 
         function items_completed() {
-            return document.querySelector("#items_form #id_type").selectedIndex !== -1 && document.querySelector("#items_form #id_quantity").value !== '' && document.getElementById("id_name").selectedIndex !== -1
+            let total_item_forms = parseInt($("#id_form-TOTAL_FORMS")[0].value);
+            console.log("total item forms: " + total_item_forms);
+            if (total_item_forms > 0){
+                // Check that each item is complete
+                incomplete_items = false;
+                $("#items_body").children("tr").each(function (rowIndex, row) {
+                    console.log("row index, row: " + rowIndex + ", " + row)
+                    let fields = $(row).children();
+                    console.log("\tchildren: " + fields)
+
+                    // Quantity is the one field common to all subtypes; check that first
+                    let test_value = $("#id_form-" + rowIndex + "-quantity").val();
+                    console.log("test value:" + test_value)
+                    if (test_value === '' || test_value === null || test_value < 1) incomplete_items = true;
+
+                    // Get the subtype
+                    let subtype = $("#id_form-" + rowIndex + "-type").val();
+
+                    // Check the giftcard amount if applicable
+                    if (subtype === "giftcard"){
+                        test_value = $("#id_form-" + rowIndex + "-amount").val();
+                        console.log(test_value)
+                        if (test_value === '' || test_value === null || test_value < 1) incomplete_items = true;
+                    }
+
+                    // Check the food/misc name, if applicable
+                    else if (subtype === "food" || subtype === "misc"){
+                        test_value = $("#id_form-" + rowIndex + "-name").val();
+                        console.log(test_value)
+                        if (test_value === '' || test_value === null) incomplete_items = true;
+                    }
+                })
+                // If none of the items were incomplete, then all of the items must be complete
+                return !incomplete_items;
+            }
+            // If there are no items, return false, since completion is dependent on the presence of items or funds
+            return false;
         }
 
         function funds_completed() {
             val = document.querySelector("#funds_form #id_amount");
+            console.log("#funds_form #id_amount: " + val)
+            // Check for an amount less than 1; anything less than 1 is invalid
             if (val !== '') {
                 if (val < 1) return false;
             }
-            return document.querySelector("#funds_form #id_type").selectedIndex !== -1 && document.querySelector("#funds_form #id_amount").value !== ''
+            console.log("#funds_form #id_type: " + document.querySelector("#funds_form #id_type").value)
+            console.log("#funds_form #id_amount: " + document.querySelector("#funds_form #id_amount").value)
+            return document.querySelector("#funds_form #id_type").value !== '' && document.querySelector("#funds_form #id_amount").value !== ''
         }
 
-        function donation_information_completed() {
-            return document.querySelector("#donation_form #id_amount").value !== '' && document.querySelector("#donation_form #id_date_received").value !== '';
+        function donor_information_completed(){
+            console.log("anonymous: " + document.getElementById("anonymous").checked)
+            console.log("first name: " + $("#id_first_name").val())
+            console.log("last name: " + $("#id_last_name").val())
+            return (document.getElementById("anonymous").checked === true || ($("#id_first_name").val() !== '' && $("#id_last_name").val() !== ''))
         }
-
 
         function submit_form() {
-            {#TODO rmove early return, only for current testing #}
-            {#clean_inputs();#}
-            return true;
             document.querySelectorAll("textarea").forEach(e => e.value = DOMPurify.sanitize(e.value));
-            if ((items_completed() || funds_completed()) && document.getElementById("anonymous").checked === true) {
+            console.log("items_completed(): " + items_completed())
+            console.log("funds_completed(): " + funds_completed())
+            console.log("donor_information_completed(): " + donor_information_completed())
+            if ((items_completed() || funds_completed()) && donor_information_completed()) {
                 return true;
             } else {
-                {#TODO: Enhance error messages#}
-                document.querySelector("#message").style.opacity = '1';
-                document.querySelector("#message").innerHTML = "Please make sure to fill up required fields";
+                // {#TODO: Enhance error messages#}
+                // document.querySelector("#message").style.opacity = '1';
+                // document.querySelector("#message").innerHTML = "Please make sure to fill up required fields";
                 return false;
             }
         }
@@ -423,8 +465,8 @@
         //$("table tbody tr td select:last").replaceWith($(giftcard));
 
         function changeSubTypeField(e, row) {
-            {#TODO: move that logic to a function to bind it to the new rows #}
-            {#TODO: logic for replacing subtype#}
+            // {#TODO: move that logic to a function to bind it to the new rows #}
+            // {#TODO: logic for replacing subtype#}
             let selected = e.target.value;
             let subTypeField = $($(row.children()[3]).children()[0])
             let amountField = $($(row.children()[4]).children()[0])
@@ -441,7 +483,8 @@
                 amountField.hide()
                 if (selected === 'clothing') {
                     subTypeId += "sub_type_clothing"
-                    subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
+                    // subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
+                    subTypeField.replaceWith(clothing);
                 } else if (selected === 'food') {
                     subTypeId += "sub_type_name"
                     subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
@@ -452,7 +495,7 @@
             }
 
 
-            {#  $(this).parents().eq(2).find("select")[1] this is the subtype dropdown for the corresponding type #}
+            // {#  $(this).parents().eq(2).find("select")[1] this is the subtype dropdown for the corresponding type #}
         }
 
 
@@ -492,4 +535,3 @@
     </script>
 
 {% endblock %}
-
