@@ -7,53 +7,59 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'style/raw_data.css' %}">
 
-        <div class="container form-group" id="search">
-            <div class="shadow p-5 mb-5 rounded border foreground-item">
-                <div class="row center-text g-1">
+    <div class="container form-group" id="search">
+        <div class="shadow p-5 mb-5 rounded border foreground-item">
+            <div class="row center-text g-1">
 
-                    <div class="col text-center">
-                        <label for="id_first_name">First name:</label>
-                    </div>
-
-                    <div class="col form-group">
-                        <input class="form-control" type="text" name="first_name" maxlength="50" placeholder="First Name" id="id_first_name">
-                    </div>
-
-                    <div class="col text-center">
-                        <label for="id_last_name">Last name:</label>
-                    </div>
-
-                    <div class="col">
-                        <input class="form-control" type="text" name="last_name" maxlength="50" placeholder="Last Name" id="id_last_name">
-                    </div>
-
-                    <div class="col text-center">
-                        <label for="id_donation_date_from">Donation Date From:</label>
-                    </div>
-                    <div class="col">
-                        <input class="form-control" type="date" name="donation_date_from" placeholder="YYYY-MM-DD" id="id_donation_date_from">
-                    </div>
-
-                    <div class="col text-center">
-                        <label for="id_donation_date_to">Donation Date To:</label>
-                    </div>
-                    <div class="col">
-                        <input class="form-control" type="date" name="donation_date_to" placeholder="YYYY-MM-DD" id="id_donation_date_to">
-                    </div>
-
-                    <div class="col text-center">
-                        <label for="pagesize">Number of Rows:</label>
-                    </div>
-
-                    <div class="col">
-                        <select id="select-rows" name="pagesize" id="pagesize" class="form-control">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                    </div>
+                <div class="col text-center">
+                    <label for="id_first_name">First name:</label>
                 </div>
+
+                <div class="col form-group">
+                    <input class="form-control" type="text" name="first_name" maxlength="50" placeholder="First Name"
+                           id="id_first_name">
+                </div>
+
+                <div class="col text-center">
+                    <label for="id_last_name">Last name:</label>
+                </div>
+
+                <div class="col">
+                    <input class="form-control" type="text" name="last_name" maxlength="50" placeholder="Last Name"
+                           id="id_last_name">
+                </div>
+                <div class="col text-center">
+                    <label for="pagesize">Number of Rows:</label>
+                </div>
+
+                <div class="col">
+                    <select id="select-rows" name="pagesize" id="pagesize" class="form-control">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row center-text g-1">
+                <div class="col text-center">
+                    <label for="id_donation_date_from">Donation Date From:</label>
+                </div>
+                <div class="col">
+                    <input class="form-control" type="date" name="donation_date_from" placeholder="YYYY-MM-DD"
+                           id="id_donation_date_from">
+                </div>
+
+                <div class="col text-center">
+                    <label for="id_donation_date_to">Donation Date To:</label>
+                </div>
+                <div class="col">
+                    <input class="form-control" type="date" name="donation_date_to" placeholder="YYYY-MM-DD"
+                           id="id_donation_date_to">
+                </div>
+                <hr style="margin-top: 20px">
+            </div>
 
             <div class="row">
                 <div class="col">
@@ -91,7 +97,7 @@
         {##}
         {#            </div>#}
         {#        </form>#}
-            </div>
+    </div>
 
 
 
@@ -116,14 +122,14 @@
             </div>
 
             <div class="col">
-                <label for="clothing">Clothing:</label>
-                <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
-                       checked>
+                <label for="food">Food:</label>
+                <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked>
             </div>
 
             <div class="col">
-                <label for="food">Food:</label>
-                <input class="donation_select m-3" type="checkbox" id="food" name="food" value="Food" checked>
+                <label for="clothing">Clothing:</label>
+                <input class="donation_select m-3" type="checkbox" id="clothing" name="clothing" value="Clothing"
+                       checked>
             </div>
 
             <div class="col">
@@ -608,16 +614,20 @@
         $(document).ready(function () {
 
             let tablesData = ['funds_table', 'giftcards_table', 'clothing_table', 'foods_table', 'misc_table']
-
+            var numberTablesShown = 5;
 
             $('#fund').change(function () {
                 if (this.checked === true) {
                     $('#funds_table').parents(".donation_table").slideDown(300);
+                    numberTablesShown++
+                    if (numberTablesShown == 5) $('#all').prop('checked', true);
                     tablesData.push('funds_table')
                 } else {
                     $('#funds_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('funds_table')
                     tablesData.splice(index, 1)
+                    numberTablesShown--
+                    $('#all').prop('checked', false);
                 }
             });
 
@@ -625,11 +635,15 @@
             $('#gift').change(function () {
                 if (this.checked === true) {
                     $('#giftcards_table').parents(".donation_table").slideDown(300);
+                    numberTablesShown++
+                    if (numberTablesShown == 5) $('#all').prop('checked', true);
                     tablesData.push('giftcards_table')
                 } else {
                     $('#giftcards_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('giftcards_table')
                     tablesData.splice(index, 1)
+                    numberTablesShown--
+                    $('#all').prop('checked', false);
                 }
             });
 
@@ -637,11 +651,15 @@
             $('#clothing').change(function () {
                 if (this.checked === true) {
                     $('#clothing_table').parents(".donation_table").slideDown(300);
+                    numberTablesShown++
+                    if (numberTablesShown == 5) $('#all').prop('checked', true);
                     tablesData.push('clothing_table')
                 } else {
                     $('#clothing_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('clothing_table')
                     tablesData.splice(index, 1)
+                    numberTablesShown--
+                    $('#all').prop('checked', false);
                 }
             });
 
@@ -649,11 +667,15 @@
             $('#food').change(function () {
                 if (this.checked === true) {
                     $('#foods_table').parents(".donation_table").slideDown(300);
+                    numberTablesShown++
+                    if (numberTablesShown == 5) $('#all').prop('checked', true);
                     tablesData.push('foods_table')
                 } else {
                     $('#foods_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('foods_table')
                     tablesData.splice(index, 1)
+                    numberTablesShown--
+                    $('#all').prop('checked', false);
                 }
             });
 
@@ -661,17 +683,22 @@
             $('#misc').change(function () {
                 if (this.checked === true) {
                     $('#misc_table').parents(".donation_table").slideDown(300);
+                    numberTablesShown++
+                    if (numberTablesShown == 5) $('#all').prop('checked', true);
                     tablesData.push('misc_table')
                 } else {
                     $('#misc_table').parents(".donation_table").slideUp(300);
                     var index = tablesData.indexOf('misc_table')
                     tablesData.splice(index, 1)
+                    numberTablesShown--
+                    $('#all').prop('checked', false);
                 }
             });
 
             $('#all').change(function () {
                 if (this.checked === true) {
                     $('table').parents(".donation_table").slideDown(300);
+                    numberTablesShown = 5
                     $("input[type=checkbox].donation_select").prop('checked', true);
                     tablesData.push('funds_table')
                     tablesData.push('giftcards_table')
@@ -683,6 +710,7 @@
                     $('table').parents(".donation_table").slideUp(300);
                     $("input[type=checkbox].donation_select").prop('checked', false);
                     tablesData = []
+                    numberTablesShown = 0
                 }
             });
 

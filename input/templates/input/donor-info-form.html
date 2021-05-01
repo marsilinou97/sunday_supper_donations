@@ -4,6 +4,13 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'style/input_page.css' %}">
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    {#    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>#}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{% static 'js/autocomplete.js' %}"></script>
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-success fade in text-center" role="alert">
@@ -32,34 +39,36 @@
                             <div class="col text-center align-top">
                                 <label for="toggleAutocomplete">
                                     Autocomplete
-                                    <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
+                                    <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete" checked>
                                 </label>
                             </div>
 
                             <div class="col text-center align-bottom">
                                 <label for="anonymous" class="anonymous">
                                     Anonymous Donor
-                                    <input type="checkbox" id="anonymous" name="anonymous" class="anonymous" onclick="anonymousToggle()">
+                                    <input type="checkbox" id="anonymous" name="anonymous" class="anonymous"
+                                           onclick="anonymousToggle()">
                                 </label>
                             </div>
 
 
                         </div>
 
+                        <div class="placeholder-text text-center ">
+                            <div class="col">Anonymous Donor</div>
+                        </div>
                         <div class="mb-4" id="donor_form">
 
                             <div class="row p-2">
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.first_name.label }}</b>
-                                        <div id='donor_form_first_name'>
+                                        <label for="id_first_name">{{ donor_form.first_name.label }}</label>
                                             {{ donor_form.first_name }}
-                                        </div>
                                     </span>
                                 </div>
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.last_name.label }}</b>
+                                        <label for="id_last_name">{{ donor_form.last_name.label }}</label>
                                         {{ donor_form.last_name }}
                                     </span>
                                 </div>
@@ -68,13 +77,13 @@
                             <div class="row p-2">
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.email.label }}</b>
+                                        <label for="id_email">{{ donor_form.email.label }}</label>
                                         {{ donor_form.email }}
                                     </span>
                                 </div>
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.phone_number.label }}</b>
+                                        <label for="id_phone_number">{{ donor_form.phone_number.label }}</label>
                                         {{ donor_form.phone_number }}
                                     </span>
                                 </div>
@@ -83,13 +92,13 @@
                             <div class="row p-2">
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.address1.label }}</b>
+                                        <label for="id_address1">{{ donor_form.address1.label }}</label>
                                         {{ donor_form.address1 }}
                                     </span>
                                 </div>
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.address2.label }}</b>
+                                        <label for="id_address2">{{ donor_form.address2.label }}</label>
                                         {{ donor_form.address2 }}
                                     </span>
                                 </div>
@@ -98,17 +107,19 @@
                             <div class="row p-2">
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.city.label }}</b>
+                                        <label for="id_city">{{ donor_form.city.label }}</label>
                                         {{ donor_form.city }}
                                     </span>
                                 </div>
                                 <div class="col">
                                     <span>
-                                        <b>{{ donor_form.state.label }}</b>
+                                        <label for="id_state">{{ donor_form.state.label }}</label>
                                         <select name="state" id="id_state" class="form-control">
-                                            <option value="" disabled selected>State</option>
+                                            <option value="" disabled>State</option>
                                             {% for state,abr in states.items %}
-                                            <option value="{{ abr }}">{{ state.title }}</option>
+                                                <option value="{{ abr }}" {% if abr == 'ca' %}selected{% endif %}>
+                                                    {{ state.title }}
+                                                </option>
                                             {% endfor %}
                                         </select>
         {#                                {{ donor_form.state }}#}
@@ -117,7 +128,7 @@
 
                                 <div class="col">
                                     <span class="mb-4">
-                                        <b>{{ donor_form.zip.label }}</b>
+                                        <label for="id_zip">{{ donor_form.zip.label }}</label>
                                         {{ donor_form.zip }}
                                     </span>
                                 </div>
@@ -140,14 +151,14 @@
 
                                 <div class="col-3">
                                     <span>
-                                        <b>{{ donation_info_form.thanks_sent.label }}</b>
+                                        <label for="id_thanks_sent">{{ donation_info_form.thanks_sent.label }}</label>
                                         {{ donation_info_form.thanks_sent }}
                                     </span>
                                 </div>
 
                                 <div class="col-4 m-2">
                                     <span>
-                                        <b>{{ donation_info_form.date_received.label }}</b>
+                                        <label for="id_date_received">{{ donation_info_form.date_received.label }}</label>
                                         {{ donation_info_form.date_received }}
                                     </span>
                                 </div>
@@ -157,7 +168,7 @@
                             <div class="row p-3">
                                 <div class="col m-2">
                                     <span>
-                                        <b>{{ donation_info_form.comment.label }}</b>
+                                        <label for="id_comment">{{ donation_info_form.comment.label }}</label>
                                             {{ donation_info_form.comment }}
                                     </span>
                                 </div>
@@ -195,8 +206,8 @@
                                     <th class="col-1">#</th>
                                     <th class="col-3">Type</th>
                                     <th class="col-2">Qty.</th>
-                                    <th class="col-3">Sub Type</th>
-                                    <th class="col-3">Amount</th>
+                                    <th class="col-4">Sub Type</th>
+                                    <th class="col-2">Amount</th>
                                 </tr>
                                 </thead>
 
@@ -221,17 +232,16 @@
 
                             <h3 class="d-flex justify-content-center">Funds</h3>
                             <hr>
-
                             <span>
                                 <div class="w-50 mb-5">
-                                    <b>{{ funds_form.type.label }}</b>
+                                    <label for="id_type">{{ funds_form.type.label }}</label>
                                     {{ funds_form.type }}
                                 </div>
 
                             </span>
                             <span>
                                 <div class="w-50">
-                                    <b>{{ funds_form.amount.label }}</b>
+                                    <label for="id_amount">{{ funds_form.amount.label }}</label>
                                        {{ funds_form.amount }}
                                 </div>
                             </span>
@@ -246,7 +256,8 @@
 
                     <div class="col m-2 foreground-item shadow w-25">
                         <div>
-                            <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 btn-danger border border-dark shadow" id="clear_fields">
+                            <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 btn-danger border border-dark shadow"
+                                    id="clear_fields">
                                 Clear
                             </button>
                         </div>
@@ -254,7 +265,9 @@
 
                     <div class="col m-2 foreground-item shadow">
                         <div>
-                            <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 shadow read">Submit</button>
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 shadow read">Submit
+                            </button>
                         </div>
                     </div>
 
@@ -267,29 +280,15 @@
 
 
 
-<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <style>
-        #donor-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 1em;
-        }
-
-        #donor-description {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="{% static 'js/autocomplete.js' %}"></script>
     <script type="text/javascript">
 
         function anonymousToggle() {
-            $("#donor_form").slideToggle(300);
+            {#$("#donor_form").slideToggle(300);#}
+            $("#donor_form").fadeToggle(300);
+            $(".placeholder-text").fadeToggle(300);
         }
 
         function items_completed() {
@@ -298,7 +297,7 @@
 
         function funds_completed() {
             val = document.querySelector("#funds_form #id_amount");
-            if (val !== ''){
+            if (val !== '') {
                 if (val < 1) return false;
             }
             return document.querySelector("#funds_form #id_type").selectedIndex !== -1 && document.querySelector("#funds_form #id_amount").value !== ''
@@ -341,7 +340,7 @@
                 let amountId = "id_form-" + formset_total_forms + "-amount"
                 let subtypeId = "id_form-" + formset_total_forms + "-sub_type_business"
 
-                let row_count = $('<td class="col">' + (formset_total_forms + 1).toString() + '</td>')
+                let row_count = $('<td class="col-1">' + (formset_total_forms + 1).toString() + '</td>')
                 let type = $('{{item_form.type}}').attr({id: typeId, name: typeId})
                 let quantity = $('{{item_form.quantity}}').attr({id: quantityId, name: quantityId})
                 let amount = $('{{item_form.amount}}').attr({id: amountId, name: amountId})
@@ -351,11 +350,11 @@
                 row.append(row_count)
                 row.append("<td class='col-3'>" + type[0].outerHTML + "</td>")
                 row.append("<td class='col-2'>" + quantity[0].outerHTML + "</td>")
-                row.append("<td class='col-3'>" + subType[0].outerHTML + "</td>")
-                row.append("<td class='col-3'>" + amount[0].outerHTML + "</td>")
+                row.append("<td class='col-4'>" + subType[0].outerHTML + "</td>")
+                row.append("<td class='col-2'>" + amount[0].outerHTML + "</td>")
 
                 $("#items_body").append(row)
-
+                $($(row).find('.col-4 select')).select2();
                 formset_total_forms++
 
                 row.click(function () {
@@ -373,7 +372,7 @@
         {% endspaceless %}
 
 
-        $("#remove_button").click(function (e) {
+        function removeRowItems(e) {
             if (formset_total_forms > 0) {
 
                 formset_total_forms--;
@@ -407,7 +406,9 @@
                 })
 
             }
-        });
+        }
+
+        $("#remove_button").click(removeRowItems);
 
         {#Add event listener to currnet tabel rows#}
         $("#items_body tr").click(function (e) {
@@ -457,15 +458,37 @@
 
         $("#clear_fields").click(function (e) {
             e.preventDefault();
-            $(this).closest('form').find("input, textarea").val("");
-            $("#id_state option:eq(0)").prop('selected', true);
+            $("body").find("input, textarea").val("");
+            $("#id_state option:eq(1)").prop('selected', true);
+            $("#id_type option:eq(0)").prop('selected', true);
+            $("#items_body .shadow").each(function (e) {
+                removeRowItems()
+            })
+            document.getElementById('id_date_received').valueAsDate = new Date();
+
         });
 
+        // Prevent donor information box from resizing
+        $("#donation_form").parent().css('min-height', $(".row .col.shadow:first").height() + 5 + 'px');
+
+        $("#toggleAutocomplete").change(function () {
+            if (this.checked === true) {
+                $('#id_first_name').autocomplete("enable");
+                $('#id_last_name').autocomplete("enable");
+
+            } else {
+                $('#id_first_name').autocomplete("disable");
+                $('#id_last_name').autocomplete("disable");
+            }
+        })
     </script>
 
     <script src="https://s3.amazonaws.com/novaksolutions/free/jquery.maskedinput.min.js"></script>
     <script>
         $("#id_phone_number").mask("(999) 999-9999?");
+
+        document.getElementById('id_date_received').valueAsDate = new Date();
+        $('#id_date_received').attr('min', "2015-01-01")
     </script>
 
 {% endblock %}

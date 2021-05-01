@@ -216,6 +216,8 @@ body{
 
 .foreground-item{
     background-color: #EAF4F4 !important;
+    padding: 0 15px;
+    border-radius:15px;
 }
 
 .background-wrapper{
@@ -232,4 +234,22 @@ hr{
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+}
+
+#items_form .btn {
+    width: 45%;
+    margin: 0 2%;
+}
+
+
+.placeholder-text {
+    position: relative;
+    display: none;
+}
+.placeholder-text .col {
+margin-top: 15%;
+    font-size: 15pt;
+    font-weight: 700;
+    position: absolute;
+    width: 100%;
 }
