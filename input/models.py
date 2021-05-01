@@ -386,10 +386,9 @@ def InsertDonation(
                     count += 1
                 else:
                     print("Could not insert Item", item)
-            except:
+            except Exception as e:
                 print("Could not insert Item", item)
-                for error in sys.exc_info():
-                    print(error)
+                print(e)
         print("Inserted", count, "items")
 
 

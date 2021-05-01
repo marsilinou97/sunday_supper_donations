@@ -141,10 +141,9 @@ def save_donation(items_list, data):
             (user_input["first_name"].strip() == "" and user_input["last_name"].strip() == ""):
         try:
             donor = InsertDonor("ANONYMOUS", "ANONYMOUS", "", "", "", "", "", "", "", "")
-        except:
+        except Exception as e:
             print("Exception while inserting donor:", end=" ")
-            for error in sys.exc_info():
-                print(error, end=", ")
+            print(e)
 
     # If the donation was not anonymous, then the database will be queried for the given attributes and that donor will be returned
     else:
@@ -170,20 +169,18 @@ def save_donation(items_list, data):
                                 user_input['address1'], user_input['address2'],
                                 user_input['city'], user_input['state'],
                                 user_input['zip'])
-        except:
+        except Exception as e:
             print("Exception while inserting donor:", end=" ")
-            for error in sys.exc_info():
-                print(error, end=", ")
+            print(e)
 
     # Now try to insert the donation. This should fail if donor == None
     # Should technically work even if items_list == []
     try:
         InsertDonation(donor, items_list, data['date_received'], send_thanks, cur_user, data['comment'])
         donation_saved = True
-    except:
+    except Exception as e:
         print("Exception while inserting donation:", end=" ")
-        for error in sys.exc_info():
-            print(error, end=", ")
+        print(e)
         donation_saved = False
 
     return donation_saved
