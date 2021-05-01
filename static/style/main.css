@@ -235,3 +235,8 @@ hr{
     -ms-hyphens: auto;
     hyphens: auto;
 }
+
+#items_form .btn {
+    width: 45%;
+    margin: 0 2%;
+}
