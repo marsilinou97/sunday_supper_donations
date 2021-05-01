@@ -32,7 +32,7 @@
                             <div class="col text-center align-top">
                                 <label for="toggleAutocomplete">
                                     Autocomplete
-                                    <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete">
+                                    <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete" checked>
                                 </label>
                             </div>
 
@@ -472,6 +472,16 @@
         // Prevent donor information box from resizing
         $("#donation_form").parent().css('min-height', $(".row .col.shadow:first").height() + 5 + 'px');
 
+        $("#toggleAutocomplete").change(function () {
+            if (this.checked === true) {
+                $('#id_first_name').autocomplete("enable");
+                $('#id_last_name').autocomplete("enable");
+
+            } else {
+                $('#id_first_name').autocomplete("disable");
+                $('#id_last_name').autocomplete("disable");
+            }
+        })
     </script>
 
     <script src="https://s3.amazonaws.com/novaksolutions/free/jquery.maskedinput.min.js"></script>
