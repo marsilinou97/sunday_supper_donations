@@ -1,6 +1,6 @@
 import bleach
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction, IntegrityError
 from django.forms import formset_factory
 from django.http import JsonResponse
@@ -185,7 +185,6 @@ def save_donation(items_list, data):
 
     return donation_saved
 
-
 def get_donor_list(request):
     if request.method == 'GET':
         list_of_data = list(get_donor_list_wo_anonymous())
@@ -210,7 +209,8 @@ def view_get_donors(request):
     else:
         return HttpResponse("Error")
 
-# @login_required
+@login_required
+@permission_required('input.add_donation')
 def index(request):
     if request.method == 'POST':
         return handle_post_req(request)
@@ -233,10 +233,12 @@ def index(request):
         messages.error(request, "Error")
         pass
 
+@permission_required('input.change_business')
 def edit_businesses(request):
     context = {"form": BusinessEditForm()}
     return render(request, 'input/edit_businesses.html', context)
 
+@permission_required('input.view_business')
 def get_businesses(request):
     if request.method == 'GET':
         data = Business.objects.values()
@@ -250,6 +252,7 @@ def get_businesses(request):
     else:
         return HttpResponse("Error getting businesses")
 
+@permission_required('input.add_business')
 def add_businesses(request):
     if request.method == "POST":
         form = BusinessForm(request.POST)
@@ -264,6 +267,7 @@ def add_businesses(request):
 
     return render(request, 'input/add_businesses.html')
 
+@permission_required('input.delete_business')
 def delete_businesses(request):
     if request.method == "POST":
         try:
@@ -275,6 +279,7 @@ def delete_businesses(request):
             print(f"Exception: {e}")
         return HttpResponse("Error")
 
+@permission_required('input.change_business')
 def update_businesses(request):
     response = {}
     try:
