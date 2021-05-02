@@ -98,7 +98,7 @@
                     $(this).bootstrapTable({
                         onPostBody(data) {
                             bindEditButton(table_type)
-                            bindRemoveButton(table_type)
+                            bindCancelButton(table_type)
                         }
 
                     });
@@ -111,7 +111,7 @@
                 $.each(row, function (k, v) {
                     if (k === 'id') {
                         html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
-                        html.push('<button type="button" class="deletebtn-users btn btn-primary btn-danger ms-2" >Delete</button>')
+                        html.push('<button type="button" class="cancelbtn-users btn btn-primary btn-danger ms-2" >Cancel</button>')
                     }
                 })
                 return html.join("")
@@ -127,6 +127,7 @@
                     let $row = $this.parents("tr")
                     let tds = $this.closest('tr').find('td')
                     tds.last().children().last().html("Cancel")
+                    tds.last().children().last().show();
                     tds.splice(-1,1)
 
                     if ($this.html() === 'Edit'){
@@ -139,15 +140,9 @@
                             oldData.push($(e).prop('outerHTML'))
                         })
 
-                        // ID, Username, Email, Active, Role
-                        // keep the commented out lines until i figure out how to do drop-downs for active/role
-                        // $(tds[0]).html($("<input type=\"number\" min=\"0\" max=\"1000\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[0]).html())) // email
-                        // $(tds[0]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[0]).html())) // active; should be drop-down for true/false
+                        // Active, Role
                         $(tds[0]).html(BOOLEANS.val($(tds[0]).html()))
-                        // $(tds[1]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[1]).html())) // role; should be drop-down for all types of user roles
                         $(tds[1]).html(USERS_ROLES.val($(tds[1]).html()))
-                        // $(tds[3]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[3]).html()))
-                        // $(tds[4]).html($("<input type=\"text\" style=\"padding: 0;\" class=\"form-control\">").val($(tds[4]).html()))
 
                         tds.closest("tr").css({
                             'border-top': '3px #6d8786 dashed',
@@ -172,7 +167,7 @@
                 let tds = $this.closest('tr').find('td')
                 let buttons = tds.last().children()
                 $(buttons[0]).html('Edit');
-                $(buttons[1]).html('Delete');
+                $(buttons[1]).hide();
 
                 tds.splice(-1,1)
                 $(tds.slice(0,3)).css({"cursor": "auto"})
@@ -182,6 +177,7 @@
                     "color": "#000"
                 });
                 $this.parentsUntil("table").find("tr").animate({opacity: 1}, 300);
+                $("")
                 $("#users_table").bootstrapTable("refresh")
             }
 
@@ -277,8 +273,8 @@
                 });
             }
 
-            function bindRemoveButton(table_type) {
-                $("#" + table_type + " .deletebtn-users").click(function(){
+            function bindCancelButton(table_type) {
+                $("#" + table_type + " .cancelbtn-users").click(function(){
                     let tds = $(this).closest('tr').find('td')
                     tds = tds.slice(3)
 
@@ -291,18 +287,8 @@
                         exitEditRowMode($(this))
                     }
                     return;
-
-                    // if (!confirm("Are you sure?")) return
-                    let row_id = $(this).parentsUntil("tr").parent().find("td").find().text()
-                    let row = $(this).parentsUntil("tr").parent()
-                    let table_type = $(this).parents(".table").attr("id")
-                    console.log("remove button " + row_id + " " + table_type);
-                    if (row_id == null) return;
-
-                    // $.ajax({
-                    //   url:
-                    // });
                 })
+                $("#" + table_type + " .cancelbtn-users").hide();
             };
 
             let $table = $('#users_table')
