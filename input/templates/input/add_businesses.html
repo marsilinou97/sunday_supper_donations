@@ -10,15 +10,18 @@
     {% endif %}
     {% if user.is_authenticated %}
         <!-- Add a business -->
-            <h1 class='text-center'>Add a Business</h1>
-            <div class="" id="add_business_form">
+            <div class="login-form" id="add_business_form">
                 <form class="" action="" method="post">
                     {% csrf_token %}
+                    <h2 class="text-start text-dark">Add New Business</h2>
+                    <hr class="mb-5">
                     <div class="mb-3">
-                        <label for="name" class="form-label"><strong>New Business</strong></label>
+                        <label for="name" class="form-label text-dark fw-bold"><strong>Business Name</strong></label>
                         <input type="text" id="name" name="name" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                    <div class="d-flex justify-content-center mt-5">
+                    <button type="submit" class="btn btn-primary read" id="submitButton">Submit</button>
+                    </div>
                 </form>
             </div>
     {% else %}
