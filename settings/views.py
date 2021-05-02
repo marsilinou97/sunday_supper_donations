@@ -169,3 +169,29 @@ def update_token_data(request):
         response.update({"success": False})
         response.update({"message": str(e)})
         return JsonResponse(response, safe=False)
+
+@login_required
+def delete_token(request):
+    try:
+        if request.method != "POST":
+            raise Exception("Request not POST")
+
+        response = {}
+
+        print("request.POST",request.POST,sep="\n")
+        token_id = request.POST["token_id"]
+        print("token id:",token_id)
+
+        with transaction.atomic():
+            success = queries.delete_token(token_id)
+            if not success:
+                raise Exception("Token id: " + str(token_id) + " not deleted")
+
+        response.update({"success": True})
+        response.update({"message": "Token id: " + str(token_id) + " deleted"})
+        return JsonResponse(response, safe= False)
+
+    except Exception as e:
+        response.update({"success": False})
+        response.update({"message": str(e)})
+        return JsonResponse(response, safe=False)

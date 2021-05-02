@@ -31,6 +31,15 @@ def get_token_data(offset: int, limit: int):
 def update_token_data(token_id: int, data: dict):
     return RegistrationToken.objects.filter(id=token_id).update(**data)
 
+def delete_token(token_id: int):
+    try:
+        token = RegistrationToken.objects.filter(id=token_id).delete()
+        print("deletion results: ",token)
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
 def test_code():
     group = Group.objects.get(name="test_group")
     group2 = Group.objects.get(name="test_group2")
