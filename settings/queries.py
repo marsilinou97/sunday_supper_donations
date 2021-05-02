@@ -18,6 +18,17 @@ def update_user_role(id: int, role: str):
     new_role = Group.objects.get(name=role)
     new_role.user_set.add(user)
 
+    if role == "Admin":
+        user.is_staff = True
+        user.is_superuser = False
+    elif role == "Superuser":
+        user.is_staff = True
+        user.is_superuser = True
+    else:
+        user.is_staff = False
+        user.is_superuser = False
+    user.save()
+
 def activate_user(id: int, active: bool):
     user = User.objects.get(id=id)
     user.is_active = active
