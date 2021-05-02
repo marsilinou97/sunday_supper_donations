@@ -18,6 +18,17 @@ def update_user_role(id: int, role: str):
     new_role = Group.objects.get(name=role)
     new_role.user_set.add(user)
 
+    if role == "Admin":
+        user.is_staff = True
+        user.is_superuser = False
+    elif role == "Superuser":
+        user.is_staff = True
+        user.is_superuser = True
+    else:
+        user.is_staff = False
+        user.is_superuser = False
+    user.save()
+
 def activate_user(id: int, active: bool):
     user = User.objects.get(id=id)
     user.is_active = active
@@ -30,6 +41,15 @@ def get_token_data(offset: int, limit: int):
 
 def update_token_data(token_id: int, data: dict):
     return RegistrationToken.objects.filter(id=token_id).update(**data)
+
+def delete_token(token_id: int):
+    try:
+        token = RegistrationToken.objects.filter(id=token_id).delete()
+        print("deletion results: ",token)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 def test_code():
     group = Group.objects.get(name="test_group")

@@ -3,6 +3,7 @@ import string
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User, Group
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -11,6 +12,7 @@ from django.urls import reverse
 from helpers import remove_html_tags
 from .forms import UserRegisterForm, RegistrationTokenForm
 from .helpers import validate_token
+from settings.queries import update_user_role
 
 TOKEN_OPTIONS = string.ascii_uppercase + string.ascii_lowercase + string.digits
 
@@ -48,6 +50,14 @@ def handle_post_req(request):
 
             # If an IntegrityError wasn't thrown, account creation was a huge success
             username = form.cleaned_data.get('username')
+            # Add the new user to the default group
+            try:
+                user = User.objects.filter(email=request.POST['email']).values()[0]
+                update_user_role(user['id'],"User")
+                print(f"Created [{username}] in group [{default_group['name']}]")
+            except Exception as e:
+                print(e)
+                print(f"Error: Created [{username}] in no group")
             messages.success(request, f'Account created for {username}!')
             print(f'Account created for {username}!')
 

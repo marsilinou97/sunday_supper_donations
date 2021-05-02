@@ -12,6 +12,7 @@ urlpatterns = [
     path('manage_roles/update_user_role/', views.update_user_role, name='update_user_role'),
 
     path('manage_registration_links/', views.manage_registration_links, name='manage_registration_links'),
+    path('manage_registration_links/delete_token/', views.delete_token, name='delete_token'),
     path('manage_registration_links/get_token_data/', views.get_token_data, name='manage_registration_links_get_token_data'),
     path('manage_registration_links/update_token_data/', views.update_token_data, name='update_token_data'),
 

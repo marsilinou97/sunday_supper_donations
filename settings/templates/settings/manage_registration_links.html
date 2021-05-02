@@ -101,7 +101,7 @@
                 $.each(row, function (k, v) {
                     if (k === 'id') {
                         html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
-                        html.push('<button type="button" class="deletebtn-tokens btn btn-primary btn-danger ms-2" >Button!</button>')
+                        html.push('<button type="button" class="deletebtn-tokens btn btn-primary btn-danger ms-2" >Delete</button>')
                     }
                 })
                 return html.join("")
@@ -249,19 +249,38 @@
                         })
                         oldData = []
                         exitEditRowMode($(this))
+                        return;
                     }
-                    return;
 
-                    // if (!confirm("Are you sure?")) return
-                    let row_id = $(this).parentsUntil("tr").parent().find("td").find().text()
+                    if (!confirm("Are you sure you want to delete this token?")) return
+                    let row_id = $(this).parentsUntil("tr").parent().find("td").first().text()
                     let row = $(this).parentsUntil("tr").parent()
                     let table_type = $(this).parents(".table").attr("id")
-                    console.log("remove button " + row_id + " " + table_type);
+                    console.log("remove button [" + row_id + "] " + table_type);
                     if (row_id == null) return;
 
-                    // $.ajax({
-                    //   url:
-                    // });
+                    $.ajax({
+                      url: 'delete_token/',
+                      data: {'token_id': row_id},
+                      type: 'POST',
+                      headers:{
+                          "X-CSRFToken": getCookie("csrftoken")
+                      },
+                      mode: "same-origin",
+                      success: function (result) {
+                          if ("error" in result){
+                              alert(result["error"])
+                          } else{
+                              row.remove()
+                              alert("Deleted!")
+                          }
+                          $("#tokens_table").bootstrapTable('refresh')
+                      },
+                      error: function(textStatus, errorThrown){
+                          alert("Error deleting token: " + textStatus);
+                          console.log(errorThrown)
+                      }
+                    });
                 })
             };
 
