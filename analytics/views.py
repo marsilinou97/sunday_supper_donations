@@ -3,6 +3,7 @@ from math import ceil
 from typing import Dict
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 from django.db import transaction
 from django.db.models.query_utils import Q
 
@@ -31,7 +32,8 @@ from analytics.excel import export_tables_to_excel
 
 get_zeros_list = lambda n: [0] * n
 
-
+@permission_required('input.view_item')
+@login_required()
 def index(request):
     if request.method == 'GET':
 
@@ -44,7 +46,8 @@ def index(request):
     else:
         return HttpResponse("ERROR...")
 
-
+@permission_required('input.view_item')
+@login_required()
 def raw_data(request):
     if request.method == "GET":
 
@@ -57,24 +60,28 @@ def raw_data(request):
     else:
         return HttpResponse("ERROR...")
 
-
+@permission_required('input.change_item')
+@login_required()
 def edit_donations(request):
     context = {'funds_form_types': FundsEditForm(), 'item_form': ItemForm()}
     return render(request, 'analytics/edit_donations.html', context)
 
-@login_required(login_url="login")
+@permission_required('input.change_item')
+@login_required()
 def edit_donors(request):
     context = {'form': DonorEditForm()}
     return render(request, 'analytics/edit_donors.html', context)
 
 
-@login_required(login_url="login")
+@permission_required('input.change_item')
+@login_required()
 def edit_donors_get_table(request):
     json_response = {"rows": list(get_donor_list_wo_anonymous()), "total": Donor.objects.count() - 1}
     return JsonResponse(json_response, safe=False)
 
 
-@login_required(login_url="login")
+@permission_required('input.change_item')
+@login_required()
 def update_donor(request):
     if request.method == "POST":
         try:
@@ -117,14 +124,15 @@ def download(request, filename="test.xls"):
     response['Content-Length'] = os.path.getsize(path)
     return response
 
-
+@permission_required('input.view_item')
+@login_required()
 def get_table(request):
     # Get request parse
     if request.method == "GET":
         try:
             """
                 {
-                    table_type: 
+                    table_type:
                     offset:
                     limit:
                     sort:
@@ -188,7 +196,8 @@ def get_table(request):
     else:
         return HttpResponse("ERROR...")
 
-
+@permission_required('input.view_item')
+@login_required()
 def get_donation_count_date_qty(request):
     if (request.method == "GET"):
 
@@ -209,7 +218,8 @@ def get_donation_count_date_qty(request):
 
         return JsonResponse(json_response, safe=False)
 
-
+@permission_required('input.view_item')
+@login_required()
 def get_donation_count_month(request):
     if (request.method == "GET"):
 
@@ -229,7 +239,8 @@ def get_donation_count_month(request):
 
         return JsonResponse(json_response, safe=False)
 
-
+@permission_required('input.view_item')
+@login_required()
 def get_donation_item_count(request):
     if (request.method == "GET"):
         year = request.GET["year"]
@@ -263,9 +274,11 @@ def get_donation_fund_count(request):
             })
 
         return JsonResponse(results, safe=False)
+    return HttpResponse("ERROR...")
 
 
-# @login_required
+@permission_required('input.change_item')
+@login_required()
 def update_item(request):
     if request.method == "POST":
         try:
@@ -290,7 +303,8 @@ def update_item(request):
 
     return HttpResponse("ERROR...")
 
-
+@permission_required('input.change_item')
+@login_required()
 def delete_item(request):
     if (request.method == "POST"):
         try:

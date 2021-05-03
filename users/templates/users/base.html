@@ -144,6 +144,8 @@
                                         <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage
                                             Registration Links</a></li>
                                         <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage User Roles</a></li>
+                                    {% endif %}
+                                    {% if user.is_superuser %}
                                         <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django Admin Page</a></li>
                                     {% endif %}
                                     <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
@@ -158,7 +160,8 @@
                             </li>
                         {% endif %}
                 </ul>
-
+                
+                <!-- Display username and Logout Link on far right -->
                 {% if user.is_authenticated %}
                     <ul class="navbar-nav navbar-right">
 
@@ -169,7 +172,6 @@
                         <li class="nav-item active me-5">
                             <a class="nav-link text-white" href="{% url 'logout' %}">Log out</a>
                         </li>
-
                     </ul>
                 {% endif %}
             </div>

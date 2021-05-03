@@ -3,7 +3,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http.response import JsonResponse
 from django.db import transaction, IntegrityError
 from django.utils.translation import activate
@@ -32,6 +32,7 @@ def change_password(request):
     return render(request, "settings/change_password.html")
 
 @login_required
+@permission_required('auth.change_user')
 def manage_roles(request):
     if request.user.is_authenticated:
         form = UserRoleForm()
@@ -39,6 +40,7 @@ def manage_roles(request):
         return render(request, "settings/manage_roles.html", context)
 
 @login_required
+@permission_required('users.change_registrationtoken')
 def manage_registration_links(request):
     if request.user.is_authenticated:
         form = TokenForm()
@@ -56,6 +58,7 @@ def index(request):
         return change_password(request)
 
 @login_required
+@permission_required('auth.change_user')
 def get_user_data(request):
     if request.method != "GET":
         return HttpResponse("Error")
@@ -66,12 +69,14 @@ def get_user_data(request):
     # return JsonResponse(list(get_users_info()), safe=False)
 
 @login_required
+@permission_required('auth.change_user')
 def get_roles(request):
     results = list(get_all_roles())
     flattend_results = list(map(lambda x: x['role'], results))
     return JsonResponse(flattend_results, safe=False)
 
 @login_required
+@permission_required('auth.change_user')
 def update_user_role(request):
     response = {}
 
@@ -96,6 +101,7 @@ def update_user_role(request):
         return JsonResponse(response)
 
 @login_required
+@permission_required('auth.change_user')
 def activate_user(request):
     response = {}
 
@@ -123,6 +129,7 @@ def activate_user(request):
         return JsonResponse(response)
 
 @login_required
+@permission_required('users.change_registrationtoken')
 def get_token_data(request):
 
     if request.method != "GET":
@@ -136,6 +143,7 @@ def get_token_data(request):
     # return JsonResponse(list(queries.get_token_data()), safe=False)
 
 @login_required
+@permission_required('users.change_registrationtoken')
 def update_token_data(request):
 
     try:
@@ -171,6 +179,7 @@ def update_token_data(request):
         return JsonResponse(response, safe=False)
 
 @login_required
+@permission_required('users.change_registrationtoken')
 def delete_token(request):
     try:
         if request.method != "POST":

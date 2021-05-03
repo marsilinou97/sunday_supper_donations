@@ -2,7 +2,7 @@ import random
 import string
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User, Group
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -89,6 +89,7 @@ def register(request):
 
 
 @login_required
+@permission_required('users.add_registrationtoken')
 def registration_token(request):
     if request.method == 'POST':
         token = ''.join(random.choices(TOKEN_OPTIONS, k=20))
