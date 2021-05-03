@@ -28,8 +28,8 @@
                        data-search-on-enter-key="true">
                     <thead class="fund_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
-                            id
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true" style="display:none">
+                            ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
@@ -60,8 +60,8 @@
                        data-search-on-enter-key="true">
                     <thead class="giftcard_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
-                            id
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true" style="display:none">
+                            ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
@@ -92,7 +92,7 @@
                        data-search-on-enter-key="true">
                     <thead class="food_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true" style="display:none">
                             ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
@@ -129,7 +129,7 @@
                        data-search-on-enter-key="true">
                     <thead class="clothing_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true" style="display:none">
                             ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
@@ -167,7 +167,7 @@
                        data-search-on-enter-key="true">
                     <thead class="misc_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false">
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="true" style="display:none">
                             ID
                         </th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
@@ -487,13 +487,11 @@
                     },
                     mode: "same-origin",
                     success: function (result) {
-                        if ("error" in result) {
-                            alert(result["error"])
-                            $("#funds_table").bootstrapTable('refresh')
-                            return
-                        }
+                        console.log(result)
+                        console.log("successfully deleted from " + table_type)
                         row.remove()
                         alert("Deleted!")
+                        $("#" + table_type).bootstrapTable('refresh')
                     },
                     error: function (textStatus, errorThrown) {
                         alert("Error deleting: " + textStatus);
