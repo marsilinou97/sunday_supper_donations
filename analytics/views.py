@@ -132,7 +132,7 @@ def get_table(request):
         try:
             """
                 {
-                    table_type: 
+                    table_type:
                     offset:
                     limit:
                     sort:
@@ -274,6 +274,7 @@ def get_donation_fund_count(request):
             })
 
         return JsonResponse(results, safe=False)
+    return HttpResponse("ERROR...")
 
 
 @permission_required('input.change_item')
