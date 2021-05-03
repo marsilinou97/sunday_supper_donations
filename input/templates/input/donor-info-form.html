@@ -396,7 +396,8 @@
                 row.append("<td class='col-2'>" + amount[0].outerHTML + "</td>")
 
                 $("#items_body").append(row)
-                $($(row).find('.col-4 select')).select2();
+                // TODO: implement select2 for only gift cards
+                // $($(row).find('.col-4 select')).select2();
                 formset_total_forms++
 
                 row.click(function () {
@@ -483,8 +484,8 @@
                 amountField.hide()
                 if (selected === 'clothing') {
                     subTypeId += "sub_type_clothing"
-                    // subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId}));
-                    subTypeField.replaceWith(clothing);
+                    subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId})); // Keep this line!
+                    // subTypeField.replaceWith(clothing); // This causes clothing items to not be inserted!
                 } else if (selected === 'food') {
                     subTypeId += "sub_type_name"
                     subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
