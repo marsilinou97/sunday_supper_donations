@@ -81,103 +81,100 @@
 
 
 <body>
+    <div class="container">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="{% url 'input_index' %}">
-        <img src="{% static "imgs/logo.png" %}" alt="logo" class="d-inline-block align-top">
-        Sunday Supper
-    </a>
-    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
+            <a class="navbar-brand" href="{% url 'input_index' %}">
+                <img src="{% static "imgs/logo.png" %}" alt="logo" class="d-inline-block align-top">
+                Sunday Supper
+            </a>
 
-            {% if user.is_authenticated %}
-                <!-- Input dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">Input</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item " href="{% url 'input_index' %}">Input Donation</a></li>
-                        <li><a class="dropdown-item " href="{% url 'add_businesses' %}">Add a Business</a></li>
-                        <li><a class="dropdown-item " href="{% url 'edit_businesses' %}">Edit Businesses</a></li>
-                    </ul>
-                </li>
-                <!-- Analytics dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">Analytics</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item " href="{% url 'analytics_index' %}">Charts</a></li>
-                        <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">Tables</a></li>
-                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
-                        <li><a class="dropdown-item " href="{% url 'analytics_edit_donors' %}">Edit Donor</a></li>
-                    </ul>
-                </li>
-            {% endif %}
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <li class="nav-item">
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    {% if user.is_authenticated %}
+
+                        <!-- Input dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">Input</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item " href="{% url 'input_index' %}">Add Donation</a></li>
+                                <li><a class="dropdown-item " href="{% url 'add_businesses' %}">Add Business</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Analytics dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">Analytics</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item " href="{% url 'analytics_index' %}">View Charts</a></li>
+                                <li><a class="dropdown-item " href="{% url 'analytics_rawdata' %}">View Tables</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Audit Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">Audit</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item " href="{% url 'edit_businesses' %}">Edit Business</a></li>
+                                <li><a class="dropdown-item " href="{% url 'analytics_edit_donations' %}">Edit Donation</a></li>
+                                <li><a class="dropdown-item " href="{% url 'analytics_edit_donors' %}">Edit Donor</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Setting dropdown -->
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle text-white" id="navbarDropdownSettings" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
+                                <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                                    {% if user.is_staff %}
+                                        <li><a class="dropdown-item" href="{% url 'maketoken' %}">Create Registration Link</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage
+                                            Registration Links</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage User Roles</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django Admin Page</a></li>
+                                    {% endif %}
+                                    <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                            <li class="nav-item active">
+                                <a class="nav-link text-white" href="{% url 'login' %}">Log in</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
+                            </li>
+                        {% endif %}
+                </ul>
 
                 {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                        <li class="nav-item active">
-                            <a class="nav-link text-white" href="{% url 'admin:index' %}">Admin</a>
+                    <ul class="navbar-nav navbar-right">
+
+                        <li class="nav-item active me-3">
+                            <span class="navbar-text text-white"> Welcome, {{ user.username }}</span>
                         </li>
-                    {% else %}
-                    {% endif %}
 
-                    <!-- Setting dropdown -->
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-white" id="navbarDropdownSettings" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                            <li><a class="dropdown-item" href="{% url 'change_password' %}">Change password or email
-                                address</a></li>
-                            {% if user.is_staff %}
-                                <li><a class="dropdown-item" href="{% url 'maketoken' %}">Create registration link</a>
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'manage_registration_links' %}">Manage
-                                    registration links</a></li>
-                                <li><a class="dropdown-item" href="{% url 'manage_roles' %}">Manage user roles</a></li>
-                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Django admin page
-                                    (advanced)</a></li>
-                            {% endif %}
-                            <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
-                        </ul>
-                    </li>
+                        <li class="nav-item active me-5">
+                            <a class="nav-link text-white" href="{% url 'logout' %}">Log out</a>
+                        </li>
 
-                    <!-- Mostly for debugging, but might be nice to keep anyway! -->
-                    <li class="nav-item active">
-                        <a class="navbar-text text-white"> [ Logged in as {{ user.username }} ] </a>
-                    </li>
-
-                    <!-- /debugging stuff -->
-
-                    <li class="nav-item active">
-                        <a class="nav-link text-white" href="{% url 'logout' %}">Log out</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item active">
-                        <a class="nav-link text-white" href="{% url 'login' %}">Log in</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
-                    </li>
+                    </ul>
                 {% endif %}
-            </li>
-            {% if user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'maketoken' %}">Make token</a>
-                </li>
-            {% endif %}
-        </ul>
+            </div>
+        </nav>
     </div>
-</nav>
 
 <main role="main" class="container">
     {% block content %}
