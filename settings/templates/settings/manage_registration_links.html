@@ -268,12 +268,9 @@
                       },
                       mode: "same-origin",
                       success: function (result) {
-                          if ("error" in result){
-                              alert(result["error"])
-                          } else{
-                              row.remove()
-                              alert("Deleted!")
-                          }
+                          console.log(result)
+                          row.remove()
+                          alert("Deleted!")
                           $("#tokens_table").bootstrapTable('refresh')
                       },
                       error: function(textStatus, errorThrown){
