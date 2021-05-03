@@ -450,4 +450,4 @@ def InsertItem(
             misc.update(item, name)
             misc.save()
     else:
-        print("Item subclass not recognized")
+        print("Item subclass", subclass , "not recognized")
