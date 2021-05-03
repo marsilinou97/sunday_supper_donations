@@ -96,7 +96,7 @@
             $(this).bootstrapTable({
                 onPostBody(data){
                     bindEditButton(table_type)
-                    bindRemoveButton(table_type)
+                    bindCancelButton(table_type)
                 }
             });
         })
@@ -109,7 +109,7 @@
         $.each(row, function (k, v) {
             if (k === 'first_name') {
                 html.push('<button type="button" class="editbtn btn btn-primary edit" >Edit</button>')
-                html.push('<button type="button" class="deletebtn-donors btn btn-primary btn-danger ms-2" >Delete</button>')
+                html.push('<button type="button" class="cancelbtn-donors btn btn-primary btn-danger ms-2" >Cancel</button>')
             }
         })
         return html.join("")
@@ -125,6 +125,7 @@
             let $row = $this.parents("tr")
             let tds = $this.closest("tr").find("td")
             tds.last().children().last().html("Cancel")
+            tds.last().children().last().show();
             tds.splice(-1,1)
 
             if ($this.html() === 'Edit'){
@@ -170,7 +171,8 @@
         let tds = $this.closest("tr").find("td")
         let buttons = tds.last().children()
         $(buttons[0]).html("Edit");
-        $(buttons[1]).html("Delete");
+        // $(buttons[1]).html("Cancel");
+        $(buttons[1]).hide();
 
         tds.splice(-1,1)
         $(tds.slice(0,1).css({"cursor": "auto"}))
@@ -248,8 +250,8 @@
         });
     }
 
-    function bindRemoveButton(table_type){
-        $("#" + table_type + " .deletebtn-donors").click(function () {
+    function bindCancelButton(table_type){
+        $("#" + table_type + " .cancelbtn-donors").click(function () {
             let tds = $(this).closest("tr").find("td")
             tds = tds.slice(1)
 
@@ -260,11 +262,10 @@
                 })
                 valuesBeforeEdit = []
                 exitEditRowMode($(this))
-                return;
             }
+            return;
         })
-
-        return;
+        $("#" + table_type + " .cancelbtn-donors").hide();
     }
 
     $(function () {
