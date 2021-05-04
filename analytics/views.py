@@ -91,11 +91,11 @@ def update_donor(request):
                 if type(v) not in (int, float, bool):
                     update_data[k] = remove_html_tags(v)
 
-            print(update_data)
+            # print(update_data)
             id = update_data["id"]
             # update_data.pop("id") # Don't want to accidentally update the Donor's id
             with transaction.atomic():
-                print(id)
+                # print(id)
                 result = update_table_entry(Donor, {"id": id}, update_data)
                 if not result:
                     result = {"error": "Couldn't update the Donor entry, please try again"}
@@ -146,7 +146,7 @@ def get_table(request):
                 }
             """
             exact_search = request.GET.get("exact", None)
-            print(dict(request.GET))
+            # print(dict(request.GET))
             if not exact_search:
                 model = request.GET["table_type"]
                 offset = int(request.GET["offset"])
@@ -184,7 +184,7 @@ def get_table(request):
             # json_response = {"rows": list(query_set), "total": len(list(query_set))}
 
             if not json_response["rows"]: json_response = {"total": 0, "rows": []}
-            print(json_response)
+            # print(json_response)
             return JsonResponse(json_response, safe=False)
 
         except Exception as e:
@@ -266,8 +266,8 @@ def get_donation_fund_count(request):
         json_response = {}
         for fund_type in fund_types:
             results = get_funds_count_qty(fund_type, year)
-            print(fund_type.name)
-            print(results)
+            # print(fund_type.name)
+            # print(results)
 
             json_response.update({
                 fund_type.name: results
@@ -289,7 +289,7 @@ def update_item(request):
             ids.append(update_data["item_id"])
             ids.append(update_data["item_id"])
             res = update_item_entry(ids, update_data, request.POST["table_type"])
-            print(res)
+            # print(res)
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + " entry, please try again."}
                 return FailedJsonResponse(res)
