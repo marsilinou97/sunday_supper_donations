@@ -58,4 +58,13 @@
         <div class="text-center">Already have an account? <a href="{% url 'login' %}">Login here</a></div>
     </div>
 
+    <script>
+        if ($("#id_token").val() === "") {
+            if (localStorage.getItem('registrationToken') != null)
+                $("#id_token").val(localStorage.getItem('registrationToken'))
+        } else {
+            localStorage.setItem("registrationToken", $("#id_token").val());
+        }
+    </script>
+
 {% endblock %}
