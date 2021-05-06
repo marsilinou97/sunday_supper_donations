@@ -55,7 +55,7 @@ class ChartsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ChartsForm, self).__init__(*args, **kwargs)
 
-        self.fields["donation_year"].widget.attrs.update({"class": "form-control-md"})
+        self.fields["donation_year"].widget.attrs.update({"class": "form-control-md ms-3"})
         self.fields["donation_year"].widget.attrs.update({"id": "year-dropdown"})
 
 
