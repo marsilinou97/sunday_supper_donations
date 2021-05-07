@@ -145,12 +145,11 @@ def get_token_data(request):
 @login_required
 @permission_required('users.change_registrationtoken')
 def update_token_data(request):
-
+    response = {}
     try:
         if request.method != "POST":
             raise Exception("Request not POST")
 
-        response = {}
 
         update_data = json.loads(request.POST["update_data"])
         token_id = update_data["id"]
