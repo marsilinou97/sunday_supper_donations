@@ -60,10 +60,10 @@
 
     <script>
         if ($("#id_token").val() === "") {
-            if (localStorage.getItem('registrationToken') != null)
-                $("#id_token").val(localStorage.getItem('registrationToken'))
+            if (sessionStorage.getItem('registrationToken') != null)
+                $("#id_token").val(sessionStorage.getItem('registrationToken'))
         } else {
-            localStorage.setItem("registrationToken", $("#id_token").val());
+            sessionStorage.setItem("registrationToken", $("#id_token").val());
         }
     </script>
 
