@@ -316,7 +316,7 @@ def delete_item(request):
             if not res:
                 res = {"error": "Couldn't update the" + request.POST["table_type"] + "entry, please try again."}
             print(f"{res=}")
-            JsonResponse(res, safe=False)
+            return JsonResponse(res, safe=False)
 
         except Exception as e:
             print(f"The error is {e}")
