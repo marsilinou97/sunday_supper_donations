@@ -6,7 +6,8 @@
 
     <!-- Includes styling for tables -->
     <link rel="stylesheet" type="text/css" href="{% static 'style/raw_data.css' %}">
-
+    <h1 class="text-center">Edit Donations</h1>
+    <hr>
     <!-- search code -->
     <div class="container form-group" id="search">
         <div class="shadow p-5 mb-5 rounded border foreground-item">
@@ -82,6 +83,7 @@
             <div class="text-center exact_search_msg"></div>
         </div>
     </div>
+
     <fieldset>
         <legend class="mb-2">Show Donation Types:</legend>
         <div class="row">
@@ -122,8 +124,6 @@
     <div class="alert alert-success fade in text-center hide" role="alert">
         <strong class="msg"> </strong>
     </div>
-    <h1 class="text-center">Edit Donations</h1>
-    <hr>
 
     <div id="content" class="content edit_donation">
         <div id="content" class="content raw_data">
@@ -151,9 +151,10 @@
                        data-search-on-enter-key="true">
                     <thead class="fund_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
+                        <!-- <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
                             ID
-                        </th>
+                        </th> -->
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                         <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
@@ -195,9 +196,10 @@
                        data-search-on-enter-key="true">
                     <thead class="giftcard_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
+                        <!-- <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
                             ID
-                        </th>
+                        </th> -->
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input">First Name</th>
                         <th data-sortable="true" data-field="last_name" data-filter-control="input">Last Name</th>
                         <th data-sortable="true" data-field="date_received" data-formatter="dateFormat"
@@ -239,9 +241,10 @@
                        data-search-on-enter-key="true">
                     <thead class="food_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
+                        <!-- <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
                             ID
-                        </th>
+                        </th> -->
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
                             class="text-capitalize">First Name
                         </th>
@@ -288,9 +291,10 @@
                        data-search-on-enter-key="true">
                     <thead class="clothing_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
+                        <!-- <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
                             ID
-                        </th>
+                        </th> -->
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
                             class="text-capitalize">First Name
                         </th>
@@ -338,9 +342,10 @@
                        data-search-on-enter-key="true">
                     <thead class="misc_header">
                     <tr>
-                        <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
+                        <!-- <th data-sortable="true" data-field="item_id" data-filter-control="input" data-visible="false" style="display:none">
                             ID
-                        </th>
+                        </th> -->
+                        <th data-sortable="true" data-field="item_id" data-filter-control="input">id</th>
                         <th data-sortable="true" data-field="first_name" data-filter-control="input"
                             class="text-capitalize">First Name
                         </th>
@@ -506,7 +511,6 @@
             return exact;
         }
 
-
         function exitExactSearchMode() {
             exactSearchOn = false;
             $("#search input").each(function () {
@@ -535,10 +539,12 @@
                 type: 'GET',
                 success: function (data) {
                     if (page != null) return data
+                    // $thisTable.bootstrapTable('removeAll') // doesnt work
                     $thisTable.bootstrapTable('load', {
                         "rows": data["rows"],
                         "total": data["total"]
                     })
+                    $thisTable.bootstrapTable('refresh')
                     console.log("LOADED DATA")
                 },
                 error: function (er) {
@@ -566,7 +572,7 @@
             $('.data-table').each(function () {
                 if ($(this).attr("id") !== undefined) {
                     $($(this).parentsUntil(".donation_table")).find(".search").attr("title", "Individual search is disabled. Click Clear to on top to enable this box")
-                    getBulkSearchResult($(this))
+                    getBulkSearchResult($(this)) // here
                 } else {
                 }
             })
@@ -614,15 +620,19 @@
             });
         }
 
-
+        // updateds the tables whenever a search/sort/etc is done
         $(window).on('load', function () {
             $('.data-table').each(function () {
                 let table = $(this)
                 let table_type = $(this).attr("id")
                 $(table).bootstrapTable({
                     onPostBody(data) {
+                        // update the actual contents of the tables
+                        tables_data[table_type] = data // seems to work!
+                        // bind/rebind the buttons
                         bindEditButton(table_type)
                         bindRemoveButton(table_type)
+                        // add a tooltip or something?
                         $($(table).parentsUntil(".donation_table")).find(".search").addClass("tool-tip")
                     }
                 });
@@ -660,8 +670,8 @@
                 if ($this.html() === 'Edit') {
                     $this.html('Save');
                     {# First 3 columns are uneditable #}
-                    $(tds.slice(0, 2)).css({"cursor": "not-allowed"})
-                    tds = tds.slice(2)
+                    $(tds.slice(0, 3)).css({"cursor": "not-allowed"})
+                    tds = tds.slice(3)
 
 
                     oldValuesBeforeEdit = [];
@@ -718,7 +728,7 @@
             $(buttons[1]).html('Delete');
 
             tds.splice(-1, 1)
-            $(tds.slice(0, 2)).css({"cursor": "auto"})
+            $(tds.slice(0, 3)).css({"cursor": "auto"})
 
             {#tds.prop('contenteditable', false)#}
             tds.closest("tr").css({
@@ -729,7 +739,7 @@
             {#$this.parentsUntil("table").find('button').attr("disabled", false);#}
 
             {# Set the cell to the date was selected and remove the input element #}
-            $(tds[2]).html(dateFormat($(tds[2]).children().last().val(), 'MM/DD/YYYY'))
+            $(tds[3]).html(dateFormat($(tds[3]).children().last().val(), 'MM/DD/YYYY'))
             // tds = tds.splice(3);
             console.log(tds)
             $(tds).each(function (i) {
@@ -738,18 +748,18 @@
         }
 
         const tables_keys = {
-            "funds_table": ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"],
+                "funds_table": ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"],
             "giftcards_table": ["first_name", "last_name", "date_received", "sub_type", "amount", "quantity", "comments"],
-            "foods_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
-            "clothing_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
-            "misc_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
+                "foods_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
+             "clothing_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
+                 "misc_table": ["first_name", "last_name", "date_received", "sub_type", "quantity", "comments"],
         };
 
         function edit_donation(row_index, table_type, $row, $this) {
             let old_data = tables_data[table_type][row_index]
             let keys = tables_keys[table_type]
             {# Remove the actions column #}
-            let columns = $row.find("td").slice(0, -1)
+            let columns = $row.find("td").slice(1, -1)
             console.log(columns)
             console.log(old_data)
 
@@ -804,7 +814,7 @@
         function bindRemoveButton(table_type) {
             $("#" + table_type + " .deletebtn-funds").click(function () {
                 let tds = $(this).closest('tr').find('td')
-                tds = tds.slice(2)
+                tds = tds.slice(3)
                 {#tds.splice(-1, 1)#}
 
                 if ($(this).html() === "Cancel") {
@@ -830,7 +840,7 @@
                 ({
                     url: 'delete_item/',
                     data: {"item_id": row_id, "table_type": table_type},
-                    type: 'post',
+                    type: 'POST',
                     headers: {
                         "X-CSRFToken": getCookie("csrftoken")
                     },
@@ -997,8 +1007,8 @@
 
         })
     </script>
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{% static 'js/autocomplete.js' %}"></script>
+
 {% endblock %}
