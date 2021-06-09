@@ -8,6 +8,7 @@ urlpatterns = [
     path('rawdata/download_my_file/', views.download, name='download_my_file'),
     path('edit_donations/', views.edit_donations, name='analytics_edit_donations'),
     path('edit_donations/get_table/', views.get_table, name='edit_donations_get_table'),
+    path('edit_donations/get_donors/', input_view_get_donors, name='get_donors'),
     path('edit_donors/', views.edit_donors, name='analytics_edit_donors'),
     path('edit_donors/get_table/', views.edit_donors_get_table, name='edit_donors_get_table'),
     path('edit_donors/update_donor/', views.update_donor, name='edit_donors_update_donor'),
