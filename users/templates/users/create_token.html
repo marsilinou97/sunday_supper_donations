@@ -1,0 +1,49 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+    <div class="login-form">
+        <form method="post" class="text-center" xmlns="http://www.w3.org/1999/html">
+            <div class="form-group">
+                {% csrf_token %}
+
+                {% include 'users/msg.html' %}
+
+                {% if form %}
+                    <h3 class="text-dark mb-4 text-start">Create Registration Link</h3>
+                    <hr>
+                    <div class="input-group d-flex justify-content-start">
+                        <label class="text-dark" for="expiration_period" style="padding-right: 10px;">Days to expire: </label>
+                        <input class="form-control-lg text-dark" type="number" name="expiration_period" id="expiration_period" value="7" max="20" min="1">
+                    </div>
+
+                {% endif %}
+                {% if token %}
+                    <h2>Click Link To Copy</h2>
+                    <hr>
+                    <a id="generated_link" style="font-size: 18pt;" onclick="copyLink($(this))" onmouseout="outFunc()"
+
+                       href="#">{{ token }}</a>
+
+                {% endif %}
+                <button type="submit" class="btn btn-primary btn-lg center-block mt-3 mb-5 w-25">Create</button>
+            </div>
+        </form>
+    <div>
+
+
+
+    <script>
+        function copyLink(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(element).text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+
+        function outFunc() {
+            var tooltip = document.getElementById("myTooltip");
+            tooltip.innerHTML = "Copy to clipboard";
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+    <div class="form-group d-flex justify-content-center">
+        <div class="shadow p-3 mb-5 border rounded foreground-item w-75">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="d-flex justify-content-center mt-3 mb-3 ms-2 me-2">
+                {{ form }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="mt-5">
+
+        <h1 class="text-center mb-5">Analytics</h1>
+        <hr>
+
+
+        <div class="shadow p-3 mb-5 bg-white rounded mt-5" style="width:100%; height:55%;">
+            <h3 class="text-center">Donation Count Bar Chart With Quantity</h3>
+            <hr>
+            <canvas id="bar-chart-1" width="350" height="100"></canvas>
+
+        </div>
+    </div>
+
+
+    <div class="mt-5">
+        <div class="shadow p-3 mb-5 bg-white rounded" style="width:100%; height:25%;">
+            <h3 class="text-center mb-5">Donation Count Bar Chart</h3>
+            <hr>
+            <canvas id="bar-chart-2" width="350" height="100"></canvas>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <div class="shadow p-3 mb-5 bg-white rounded" style="width:100%; height:100%;">
+            <h3 class="text-center">Donation Count Pie Chart</h3>
+            <hr>
+            <canvas id="pie-chart" width="500" height="250"></canvas>
+        </div>
+
+    </div>
+<script>
+
+    $('#year-dropdown').change(function() {
+        fetchCharts($('#year-dropdown')[0].value)
+    })
+
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
+
+    const bar1Context = document.getElementById('bar-chart-1').getContext('2d');
+    const bar2Context = document.getElementById('bar-chart-2').getContext('2d');
+    const pieContext = document.getElementById('pie-chart').getContext('2d');
+
+    let bar1Chart = new Chart(bar1Context, { type: 'bar'})
+    let bar2Chart = new Chart(bar2Context, { type: 'bar'})
+    let pieChart = new Chart(pieContext, { type: 'pie'})
+    fetchCharts(2021)
+    
+
+    function fetchCharts(year) {
+
+        $.ajax({
+            url: 'get_donation_count_date_qty/',
+            datatype: 'json',
+            data: {"year": year},
+            type: 'GET',
+            success: function (response) {
+                console.log('Donations W/ quantity (bar chart 1):', response);
+
+                bar1Chart.data = {
+                        labels: months,
+                        datasets: [{
+                            label: 'Funds',
+                            backgroundColor: "#3e95cd",
+                            borderColor: "#3e95cd",
+                            data: response["funds_table"]
+                        },{
+                            label: 'Gift Cards',
+                            backgroundColor: "#8e5ea2",
+                            borderColor: "#8e5ea2",
+                            data: response["giftcards_table"]
+                        },{
+                            label: 'Clothing',
+                            backgroundColor: "#3cba9f",
+                            borderColor: "#3cba9f",
+                            data: response["clothing_table"]
+                        },{
+                            label: 'Food',
+                            backgroundColor: "#e8c3b9",
+                            borderColor: "#e8c3b9",
+                            data: response["foods_table"]
+                        },{
+                            label: 'Miscellaneous',
+                            backgroundColor: "#c45850",
+                            borderColor: "#c45850",
+                            data: response["misc_table"]
+                        }]
+                }
+                bar1Chart.update()
+
+            }
+        });
+
+
+
+        $.ajax({
+            url: 'get_donation_count_month/',
+            datatype: 'json',
+            data: {"year": year},
+            type: 'GET',
+            success: function (response) {
+
+                console.log('Donations W/O quantity: (bar chart 2)', response);
+                
+                bar2Chart.data = {
+                        labels: months,
+                        datasets: [{
+                            label: 'Funds',
+                            backgroundColor: "#3e95cd",
+                            borderColor: "#3e95cd",
+                            data: response["funds_table"]
+                        },{
+                            label: 'Gift Cards',
+                            backgroundColor: "#8e5ea2",
+                            borderColor: "#8e5ea2",
+                            data: response["giftcards_table"]
+                        },{
+                            label: 'Clothing',
+                            backgroundColor: "#3cba9f",
+                            borderColor: "#3cba9f",
+                            data: response["clothing_table"]
+                        },{
+                            label: 'Food',
+                            backgroundColor: "#e8c3b9",
+                            borderColor: "#e8c3b9",
+                            data: response["foods_table"]
+                        },{
+                            label: 'Miscellaneous',
+                            backgroundColor: "#c45850",
+                            borderColor: "#c45850",
+                            data: response["misc_table"]
+                        }]
+                }
+                bar2Chart.update()
+            }
+        });
+
+
+
+        $.ajax({
+            url: 'get_donation_item_count/',
+            datatype: 'json',
+            data: {"year": year},
+            type: 'GET',
+            success: function (response) {
+                console.log('Total donations by category (pie chart):', response);
+
+                pieChart.data = {
+
+                    <!-- Donation Categories -->
+                    labels: ['Funds', 'Gift Cards', 'Clothing', 'Food', 'Miscellaneous'],
+                    datasets: [{
+                        label: '# of Donations',
+
+                        <!-- Donation Category Counts -->
+                        data: [response["funds_table"], response["giftcards_table"], response["clothing_table"],response["foods_table"], response["misc_table"]],
+
+                        backgroundColor: [
+                            "#3e95cd",
+                            "#8e5ea2",
+                            "#3cba9f",
+                            "#e8c3b9",
+                            "#c45850",
+                        ],
+                        borderColor: [
+                            "#3e95cd",
+                            "#8e5ea2",
+                            "#3cba9f",
+                            "#e8c3b9",
+                            "#c45850",
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+
+                pieChart.options = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    } 
+                }
+
+                pieChart.update()
+            }
+        });
+    }
+
+</script>
+
+
+{% endblock %}
+

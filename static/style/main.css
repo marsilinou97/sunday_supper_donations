@@ -1,0 +1,255 @@
+.form-control, .form-control:focus, .input-group-addon {
+    border-color: #e1e1e1;
+}
+
+.form-control, .btn {
+    border-radius: 3px;
+}
+
+.signup-form, .login-form {
+    width: 390px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.signup-form form, .login-form form {
+    color: #999;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    background: #fff;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+
+.signup-form h2, .login-form h2 {
+    color: #333;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+.signup-form hr, .login-form hr {
+    margin: 0 -30px 20px;
+}
+
+.signup-form .form-group, .login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.signup-form label, .login-form label {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.signup-form .form-control, .login-form .form-control {
+    min-height: 38px;
+    box-shadow: none !important;
+}
+
+.signup-form .input-group-addon, .login-form .input-group-addon {
+    max-width: 42px;
+    text-align: center;
+}
+
+.signup-form input[type="checkbox"], .login-form input[type="checkbox"] {
+    margin-top: 2px;
+}
+
+.signup-form .btn, .login-form .btn {
+    font-size: 16px;
+    font-weight: bold;
+    background: #19aa8d;
+    border: none;
+    min-width: 140px;
+}
+
+.signup-form .btn:hover, .signup-form .btn:focus, .login-form .btn:hover, .signup-form .btn:focus {
+    background: #179b81;
+    outline: none;
+}
+
+.signup-form a, .login-form a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.signup-form a:hover, .login-form a:hover {
+    text-decoration: none;
+}
+
+.signup-form form a, .login-form form a {
+    color: #19aa8d;
+    text-decoration: none;
+}
+
+.signup-form form a:hover, .login-form form a:hover {
+    text-decoration: underline;
+}
+
+.signup-form .fa, .login-form .fa {
+    font-size: 21px;
+}
+
+.signup-form .fa-paper-plane, .login-form .fa-paper-plane {
+    font-size: 18px;
+}
+
+.signup-form .fa-check, .login-form .fa-check {
+    color: #fff;
+    left: 17px;
+    top: 18px;
+    font-size: 7px;
+    position: absolute;
+}
+
+nav.navbar * {
+    margin: auto;
+}
+
+img.d-inline-block.align-top {
+    width: 100px;
+    height: 100px;
+    margin: -43px 0;
+}
+
+main {
+    min-height: 100%;
+}
+
+.footer {
+    margin-top: 2vh;
+    height: 5vh;
+    width: 100%;
+    display: block;
+    bottom: 0;
+    left: 0;
+}
+
+.footer .container {
+    text-align: center;
+
+}
+
+nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top {
+    position: fixed;
+    /* margin-bottom: 70px !important; */
+    display: block;
+    /* bottom: 100px; */
+    padding: 12px;
+}
+
+main.container {
+    margin-top: 100px;
+}
+
+.navbar-dark .navbar-brand {
+    font-size: 20pt;
+}
+
+body, html {
+    height: 100%;
+}
+
+div#input-group {
+    width: 14%;
+    display: inline-block;
+}
+
+fieldset {
+    text-align: center;
+}
+
+.alert {
+    text-align: left;
+    width: 30vw;
+    margin: 0 auto;
+}
+
+
+.bd-example * {
+    font-size: 15pt
+}
+
+button.accordion-button:hover, button.accordion-button[aria-expanded="true"] {
+    background: #70dddd;
+    font-size: 16pt;
+    transition: all 1s;
+}
+
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 80vh;
+    width: 80vw;
+}
+
+.signup-form a, .login-form a {
+    color: #337ab7;
+}
+
+.edit_donation tr td:last-child {
+    text-align: center;
+}
+
+/* todo: handle mobile */
+
+.table-container {
+    height: 30vh;
+    display: block;
+    overflow: auto;
+}
+
+.ui-autocomplete-loading {
+    background: white url("../imgs/ui-anim_basic_16x16.gif") right center no-repeat;
+}
+
+/* Universal styling */
+body{
+    background-color: #CCE3DE;
+}
+
+.btn-primary.read{
+    border: 1px solid #000000;
+    background-color: #19AA8D !important;
+    font-weight: bold;
+}
+
+.foreground-item{
+    background-color: #EAF4F4 !important;
+    padding: 0 15px;
+    border-radius:15px;
+}
+
+.background-wrapper{
+    background-color: #A4C3B2 !important;
+}
+
+hr{
+    background-color: #000000 !important;
+}
+
+* {
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+#items_form .btn {
+    width: 45%;
+    margin: 0 2%;
+}
+
+
+.placeholder-text {
+    position: relative;
+    display: none;
+}
+.placeholder-text .col {
+margin-top: 15%;
+    font-size: 15pt;
+    font-weight: 700;
+    position: absolute;
+    width: 100%;
+}

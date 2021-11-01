@@ -1,0 +1,292 @@
+
+
+    <!--
+    <h3>Funds</h3>
+    <div style="width:50%; height:65%;">
+    <canvas id="fund-line-chart" width="300" height="260"></canvas>
+    </div>
+
+    <div style="width:50%; height:65%;">
+    <h3>Gift Cards</h3>
+    <canvas id="giftcard-line-chart" width="300" height="260"></canvas>
+    </div>
+
+    <div style="width:50%; height:65%;">
+    <h3>Clothing</h3>
+    <canvas id="clothing-line-chart" width="300" height="260"></canvas>
+    </div>
+
+    <div style="width:50%; height:65%;">
+    <h3>Food</h3>
+    <canvas id="food-line-chart" width="300" height="260"></canvas>
+    </div>
+
+    <div style="width:50%; height:65%;">
+    <h3>Miscellaneous</h3>
+    <canvas id="miscellaneous-line-chart" width="300" height="260"></canvas>
+    </div>
+    -->
+
+
+    <div class="container">
+
+          <div class="row">
+            <div class="col-md-12">
+                  <h3>Funds</h3>
+                <canvas id="fund-line-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+                  <h3>Gift Cards</h3>
+                <canvas id="giftcard-line-chart"></canvas>
+            </div>
+          </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                  <h3>Clothing</h3>
+                <canvas id="clothing-line-chart"></canvas>
+            </div>
+          </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Food</h3>
+                <canvas id="food-line-chart"></canvas>
+            </div>
+          </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Miscellaneous</h3>
+                <canvas id="miscellaneous-line-chart"></canvas>
+            </div>
+          </div>
+
+
+
+    </div>
+
+
+
+    <!-- Funds -->
+    <script>
+          new Chart(document.getElementById("fund-line-chart"), {
+          type: 'line',
+          data: {
+            <!-- X-Axis Donation Received Dates -->
+            labels: [{% for fund in fund_data %} '{{fund.date_received}}', {% endfor %} ],
+            datasets: [{
+                <!-- Y-Axis Amount -->
+                data: [ {% for fund in fund_data %} {{fund.amount}} , {% endfor %} ],
+                label: "Funds",
+                borderColor: "#3e95cd",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'Fund Donations'
+            },
+            scales: {
+						xAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Date Received'
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Amount'
+							}
+						}]
+					},
+          }
+        });
+
+    </script>
+
+
+     <!-- Gift Cards -->
+    <script>
+
+          new Chart(document.getElementById("giftcard-line-chart"), {
+          type: 'line',
+          data: {
+            <!-- X-Axis Donation Received Dates -->
+            labels: [ {% for giftcard in giftcard_data %} '{{giftcard.date_received}}', {% endfor %} ],
+            datasets: [{
+                 <!-- Y-Axis Amount -->
+                data: [{% for giftcard in giftcard_data %} {{giftcard.amount}} , {% endfor %}],
+                label: "Gift Cards",
+                borderColor: "#8e5ea2",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'Gift Card Donations'
+            },
+            scales: {
+						xAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Date Received'
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Amount'
+							}
+						}]
+					},
+          }
+        });
+
+
+    </script>
+
+     <!-- Clothing -->
+    <script>
+
+          new Chart(document.getElementById("clothing-line-chart"), {
+          type: 'line',
+          data: {
+            <!-- X-Axis Donation Received Dates -->
+            labels: [{% for clothing in clothing_data %} '{{clothing.date_received}}', {% endfor %}],
+            datasets: [{
+                 <!-- Y-Axis Type -->
+                data: [{% for clothing in clothing_data %} {{clothing.quantity}} , {% endfor %}],
+                label: "Clothing",
+                borderColor: "#3cba9f",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'Clothing Donations'
+            },
+            scales: {
+						xAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Date Received'
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Quantity'
+							}
+						}]
+					},
+          }
+        });
+
+
+    </script>
+
+
+     <!-- Food -->
+    <script>
+
+          new Chart(document.getElementById("food-line-chart"), {
+          type: 'line',
+          data: {
+            <!-- X-Axis Donation Received Dates -->
+            labels: [{% for food in food_data %} '{{food.date_received}}', {% endfor %}],
+            datasets: [{
+                 <!-- Y-Axis Quantity -->
+                data: [{% for food in food_data %} {{food.quantity}} , {% endfor %}],
+                label: "Food",
+                borderColor: "#e8c3b9",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'Food Donations'
+            },
+            scales: {
+						xAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Date Received'
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Quantity'
+							}
+						}]
+					},
+          }
+        });
+
+
+    </script>
+
+     <!-- Miscellaneous -->
+    <script>
+
+          new Chart(document.getElementById("miscellaneous-line-chart"), {
+          type: 'line',
+          data: {
+            <!-- X-Axis Donation Received Dates -->
+            labels: [{% for misc in miscellaneous_data %} '{{misc.date_received}}', {% endfor %}],
+            datasets: [{
+                 <!-- Y-Axis Quantity -->
+                data: [{% for misc in miscellaneous_data %} '{{misc.quantity}}', {% endfor %}],
+                label: "Miscellaneous",
+                borderColor: "#c45850",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'Miscellaneous Donations'
+            },
+            scales: {
+						xAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Date Received'
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Quantity'
+							}
+						}]
+					},
+          }
+        });
+
+
+    </script>

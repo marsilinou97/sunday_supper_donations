@@ -1,0 +1,54 @@
+
+<div class="chart-container">
+    <canvas id="acc-bar-chart-1"></canvas>
+</div>
+<script>
+   $.ajax({
+        url: 'get_donation_count_date_qty/',
+        datatype: 'json',
+        type: 'GET',
+        success: function (response) {
+            console.log('Donations W/ quantity (bar chart 1):', response);
+
+            var ctx = document.getElementById('acc-bar-chart-1').getContext('2d');
+            var chart = new Chart(ctx, {
+
+                type: 'bar',
+
+                // The data for our dataset
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Funds',
+                        backgroundColor: "#3e95cd",
+                        borderColor: "#3e95cd",
+                        data: response["funds_table"]
+                    },{
+                        label: 'Gift Cards',
+                        backgroundColor: "#8e5ea2",
+                        borderColor: "#8e5ea2",
+                        data: response["giftcards_table"]
+                    },{
+                        label: 'Clothing',
+                        backgroundColor: "#3cba9f",
+                        borderColor: "#3cba9f",
+                        data: response["clothing_table"]
+                    },{
+                        label: 'Food',
+                        backgroundColor: "#e8c3b9",
+                        borderColor: "#e8c3b9",
+                        data: response["foods_table"]
+                    },{
+                        label: 'Miscellaneous',
+                        backgroundColor: "#c45850",
+                        borderColor: "#c45850",
+                        data: response["misc_table"]
+                    }]
+                },
+                options: {}
+            });
+
+        }
+    });
+</script>
+

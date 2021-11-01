@@ -1,0 +1,538 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'style/input_page.css' %}">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    {#    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>#}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{% static 'js/autocomplete.js' %}"></script>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success fade in text-center" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="donor-info-form mb-5">
+        <form method="post" onsubmit="return submit_form()">
+            {% csrf_token %}
+            <h1 class="text-center mb-5">Input Page</h1>
+            <hr>
+
+
+            <!-- Begin Grid -->
+            <div class="container m-3" id="">
+                <div class="row p-3">
+
+                    <div class="col m-2 foreground-item shadow">
+                        <h3 class="d-flex justify-content-center">Donor Information</h3>
+                        <hr>
+
+                        <div class="row p-3 align-items-center">
+
+                            <div class="col text-center align-top">
+                                <label for="toggleAutocomplete">
+                                    Autocomplete
+                                    <input type="checkbox" name="toggleAutocomplete" id="toggleAutocomplete" checked>
+                                </label>
+                            </div>
+
+                            <div class="col text-center align-bottom">
+                                <label for="anonymous" class="anonymous">
+                                    Anonymous Donor
+                                    <input type="checkbox" id="anonymous" name="anonymous" class="anonymous"
+                                           onclick="anonymousToggle()">
+                                </label>
+                            </div>
+
+
+                        </div>
+
+                        <div class="placeholder-text text-center ">
+                            <div class="col">Anonymous Donor</div>
+                        </div>
+                        <div class="mb-4" id="donor_form">
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <label for="id_first_name">{{ donor_form.first_name.label }}</label>
+                                            {{ donor_form.first_name }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <label for="id_last_name">{{ donor_form.last_name.label }}</label>
+                                        {{ donor_form.last_name }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <label for="id_email">{{ donor_form.email.label }}</label>
+                                        {{ donor_form.email }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <label for="id_phone_number">{{ donor_form.phone_number.label }}</label>
+                                        {{ donor_form.phone_number }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <label for="id_address1">{{ donor_form.address1.label }}</label>
+                                        {{ donor_form.address1 }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <label for="id_address2">{{ donor_form.address2.label }}</label>
+                                        {{ donor_form.address2 }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col">
+                                    <span>
+                                        <label for="id_city">{{ donor_form.city.label }}</label>
+                                        {{ donor_form.city }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <span>
+                                        <label for="id_state">{{ donor_form.state.label }}</label>
+                                        <select name="state" id="id_state" class="form-control">
+                                            <option value="" disabled>State</option>
+                                            {% for state,abr in states.items %}
+                                                <option value="{{ abr }}" {% if abr == 'ca' %}selected{% endif %}>
+                                                    {{ state.title }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+        {#                                {{ donor_form.state }}#}
+                                    </span>
+                                </div>
+
+                                <div class="col">
+                                    <span class="mb-4">
+                                        <label for="id_zip">{{ donor_form.zip.label }}</label>
+                                        {{ donor_form.zip }}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> <!-- End Donor Information column -->
+
+                    <div class="col m-2 foreground-item shadow">
+
+                        <div id="donation_form">
+
+                            <div>
+                                <h3 class="text-center"> Donation Information</h3>
+                                <hr>
+                            </div>
+
+                            <div class="row p-3 align-items-center form-inline">
+
+
+                                <div class="col-3">
+                                    <span>
+                                        <label for="id_thanks_sent" class="pr-5">{{ donation_info_form.thanks_sent.label }}</label>
+                                        {{ donation_info_form.thanks_sent }}
+                                    </span>
+                                </div>
+
+                                <div class="col-8 m-2">
+                                    <span>
+                                        <label for="id_date_received">{{ donation_info_form.date_received.label }}</label>
+                                        {{ donation_info_form.date_received }}
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <div class="row p-3">
+                                <div class="col m-2">
+                                    <span>
+                                        <label for="id_comment">{{ donation_info_form.comment.label }}</label>
+                                            {{ donation_info_form.comment }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!-- End Donation Information column -->
+
+                </div> <!-- End First Row -->
+
+                <div class="row p-3">
+                    <div class="col m-2 foreground-item shadow">
+                        <div id="items_form">
+
+                            <h3 class="d-flex justify-content-center">Items</h3>
+                            <hr>
+
+                            <div class="d-flex justify-content-end">
+
+                                <button id="remove_button" type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+
+                                <button id="add_button" type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+
+                            </div>
+
+                            <br>
+
+                            <table class="table shadow p-3 mb-5 bg-body rounded">
+                                <thead>
+                                <tr>
+                                    <th class="col-1">#</th>
+                                    <th class="col-3">Type</th>
+                                    <th class="col-2">Qty.</th>
+                                    <th class="col-4">Sub Type</th>
+                                    <th class="col-2">Amount</th>
+                                </tr>
+                                </thead>
+
+                                <tbody id="items_body">
+                                {{ item_formset.management_form }}
+                                {% for item_form in item_formset %}
+                                    <tr class="shadow p-3 mb-5 bg-body rounded">
+                                        <td>{{ item_form.type }}</td>
+                                        <td>{{ item_form.quantity }}</td>
+                                        <td>{{ item_form.sub_type_business }}</td>
+                                    </tr>'
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="col m-2 foreground-item shadow">
+
+                        <div id="funds_form">
+
+                            <h3 class="d-flex justify-content-center">Funds</h3>
+                            <hr>
+                            <span class="d-flex justify-content-center">
+                                <div class="w-50 mb-5">
+                                    <label for="id_type">{{ funds_form.type.label }}</label>
+                                    {{ funds_form.type }}
+                                </div>
+
+                            </span>
+                            <span class="d-flex justify-content-center">
+                                <div class="w-50">
+                                    <label for="id_amount">{{ funds_form.amount.label }}</label>
+                                       {{ funds_form.amount }}
+                                </div>
+                            </span>
+
+                        </div>
+
+                    </div> <!-- End Funds Column -->
+
+                </div> <!-- End Second Row -->
+
+                <div class="row p-3">
+
+                    <div class="col m-2 foreground-item shadow w-25">
+                        <div>
+                            <button class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 btn-danger border border-dark shadow"
+                                    id="clear_fields">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col m-2 foreground-item shadow">
+                        <div>
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg center-block mt-3 mb-3 w-25 shadow read">Submit
+                            </button>
+                        </div>
+                    </div>
+
+                </div> <!-- End Third Row -->
+
+            </div> <!-- End Grid-->
+
+        </form>
+    </div>
+
+
+
+    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+
+    <script type="text/javascript">
+
+        function anonymousToggle() {
+            {#$("#donor_form").slideToggle(300);#}
+            $("#donor_form").fadeToggle(300);
+            $(".placeholder-text").fadeToggle(300);
+        }
+
+        function items_completed() {
+            let total_item_forms = parseInt($("#id_form-TOTAL_FORMS")[0].value);
+            console.log("total item forms: " + total_item_forms);
+            if (total_item_forms > 0){
+                // Check that each item is complete
+                incomplete_items = false;
+                $("#items_body").children("tr").each(function (rowIndex, row) {
+                    console.log("row index, row: " + rowIndex + ", " + row)
+                    let fields = $(row).children();
+                    console.log("\tchildren: " + fields)
+
+                    // Quantity is the one field common to all subtypes; check that first
+                    let test_value = $("#id_form-" + rowIndex + "-quantity").val();
+                    console.log("test value:" + test_value)
+                    if (test_value === '' || test_value === null || test_value < 1) incomplete_items = true;
+
+                    // Get the subtype
+                    let subtype = $("#id_form-" + rowIndex + "-type").val();
+
+                    // Check the giftcard amount if applicable
+                    if (subtype === "giftcard"){
+                        test_value = $("#id_form-" + rowIndex + "-amount").val();
+                        console.log(test_value)
+                        if (test_value === '' || test_value === null || test_value < 1) incomplete_items = true;
+                    }
+
+                    // Check the food/misc name, if applicable
+                    else if (subtype === "food" || subtype === "misc"){
+                        test_value = $("#id_form-" + rowIndex + "-name").val();
+                        console.log(test_value)
+                        if (test_value === '' || test_value === null) incomplete_items = true;
+                    }
+                })
+                // If none of the items were incomplete, then all of the items must be complete
+                return !incomplete_items;
+            }
+            // If there are no items, return false, since completion is dependent on the presence of items or funds
+            return false;
+        }
+
+        function funds_completed() {
+            val = document.querySelector("#funds_form #id_amount");
+            console.log("#funds_form #id_amount: " + val)
+            // Check for an amount less than 1; anything less than 1 is invalid
+            if (val !== '') {
+                if (val < 1) return false;
+            }
+            console.log("#funds_form #id_type: " + document.querySelector("#funds_form #id_type").value)
+            console.log("#funds_form #id_amount: " + document.querySelector("#funds_form #id_amount").value)
+            return document.querySelector("#funds_form #id_type").value !== '' && document.querySelector("#funds_form #id_amount").value !== ''
+        }
+
+        function donor_information_completed(){
+            console.log("anonymous: " + document.getElementById("anonymous").checked)
+            console.log("first name: " + $("#id_first_name").val())
+            console.log("last name: " + $("#id_last_name").val())
+            return (document.getElementById("anonymous").checked === true || ($("#id_first_name").val() !== '' && $("#id_last_name").val() !== ''))
+        }
+
+        function submit_form() {
+            document.querySelectorAll("textarea").forEach(e => e.value = DOMPurify.sanitize(e.value));
+            console.log("items_completed(): " + items_completed())
+            console.log("funds_completed(): " + funds_completed())
+            console.log("donor_information_completed(): " + donor_information_completed())
+            if ((items_completed() || funds_completed()) && donor_information_completed()) {
+                return true;
+            } else {
+                // {#TODO: Enhance error messages#}
+                // document.querySelector("#message").style.opacity = '1';
+                // document.querySelector("#message").innerHTML = "Please make sure to fill up required fields";
+                return false;
+            }
+        }
+
+        function items_row_clicked(e) {
+            $(e).parent().children().removeClass("selected");
+            $(e).addClass("selected");
+        }
+
+        let formset_total_forms = parseInt($("#id_form-TOTAL_FORMS")[0].value);
+
+        {% spaceless %}
+            let itemCount = 0;
+            $("#add_button").click(function (e) {
+                e.preventDefault();
+
+                let typeId = "id_form-" + formset_total_forms + "-type"
+                let quantityId = "id_form-" + formset_total_forms + "-quantity"
+                let amountId = "id_form-" + formset_total_forms + "-amount"
+                let subtypeId = "id_form-" + formset_total_forms + "-sub_type_business"
+
+                let row_count = $('<td class="col-1">' + (formset_total_forms + 1).toString() + '</td>')
+                let type = $('{{item_form.type}}').attr({id: typeId, name: typeId})
+                let quantity = $('{{item_form.quantity}}').attr({id: quantityId, name: quantityId})
+                let amount = $('{{item_form.amount}}').attr({id: amountId, name: amountId})
+                let subType = $('{{item_form.sub_type_business}}').attr({id: subtypeId, name: subtypeId})
+
+                let row = $('<tr class="shadow p-3 mb-5 bg-body rounded"></tr>')
+                row.append(row_count)
+                row.append("<td class='col-3'>" + type[0].outerHTML + "</td>")
+                row.append("<td class='col-2'>" + quantity[0].outerHTML + "</td>")
+                row.append("<td class='col-4'>" + subType[0].outerHTML + "</td>")
+                row.append("<td class='col-2'>" + amount[0].outerHTML + "</td>")
+
+                $("#items_body").append(row)
+                // TODO: implement select2 for only gift cards
+                // $($(row).find('.col-4 select')).select2();
+                formset_total_forms++
+
+                row.click(function () {
+                    {#Add event listener to new rows#}
+                    items_row_clicked(row);
+                });
+
+                row.find("select:first").change(function (e) {
+                    {#Add change listener to type field#}
+                    changeSubTypeField(e, row)
+                })
+                $("#id_form-TOTAL_FORMS").attr("value", formset_total_forms)
+
+            });
+        {% endspaceless %}
+
+
+        function removeRowItems(e) {
+            if (formset_total_forms > 0) {
+
+                formset_total_forms--;
+
+                $("#id_form-TOTAL_FORMS").attr("value", formset_total_forms)
+                let el = $("#items_body").children(".selected");
+
+                if (el.length === 0) {
+                    $("#items_body").children().last().remove()
+                    return;
+                }
+
+                el.remove();
+
+                $("#items_body").children("tr").each(function (rowIndex, row) {
+                    $(row).children().each(function (inputIndex, input) {
+                        if (inputIndex > 0) {
+                            let inputField = $(input).children().first();
+
+                            let id = inputField.attr("id").split("-")
+                            id = id[0] + "-" + rowIndex + "-" + id[2]
+
+                            let name = inputField.attr("name").split("-")
+                            name = name[0] + "-" + rowIndex + "-" + name[2]
+
+                            inputField.attr({id: id, name: name})
+                        } else {
+                            $(input).text(rowIndex + 1)
+                        }
+                    })
+                })
+
+            }
+        }
+
+        $("#remove_button").click(removeRowItems);
+
+        {#Add event listener to currnet tabel rows#}
+        $("#items_body tr").click(function (e) {
+            items_row_clicked($(this));
+        });
+
+        let clothing = ' {{item_form.sub_type_clothing|escapejs}} '
+        let misc = '{{item_form.sub_type_name|escapejs}}'
+        let food = '{{item_form.sub_type_name|escapejs}}'
+        let giftcard = '{{item_form.sub_type_business|escapejs}}'
+
+        //$("table tbody tr td select:last").replaceWith($(giftcard));
+
+        function changeSubTypeField(e, row) {
+            // {#TODO: move that logic to a function to bind it to the new rows #}
+            // {#TODO: logic for replacing subtype#}
+            let selected = e.target.value;
+            let subTypeField = $($(row.children()[3]).children()[0])
+            let amountField = $($(row.children()[4]).children()[0])
+            //let subTypeField =  $(row.parents().eq(2).find("select:last, input:last")[1])
+
+            let subTypeId = "id_form-" + (row[0].rowIndex - 1) + "-"
+
+
+            if (selected === "giftcard") {
+                subTypeId += "sub_type_business"
+                subTypeField.replaceWith($(giftcard).attr({id: subTypeId, name: subTypeId}));
+                amountField.show()
+            } else {
+                amountField.hide()
+                if (selected === 'clothing') {
+                    subTypeId += "sub_type_clothing"
+                    subTypeField.replaceWith($(clothing).attr({id: subTypeId, name: subTypeId})); // Keep this line!
+                    // subTypeField.replaceWith(clothing); // This causes clothing items to not be inserted!
+                } else if (selected === 'food') {
+                    subTypeId += "sub_type_name"
+                    subTypeField.replaceWith($(food).attr({id: subTypeId, name: subTypeId}));
+                } else if (selected === 'misc') {
+                    subTypeId += "sub_type_name"
+                    subTypeField.replaceWith($(misc).attr({id: subTypeId, name: subTypeId}));
+                }
+            }
+
+
+            // {#  $(this).parents().eq(2).find("select")[1] this is the subtype dropdown for the corresponding type #}
+        }
+
+
+        $("#clear_fields").click(function (e) {
+            e.preventDefault();
+            $("body").find("input, textarea").val("");
+            $("#id_state option:eq(1)").prop('selected', true);
+            $("#id_type option:eq(0)").prop('selected', true);
+            $("#items_body .shadow").each(function (e) {
+                removeRowItems()
+            })
+            document.getElementById('id_date_received').valueAsDate = new Date();
+
+        });
+
+        // Prevent donor information box from resizing
+        $("#donation_form").parent().css('min-height', $(".row .col.shadow:first").height() + 5 + 'px');
+
+        $("#toggleAutocomplete").change(function () {
+            if (this.checked === true) {
+                $('#id_first_name').autocomplete("enable");
+                $('#id_last_name').autocomplete("enable");
+
+            } else {
+                $('#id_first_name').autocomplete("disable");
+                $('#id_last_name').autocomplete("disable");
+            }
+        })
+    </script>
+
+    <script src="https://s3.amazonaws.com/novaksolutions/free/jquery.maskedinput.min.js"></script>
+    <script>
+        $("#id_phone_number").mask("(999) 999-9999?");
+
+        document.getElementById('id_date_received').valueAsDate = new Date();
+        $('#id_date_received').attr('min', "2015-01-01")
+    </script>
+
+{% endblock %}
